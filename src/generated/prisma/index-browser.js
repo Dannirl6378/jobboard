@@ -137,6 +137,14 @@ exports.Prisma.JobScalarFieldEnum = {
   createdat: 'createdat'
 };
 
+exports.Prisma.ApplicationScalarFieldEnum = {
+  id: 'id',
+  jobid: 'jobid',
+  userid: 'userid',
+  covertletter: 'covertletter',
+  application_date: 'application_date'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -167,7 +175,8 @@ exports.Category = exports.$Enums.Category = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Job: 'Job'
+  Job: 'Job',
+  Application: 'Application'
 };
 
 /**
