@@ -2,6 +2,7 @@ import { fetchjobs } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect } from "react";
+import { List, ListItem } from "@mui/material";
 
 const JobPage = () => {
 	const { data, error, isLoading } = useQuery({
@@ -27,14 +28,11 @@ const JobPage = () => {
 	}
 	console.log(data);
 	return (
-		<div>
-			<h1>Job List</h1>
-			<ul>
-				{data?.map((job: { id: string; title: string }) => (
-					<li key={job.id}>{job.title}</li>
-				))}
-			</ul>
-		</div>
+        <List>
+            {data?.map((job: { id: string; title: string }) => (
+                <ListItem key={job.id} sx={{color:'#1f2937'}}>{job.title}</ListItem>
+            ))}
+        </List>
 	);
 };
 export default JobPage;

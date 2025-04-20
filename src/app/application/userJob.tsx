@@ -21,15 +21,10 @@ export const getUserJob = async () => {
     const userApplication = applications.find(
         (app: { userid: string; }) => app.userid === userTest.id
       );
-      console.log("Applications from API:", applications);
-      console.log("Current LogInUser ID:", userTest.id);
-      console.log("User Application by Id:", userApplication.jobid);
-
 
       if (!userApplication) throw new Error("No application found for user");
     // Získání uživatele podle ID
     const job = useAppStore.getState().getJobById(userApplication.jobid); // Získání jobu podle ID aplikace
-    console.log("Job from store:", job?.title);
 
     return {userApplication, userTest, job }; // Vrácení dat
   } catch (error) {
