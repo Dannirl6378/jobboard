@@ -1,14 +1,15 @@
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Button, Icon } from "@mui/material";
 import { useState } from "react";
 import PageContainer from '@/components/PageContainer';
+
 
 
 const HeaderMainPage = () => {
 	const [isloggedin, setLoggedIn] = useState(false);
 	return (
 		<PageContainer>
-			<AppBar position='static'>
-				<Toolbar>
+			<AppBar position='static'sx={{width:'100vw',ml:-3}}>
+				<Toolbar>					
 					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
 						JobBoard
 					</Typography>
