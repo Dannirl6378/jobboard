@@ -31,13 +31,17 @@ export default function JobFilterPanel() {
 	};
 
 	return (
-		<Box
+		<Box 
 			sx={{
+				mt:10,
 				mb: 2,
 				bgcolor: "#3b82f6",
 				p: 2,
+				right:'5%',
+				left:'5%',
 				borderRadius: 2,
 				boxShadow: 2,
+				minWidth:"80%",
 			}}
 		>
 			<Grid container spacing={1}>

@@ -64,7 +64,7 @@ export default function Home() {
 					>
 						<Grid
 							size={{ xs: 12, md: 6 }}
-							sx={{ ml: 0, maxWidth: "120vw", minWidth: "80vw" }}
+							sx={{maxWidth: "120vw", minWidth: "80vw" }}
 						>
 							<JobsList />
 						</Grid>

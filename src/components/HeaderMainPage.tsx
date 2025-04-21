@@ -8,7 +8,7 @@ const HeaderMainPage = () => {
 	const [isloggedin, setLoggedIn] = useState(false);
 	return (
 		<PageContainer>
-			<AppBar position='static'sx={{width:'100vw',ml:-3}}>
+			<AppBar sx={{width:'full-width',flexGrow:1}}>
 				<Toolbar>					
 					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
 						JobBoard
