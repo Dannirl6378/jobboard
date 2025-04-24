@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+"use client"
 import { useQuery } from "@tanstack/react-query";
 import { fetchjobs, fetchUsers, fetchApplication } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
+import { useEffect } from "react";
 
 const AppDataFetcher = () => {
   const { setJobs, setUsers, setApplications} = useAppStore();

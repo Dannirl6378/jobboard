@@ -13,30 +13,15 @@ type Job ={
     description: string;
     location: string;
     salary: string;
-    company: string;
+    companyid: string;
 }
 type Application = {
     id: string;
-    jobId: string;
-    userId: string;
+    jobid: string;
+    userid: string;
     createdAt: Date;
     updatedAt: Date;
-    user: {
-        id: string;
-        name: string;
-        email: string;
-        role: 'admin' | 'user' | 'COMPANY';
-        createdAt: Date;
-        updatedAt: Date;
-    };
-    job: {
-        id: string;
-        title: string;
-        description: string;
-        location: string;
-        salary: string;
-        category: string;}}
-
+}
 type AppState = {
     users: Record<string, User>;
     applications: Record<string, Application>;
