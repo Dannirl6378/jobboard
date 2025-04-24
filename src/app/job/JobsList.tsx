@@ -2,7 +2,7 @@
 "use client";
 
 import { Box } from "@mui/system";
-import JobPage from "../app/job/page";
+import JobPage from "./page";
 import { Typography } from "@mui/material";
 
 const JobsList = () => {
@@ -16,11 +16,13 @@ const JobsList = () => {
 				maxHeight: "90vh",
 				minHeight: "70vh",
 				width: "80%",
-        ml:'10%'
+				ml: "10%",
 			}}
 		>
-			<Typography variant='h6' sx={{ color: "black",display: "flex",
-											justifyContent: "center",}}>
+			<Typography
+				variant='h6'
+				sx={{ color: "black", display: "flex", justifyContent: "center" }}
+			>
 				Seznam nabídek
 			</Typography>
 			<JobPage />

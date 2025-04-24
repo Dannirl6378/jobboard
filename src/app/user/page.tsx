@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import Firm from "./company/firm";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Box } from "@mui/material";
+import { LogInUser,LogInFirm } from "../login/LogInUser";
+import MainPgFirm from "./company/MainPgFirm";
 
 
 const UserPage = () => {
@@ -26,19 +28,16 @@ const UserPage = () => {
     if (isLoading) return <div>Loading...</div>;
     if (error instanceof Error) return <div>Error: {error.message}</div>;
     console.log("users", data);
+
+    const LogInCompany: boolean = LogInFirm.role=== "FIRM"  ? true : false;//toto se upravi na zjistovani kdo je přihlašeny Firm User 
+    console.log("LogInCompany", LogInCompany);
   
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
-         <HeaderMainPage/>
-        <h1>Users: for company</h1>
-        <ul>
-          {data?.map((user: { id: string; name: string,role:string }) => (
-            <li key={user.id}>{user.name} {user.role}</li>
-          ))}
-        </ul>
-        <Firm/>
-      </Box>
+      <>
+          {LogInCompany ? (<Box sx={{display:'flex',flexDirection:'column',alignItems:'center',mt:5,bgcolor:'#D5DEFF',width:'100vw',height:'100vh', color: "black",p:5}}> 
+            <Firm/>
+          </Box>):(<MainPgFirm/>)}      
+      </>
     );
-    
   };
   export default UserPage;  

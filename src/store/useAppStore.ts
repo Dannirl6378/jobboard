@@ -15,19 +15,54 @@ type Job ={
     salary: string;
     company: string;
 }
+type Application = {
+    id: string;
+    jobId: string;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+    user: {
+        id: string;
+        name: string;
+        email: string;
+        role: 'admin' | 'user' | 'COMPANY';
+        createdAt: Date;
+        updatedAt: Date;
+    };
+    job: {
+        id: string;
+        title: string;
+        description: string;
+        location: string;
+        salary: string;
+        category: string;}}
 
 type AppState = {
     users: Record<string, User>;
+    applications: Record<string, Application>;
     jobs: Record<string, Job>;
     setUsers: (users: User[]) => void;
     setJobs: (jobs: Job[]) => void;
     getUserById: (id: string) => User | undefined;
     getJobById: (id: string) => Job | undefined;
+    setApplications: (applications: Application[]) => void;
+    getApplicationById: (id: string) => Application | undefined;
+   
 };
 
 export const useAppStore = create<AppState>((set, get) => ({
   users: {},
   jobs: {},
+  applications: {},
+
+  setApplications: (applications) => {
+    const applicationMap = applications.reduce((acc, application) => {
+      acc[application.id] = application;
+      return acc;
+    }, {} as Record<string, Application>);
+    set({ applications: applicationMap });
+  },
+ 
 
   setUsers: (users) => {
     const userMap = users.reduce((acc, user) => {
@@ -49,5 +84,8 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   getJobById: (id) => {
     return get().jobs[id];
+  },
+  getApplicationById: (id) => {
+    return get().applications[id];
   },
 }));

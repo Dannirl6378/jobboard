@@ -4,7 +4,7 @@ import { Grid, Box } from "@mui/material";
 import JobFilterPanel from "./job/JobFilterPanel";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { useEffect, useState } from "react";
-import JobsList from "@/components/JobsList";
+import JobsList from "@/app/job/JobsList";
 import Head from "next/head";
 //V jakékoli komponentě, kde budeš potřebovat např.
 // jméno autora nabídky práce nebo název jobu, jednoduše použiješ:
@@ -13,14 +13,14 @@ import Head from "next/head";
 
 export default function Home() {
 	const [mounted, setMounted] = useState(false);
-//tento kod je pro hdrytation error
-//kdybychom to nedali do useEffectu, tak by se to spustilo na serveru a
-//vytvořilo by to hydration error
-  useEffect(() => {
-    setMounted(true);  // Tento kód se spustí až na klientovi
-  }, []);
+	//tento kod je pro hdrytation error
+	//kdybychom to nedali do useEffectu, tak by se to spustilo na serveru a
+	//vytvořilo by to hydration error
+	useEffect(() => {
+		setMounted(true); // Tento kód se spustí až na klientovi
+	}, []);
 
-  if (!mounted) return null;  // Nebude se renderovat, dokud komponenta není na klientovi
+	if (!mounted) return null; // Nebude se renderovat, dokud komponenta není na klientovi
 	return (
 		<>
 			<Head>
@@ -64,7 +64,7 @@ export default function Home() {
 					>
 						<Grid
 							size={{ xs: 12, md: 6 }}
-							sx={{maxWidth: "120vw", minWidth: "80vw" }}
+							sx={{ maxWidth: "120vw", minWidth: "80vw" }}
 						>
 							<JobsList />
 						</Grid>
