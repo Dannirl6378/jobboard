@@ -4,6 +4,9 @@ import { fetchUsers } from "@/lib/api";
 import { useQuery } from '@tanstack/react-query';
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect } from "react";
+import Firm from "./company/firm";
+import HeaderMainPage from "@/components/HeaderMainPage";
+import { Box } from "@mui/material";
 
 
 const UserPage = () => {
@@ -22,16 +25,19 @@ const UserPage = () => {
 
     if (isLoading) return <div>Loading...</div>;
     if (error instanceof Error) return <div>Error: {error.message}</div>;
+    console.log("users", data);
   
     return (
-      <div>
-        <h1>Users</h1>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+         <HeaderMainPage/>
+        <h1>Users: for company</h1>
         <ul>
-          {data?.map((user: { id: string; name: string }) => (
-            <li key={user.id}>{user.name}</li>
+          {data?.map((user: { id: string; name: string,role:string }) => (
+            <li key={user.id}>{user.name} {user.role}</li>
           ))}
         </ul>
-      </div>
+        <Firm/>
+      </Box>
     );
     
   };

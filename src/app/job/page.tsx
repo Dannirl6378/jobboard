@@ -82,85 +82,84 @@ const JobPage = () => {
 					location: string;
 					createdat: string;
 				}) => (
-					<ListItem key={job.id} sx={{ color: "black", display: "inline" }}>
-						<ListItemText
+					<ListItem
+						key={job.id}
+						sx={{
+							color: "black",
+							flexDirection: "column", // důležité pro vertikální rozložení
+							alignItems: "flex-start",
+							gap: 1,
+							boxShadow: 3,
+							borderRadius: 2,
+							p: 2,
+							mb: 2,
+							maxHeight: "17vh",
+						}}
+					>
+						<Typography
+							variant='h6'
+							sx={{ color: "black", fontSize: "1.4rem" }}
+						>
+							{job.title}
+						</Typography>
+
+						<Typography
+							variant='body2'
 							sx={{
-								disply: "inline",
-								border: 0,
-								borderRadius: 2,
-								boxShadow: 3,
+								color: "black",
+								opacity: 0.9,
+								fontSize: "0.8rem",
+								ml: 2,
 							}}
-							primary={
-								<Typography
-									variant='h6'
-									sx={{ color: "black", fontSize: "1.4rem", ml: 2 }}
-								>
-									{job.title}
-								</Typography>
-							}
-							secondary={
-								<React.Fragment>
-									<Typography
-										variant='body2'
-										component='span'
-										sx={{
-											display: "block",
-											color: "black",
-											opacity: 0.9,
-											fontSize: "0.8rem",
-											ml: 4,
-										}}
-									>
-										{job.description}
-									</Typography>
-									<Typography
-										variant='body2'
-										component='span'
-										sx={{
-											display: "block",
-											color: "black",
-											opacity: 0.9,
-											fontSize: "0.8rem",
-											ml: 6,
-										}}
-									>
-										{job.salary}/měsic
-									</Typography>
-									<Typography
-										variant='body2'
-										component='span'
-										sx={{
-											color: "black",
-											opacity: 0.7,
-											fontSize: "0.8rem",
-											ml: 8,
-										}}
-									>
-										{job.location}
-									</Typography>
-									<Box
-										sx={{
-											width: "100%",
-											display: "flex",
-											justifyContent: "flex-end",
-											pr: "5%", // přizpůsob dle vzhledu
-										}}
-									>
-										<Typography
-											variant='body2'
-											component='div'
-											sx={{
-												color: "black",
-												opacity: 0.9,
-												fontSize: "0.8rem",
-											}}
-										>
-											{new Date(job.createdat).toLocaleDateString()}
-										</Typography>
-									</Box>
-								</React.Fragment>
-							}
-						/>
+						>
+							{job.description}
+						</Typography>
+
+						<Typography
+							variant='body2'
+							sx={{
+								color: "black",
+								opacity: 0.9,
+								fontSize: "0.8rem",
+								ml: 4,
+							}}
+						>
+							{job.salary}/měsíc
+						</Typography>
+
+						<Typography
+							variant='body2'
+							sx={{
+								color: "black",
+								opacity: 0.7,
+								fontSize: "0.8rem",
+								ml: 6,
+							}}
+						>
+							{job.location}
+						</Typography>
+
+						<Box
+							sx={{
+								width: "100%",
+								display: "flex",
+								justifyContent: "flex-end",
+								pr: "5%",
+							}}
+						>
+							<Typography
+								variant='body2'
+								component='div'
+								sx={{
+									color: "black",
+									opacity: 0.9,
+									fontSize: "0.8rem",
+									mt:-5,
+								}}
+							>
+								{new Date(job.createdat).toLocaleDateString()}
+							</Typography>
+						</Box>
 					</ListItem>
 				)
 			)}

@@ -1,11 +1,5 @@
 
 
-interface Job {
-  id: string;
-  title: string;
-  description: string;
-}
-
 export const fetchUsers = async () => {
     const res = await fetch('/api/user');  // Volání našeho API
     if (!res.ok) {
