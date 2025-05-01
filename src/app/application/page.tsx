@@ -12,7 +12,7 @@ const { data, error, isLoading } = useQuery({
         queryKey: ['application'],
         queryFn: fetchApplication,
     });
-    
+    const applications = useAppStore((state) => state.applications);
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -30,7 +30,7 @@ const { data, error, isLoading } = useQuery({
         return <div>Loading...</div>;
     }
     if (error instanceof Error) return <div>Error: {error.message}</div>;
-    const applications = useAppStore((state) => state.applications);
+    
     console.log("applications", applications);
 
     return (
