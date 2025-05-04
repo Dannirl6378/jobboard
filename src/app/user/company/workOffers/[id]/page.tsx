@@ -6,6 +6,8 @@ import { use } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import updateJob from "../updateJob";
+import HeaderMainPage from "@/components/HeaderMainPage";
+import deleteJob from "../deleteWorkOffer/deleteJob";
 
 export default function EditWorkOffer({
 	params,
@@ -49,7 +51,17 @@ export default function EditWorkOffer({
 		handleUpdateJob(jobid, updateData);
 	};
 
+	const handleDelete = async ()=>{
+		try{
+			await deleteJob(jobid);
+		}catch(error){
+			console.error("nelze smazat",error)
+		}
+	};
+
 	return (
+		<>
+		<HeaderMainPage/>
 		<form
 			noValidate
 			autoComplete='off'
@@ -63,6 +75,7 @@ export default function EditWorkOffer({
 				maxHeight: "100vh",
 				overflowY: "auto",
 				width: "80%",
+				marginTop:"10%",
 				marginLeft: "10%",
 				display: "flex",
 				flexDirection: "column",
@@ -123,6 +136,10 @@ export default function EditWorkOffer({
 			<Button variant='contained' onClick={handleBack}>
 				zpět
 			</Button>
+			<Button variant='contained' onClick={handleDelete}>
+				smazat nabidku
+			</Button>
 		</form>
+		</>
 	);
 }

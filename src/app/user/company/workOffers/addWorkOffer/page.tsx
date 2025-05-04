@@ -4,6 +4,8 @@ import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import { Box, Button, TextField } from "@mui/material";
 import { LogInFirm } from "@/app/login/LogInUser";
 import { useEffect, useState } from "react";
+import HeaderMainPage from "@/components/HeaderMainPage";
+import { useRouter } from "next/navigation";
 
 export default function AddWorkOffer() {
 	const [title, setTitle] = useState("");
@@ -17,17 +19,15 @@ export default function AddWorkOffer() {
 
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const foundUser = usersArray.find((user) => user.id === LogInFirm.id);
+	const router = useRouter();
 
-
-useEffect(()=>{
-	if (foundUser) {
-		setCompanyid(foundUser.id);
-	} else {
-		setError("nic sem nenašel");
-	}
-},[foundUser])
-
-	
+	useEffect(() => {
+		if (foundUser) {
+			setCompanyid(foundUser.id);
+		} else {
+			setError("nic sem nenašel");
+		}
+	}, [foundUser]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		if (
@@ -73,77 +73,88 @@ useEffect(()=>{
 			setError("Failed to create job");
 		}
 	};
+	const handleBack = () => {
+		router.push("/user"); // Použití useNavigate pro přesměrování
+	};
+
 	return (
-		<form
-			noValidate
-			autoComplete='off'
-			style={{
-				border: "1px solid gray",
-				boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
-				padding: "16px",
-				backgroundColor: "#F5F5F5",
-				opacity: 0.8,
-				borderRadius: "8px",
-				maxHeight: "100vh",
-				overflowY: "auto",
-				width: "80%",
-				marginLeft: "10%",
-				display: "flex",
-				flexDirection: "column",
-				gap: "24px",
-				justifyContent: "center",
-			}}
-		>
-			<Heading>Nová nabídka práce</Heading>
-			<Box>
-				<SubHeading>Title:</SubHeading>
-				<TextField
-					value={title}
-					onChange={(e) => setTitle(e.target.value)}
-					required
-				/>
-			</Box>
-			<Box>
-				<Text>Description:</Text>
-				<TextField
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
-					required
-				/>
-			</Box>
-			<Box>
-				<Text>Location:</Text>
-				<TextField
-					type='text'
-					value={location}
-					onChange={(e) => setLocation(e.target.value)}
-					required
-				/>
-			</Box>
-			<Box>
-				<Text>Salary:</Text>
-				<TextField
-					type='number'
-					value={salary}
-					onChange={(e) => setSalary(e.target.value)}
-					required
-				/>
-			</Box>
-			<Box>
-				<Text>Category:</Text>
-				<TextField
-					type='text'
-					value={category}
-					onChange={(e) => setCategory(e.target.value)}
-					required
-				/>
-			</Box>
-			{error && <p style={{ color: "red" }}>{error}</p>}
-			{success && <p style={{ color: "green" }}>Job created successfully!</p>}
-			<Button type='submit' onClick={handleSubmit}>
-				Add Work Offer
-			</Button>
-		</form>
+		<>
+			<HeaderMainPage />
+			<form
+				noValidate
+				autoComplete='off'
+				style={{
+					border: "1px solid gray",
+					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+					padding: "16px",
+					backgroundColor: "#F5F5F5",
+					opacity: 0.8,
+					borderRadius: "8px",
+					maxHeight: "100vh",
+					overflowY: "auto",
+					width: "80%",
+					marginTop:"10%",
+					marginLeft: "10%",
+					display: "flex",
+					flexDirection: "column",
+					gap: "24px",
+					justifyContent: "center",
+				}}
+			>
+				<Heading>Nová nabídka práce</Heading>
+				<Box>
+					<SubHeading>Title:</SubHeading>
+					<TextField
+						value={title}
+						onChange={(e) => setTitle(e.target.value)}
+						required
+					/>
+				</Box>
+				<Box>
+					<Text>Description:</Text>
+					<TextField
+						value={description}
+						onChange={(e) => setDescription(e.target.value)}
+						required
+					/>
+				</Box>
+				<Box>
+					<Text>Location:</Text>
+					<TextField
+						type='text'
+						value={location}
+						onChange={(e) => setLocation(e.target.value)}
+						required
+					/>
+				</Box>
+				<Box>
+					<Text>Salary:</Text>
+					<TextField
+						type='number'
+						value={salary}
+						onChange={(e) => setSalary(e.target.value)}
+						required
+					/>
+				</Box>
+				<Box>
+					<Text>Category:</Text>
+					<TextField
+						type='text'
+						value={category}
+						onChange={(e) => setCategory(e.target.value)}
+						required
+					/>
+				</Box>
+				{error && <p style={{ color: "red" }}>{error}</p>}
+				{success && <p style={{ color: "green" }}>Job created successfully!</p>}
+				<Button variant="contained" type='submit' onClick={handleSubmit}>
+					Add Work Offer
+				</Button>
+				<Button variant="contained" onClick={handleBack}>
+					zpět
+				</Button>
+			</form>
+		</>
 	);
 }
 // 				<TextField
