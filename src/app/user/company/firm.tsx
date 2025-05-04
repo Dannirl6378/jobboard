@@ -5,8 +5,11 @@ import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import ApplicationPage from "@/app/application/page";
 import Badge from "@mui/material/Badge";
+import EditWorkOffer from "./workOffers/[id]/page";
+import { useRouter } from "next/navigation";
 
 const Firm = () => {
+	const router = useRouter();
 	const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
 	const usersArray = Object.values(useAppStore((state) => state.users));
@@ -57,13 +60,20 @@ const Firm = () => {
 			.filter(Boolean); // Odstraní `null` hodnoty
 	};
 
+	const handleEditWorkOffer = (jobId: string) => {
+    router.push(`/user/company/workOffers/${jobId}`);
+	};
+const handleAddWorkOffer = ()=>{
+  router.push(`/user/company/workOffers/addWorkOffer`);
+}
+
 	return (
 		<Box>
 			<HeaderMainPage />
 			<Typography>Profil: {company?.name}</Typography>
 			<Box>
 				<Button>Výpis pracovnich nabídek</Button>
-				<Button>Přidat pracovní nabídku</Button>
+				<Button onClick={handleAddWorkOffer}>Přidat pracovní nabídku</Button>
 				<Box
 					sx={{
 						display: "flex",
@@ -119,13 +129,17 @@ const Firm = () => {
 								<Typography variant='h5'>{job.description}</Typography>
 
 								<Box sx={{ display: "flex", gap: 2 }}>
-									<Button variant='contained'>Upravit pracovní nabídku</Button>
+									<Button
+										variant='contained'
+										onClick={() => handleEditWorkOffer(job.id)}
+									>
+										Upravit pracovní nabídku
+									</Button>
 									<Button
 										variant='contained'
 										onClick={() => setSelectedJobId(isOpen ? null : job.id)}
 									>
 										<Badge
-                    
 											anchorOrigin={{
 												vertical: "bottom",
 												horizontal: "right",

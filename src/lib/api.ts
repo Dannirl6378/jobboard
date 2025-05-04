@@ -9,7 +9,7 @@ export const fetchUsers = async () => {
   };
 
   export const fetchjobs = async () => {
-    const res = await fetch('/api/job');  // Volání našeho API
+    const res = await fetch('/api/job/getJob');  // Volání našeho API
     if (!res.ok) {
       throw new Error('Failed to fetch jobs');
     }
