@@ -2,7 +2,7 @@
 import { Box, Button, Input, TextField, Typography } from "@mui/material";
 import selectJob from "../selectJob";
 import { Job } from "@/types/job";
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import updateJob from "../updateJob";
@@ -14,12 +14,27 @@ export default function EditWorkOffer({
 }: {
 	params: Promise<{ id: string }>;
 }) {
+	const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [salary, setSalary] = useState("");
+const [location, setLocation] = useState("");
+
 	const { id: jobid } = use(params);
 	const router = useRouter();
 
 	const job = selectJob(jobid);
 	console.log("job", job);
 	console.log("jobid", job?.id);
+
+
+	useEffect(() => {
+		if (job) {
+			setTitle(job.title || "");
+			setDescription(job.description || "");
+			setSalary(job.salary?.toString() || "");
+			setLocation(job.location || "");
+		}
+	}, [job]);
 
 	const handleBack = () => {
 		router.push("/user"); // Použití useNavigate pro přesměrování
@@ -36,17 +51,11 @@ export default function EditWorkOffer({
 		}
 	};
 	const handleSaveChanges = () => {
-		const title = document.getElementById("title") as HTMLInputElement;
-		const description = document.getElementById(
-			"description"
-		) as HTMLInputElement;
-		const salary = document.getElementById("salary") as HTMLInputElement;
-		const location = document.getElementById("location") as HTMLInputElement;
 		const updateData = {
-			title: title.value,
-			description: description.value,
-			salary: salary.value,
-			location: location.value,
+			title,
+			description,
+			salary,
+			location,
 		};
 		handleUpdateJob(jobid, updateData);
 	};
@@ -91,6 +100,7 @@ export default function EditWorkOffer({
 					variant='outlined'
 					defaultValue={job?.title}
 					fullWidth
+					onChange={(e) => setTitle(e.target.value)}
 				/>
 			</Box>
 			<Box>
@@ -100,6 +110,7 @@ export default function EditWorkOffer({
 					variant='outlined'
 					defaultValue={job?.salary}
 					fullWidth
+					onChange={(e) => setSalary(e.target.value)}
 				/>
 			</Box>
 			<Box>
@@ -109,6 +120,7 @@ export default function EditWorkOffer({
 					variant='outlined'
 					defaultValue={job?.location}
 					fullWidth
+					onChange={(e) => setLocation(e.target.value)}
 				/>
 			</Box>
 			<Box>
@@ -120,6 +132,7 @@ export default function EditWorkOffer({
 					rows={6}
 					defaultValue={job?.description}
 					fullWidth
+					onChange={(e) => setDescription(e.target.value)}
 				/>
 			</Box>
 

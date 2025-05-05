@@ -6,6 +6,8 @@ type User = {
   name: string;
   email:string;
   role:string; 
+  passwordHash:string;
+  about:string;
 };
 type Job ={
     id: string;

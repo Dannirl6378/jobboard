@@ -5,7 +5,6 @@ import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import ApplicationPage from "@/app/application/page";
 import Badge from "@mui/material/Badge";
-import EditWorkOffer from "./workOffers/[id]/page";
 import { useRouter } from "next/navigation";
 
 const Firm = () => {
@@ -66,13 +65,16 @@ const Firm = () => {
 const handleAddWorkOffer = ()=>{
   router.push(`/user/company/workOffers/addWorkOffer`);
 }
+const handleEditUser = ()=>{
+	router.push(`/user/users/userAppProfil`);
+}
 
 	return (
 		<Box>
 			<HeaderMainPage />
 			<Typography>Profil: {company?.name}</Typography>
 			<Box>
-				<Button>Výpis pracovnich nabídek</Button>
+				<Button onClick={handleEditUser}>Upravit profil</Button>
 				<Button onClick={handleAddWorkOffer}>Přidat pracovní nabídku</Button>
 				<Box
 					sx={{

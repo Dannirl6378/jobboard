@@ -1171,6 +1171,7 @@ export namespace Prisma {
     name: string | null
     role: $Enums.Role | null
     created_at: Date | null
+    about: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1180,6 +1181,7 @@ export namespace Prisma {
     name: string | null
     role: $Enums.Role | null
     created_at: Date | null
+    about: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1189,6 +1191,7 @@ export namespace Prisma {
     name: number
     role: number
     created_at: number
+    about: number
     _all: number
   }
 
@@ -1200,6 +1203,7 @@ export namespace Prisma {
     name?: true
     role?: true
     created_at?: true
+    about?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1209,6 +1213,7 @@ export namespace Prisma {
     name?: true
     role?: true
     created_at?: true
+    about?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1218,6 +1223,7 @@ export namespace Prisma {
     name?: true
     role?: true
     created_at?: true
+    about?: true
     _all?: true
   }
 
@@ -1300,6 +1306,7 @@ export namespace Prisma {
     name: string
     role: $Enums.Role | null
     created_at: Date | null
+    about: string
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1326,6 +1333,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     created_at?: boolean
+    about?: boolean
     Application?: boolean | User$ApplicationArgs<ExtArgs>
     Job?: boolean | User$JobArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1338,6 +1346,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     created_at?: boolean
+    about?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1347,6 +1356,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     created_at?: boolean
+    about?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1356,9 +1366,10 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     created_at?: boolean
+    about?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "created_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "created_at" | "about", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Application?: boolean | User$ApplicationArgs<ExtArgs>
     Job?: boolean | User$JobArgs<ExtArgs>
@@ -1380,6 +1391,7 @@ export namespace Prisma {
       name: string
       role: $Enums.Role | null
       created_at: Date | null
+      about: string
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1811,6 +1823,7 @@ export namespace Prisma {
     readonly name: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'Role'>
     readonly created_at: FieldRef<"User", 'DateTime'>
+    readonly about: FieldRef<"User", 'String'>
   }
     
 
@@ -4531,7 +4544,8 @@ export namespace Prisma {
     password: 'password',
     name: 'name',
     role: 'role',
-    created_at: 'created_at'
+    created_at: 'created_at',
+    about: 'about'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4688,6 +4702,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     role?: EnumRoleNullableFilter<"User"> | $Enums.Role | null
     created_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    about?: StringFilter<"User"> | string
     Application?: ApplicationListRelationFilter
     Job?: JobListRelationFilter
   }
@@ -4699,6 +4714,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    about?: SortOrder
     Application?: ApplicationOrderByRelationAggregateInput
     Job?: JobOrderByRelationAggregateInput
   }
@@ -4713,6 +4729,7 @@ export namespace Prisma {
     name?: StringFilter<"User"> | string
     role?: EnumRoleNullableFilter<"User"> | $Enums.Role | null
     created_at?: DateTimeNullableFilter<"User"> | Date | string | null
+    about?: StringFilter<"User"> | string
     Application?: ApplicationListRelationFilter
     Job?: JobListRelationFilter
   }, "id" | "email">
@@ -4724,6 +4741,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrderInput | SortOrder
     created_at?: SortOrderInput | SortOrder
+    about?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -4739,6 +4757,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"User"> | string
     role?: EnumRoleNullableWithAggregatesFilter<"User"> | $Enums.Role | null
     created_at?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    about?: StringWithAggregatesFilter<"User"> | string
   }
 
   export type JobWhereInput = {
@@ -4882,6 +4901,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
     Application?: ApplicationCreateNestedManyWithoutUserInput
     Job?: JobCreateNestedManyWithoutUserInput
   }
@@ -4893,6 +4913,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
     Application?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     Job?: JobUncheckedCreateNestedManyWithoutUserInput
   }
@@ -4904,6 +4925,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
     Application?: ApplicationUpdateManyWithoutUserNestedInput
     Job?: JobUpdateManyWithoutUserNestedInput
   }
@@ -4915,6 +4937,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
     Application?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     Job?: JobUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -4926,6 +4949,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -4935,6 +4959,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -4944,6 +4969,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
   }
 
   export type JobCreateInput = {
@@ -5157,6 +5183,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     created_at?: SortOrder
+    about?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -5166,6 +5193,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     created_at?: SortOrder
+    about?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -5175,6 +5203,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     created_at?: SortOrder
+    about?: SortOrder
   }
 
   export type UuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -5985,6 +6014,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
     Application?: ApplicationCreateNestedManyWithoutUserInput
   }
 
@@ -5995,6 +6025,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
     Application?: ApplicationUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6037,6 +6068,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
     Application?: ApplicationUpdateManyWithoutUserNestedInput
   }
 
@@ -6047,6 +6079,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
     Application?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -6084,6 +6117,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
     Job?: JobCreateNestedManyWithoutUserInput
   }
 
@@ -6094,6 +6128,7 @@ export namespace Prisma {
     name: string
     role?: $Enums.Role | null
     created_at?: Date | string | null
+    about: string
     Job?: JobUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6153,6 +6188,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
     Job?: JobUpdateManyWithoutUserNestedInput
   }
 
@@ -6163,6 +6199,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     role?: NullableEnumRoleFieldUpdateOperationsInput | $Enums.Role | null
     created_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    about?: StringFieldUpdateOperationsInput | string
     Job?: JobUncheckedUpdateManyWithoutUserNestedInput
   }
 
