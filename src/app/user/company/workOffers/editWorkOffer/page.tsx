@@ -5,7 +5,7 @@ import { Job } from "@/types/job";
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
-import updateJob from "../updateJob";
+import updateJob from "./updateJob";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import deleteJob from "../deleteWorkOffer/deleteJob";
 

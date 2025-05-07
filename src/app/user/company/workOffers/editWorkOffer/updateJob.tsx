@@ -1,8 +1,8 @@
 import { Job } from "@/types/job";
 
 
-const updateJob = async (id: string, updateData: Partial<Job>) => {
-    const response = await fetch(`/api/job/${id}`, {
+const updateJob = async (jobId: string, updateData: Partial<Job>) => {
+    const response = await fetch(`/api/job/editJob/${jobId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

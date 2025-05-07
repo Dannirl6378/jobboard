@@ -7,6 +7,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { LogInUser } from "@/app/login/LogInUser";
 import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
+import TextEditor from "@/components/textEditor/textEdit";
 
 export default function UserProfil(/*{
 	params,
@@ -73,7 +74,16 @@ export default function UserProfil(/*{
 	return (
 		<>
 			<HeaderMainPage />
-			<Box sx={{ bgcolor: "white" }}>
+			<Box
+				sx={{
+					bgcolor: "white",
+					display: "flex",
+					alignContent: "center",
+					flexDirection: "column",
+					alignItems: "center",
+					mt: "10%",
+				}}
+			>
 				<Box>
 					<Heading>Profil uživatele</Heading>
 				</Box>
@@ -81,7 +91,7 @@ export default function UserProfil(/*{
 					<Text>Email:</Text>
 					<Input
 						id='email'
-						value={isEnable ? email : ""}
+						value={email}
 						disabled={!isEnable}
 						onChange={(e) => setEmail(e.target.value)}
 					/>
@@ -90,7 +100,7 @@ export default function UserProfil(/*{
 					<Text>Uživatelské Jméno</Text>
 					<Input
 						id='userName'
-						value={isEnable ? name : ""}
+						value={name}
 						disabled={!isEnable}
 						onChange={(e) => setName(e.target.value)}
 					/>
@@ -99,7 +109,7 @@ export default function UserProfil(/*{
 					<Text>Heslo:</Text>
 					<Input
 						id='password'
-						value={isEnable ? password : ""}
+						value={password}
 						disabled={!isEnable}
 						onChange={(e) => setPassword(e.target.value)}
 					/>
@@ -118,9 +128,13 @@ export default function UserProfil(/*{
 				<Box>
 					<Text>O mě </Text>
 					{/*Toto musim jestě přidat do databaze */}
+					<TextEditor
+						value={about}
+						onChange={(content) => setAbout(content)}
+					/>
 					<Input
 						id='about'
-						value={isEnable ? about : ""}
+						value={about}
 						disabled={!isEnable}
 						onChange={(e) => setAbout(e.target.value)}
 					/>

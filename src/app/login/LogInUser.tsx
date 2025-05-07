@@ -1,15 +1,17 @@
 // zaklad učet testovaci bude john Doe "036fb56a-723c-4a07-97fe-40a173d47711" email: example@example.com
-export const LogInUser: { id: string; name: string; email: string; role:string } = {
+export const LogInUser: { id: string; name: string; email: string; role:string; about:string } = {
     id: "036fb56a-723c-4a07-97fe-40a173d47711",
     name: "John Doe",
     email: "exaple@example.com",
-    role: "USER"
+    role: "USER",
+    about:"",
 };
-export const LogInFirm: { id: string; name: string; email: string; role: string } = { 
+export const LogInFirm: { id: string; name: string; email: string; role: string; about:string } = { 
     id: "a1eeafec-552f-413d-89aa-d2e46b485a59",
     name: "Firma s.r.o.",
     email: "firma@example.com",
-    role: "FIRM"
+    role: "FIRM",
+    about:"",
 };
 export const LogInAdmin: { id: string; name: string; email: string; role:string } = {
     id: "5e724726-c55c-4209-8887-4d07de5c09f8",
