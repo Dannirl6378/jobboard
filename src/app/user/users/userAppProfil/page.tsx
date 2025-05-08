@@ -130,8 +130,7 @@ export default function UserProfil(/*{
 					{/*Toto musim jestě přidat do databaze */}
 					<TextEditor
 						value={about}
-						onChange={(content) => setAbout(content)}
-					/>
+						onChange={(content) => setAbout(content)} />
 					<Input
 						id='about'
 						value={about}
