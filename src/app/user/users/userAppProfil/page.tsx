@@ -7,7 +7,8 @@ import { useAppStore } from "@/store/useAppStore";
 import { LogInUser } from "@/app/login/LogInUser";
 import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
-import TextEditor from "@/components/textEditor/textEdit";
+import TiptapEditor from "@/components/textEditor/textEdit";
+import QuillEditor from "@/components/textEditor/textEditQuill";
 
 export default function UserProfil(/*{
 	params,
@@ -128,9 +129,8 @@ export default function UserProfil(/*{
 				<Box>
 					<Text>O mě </Text>
 					{/*Toto musim jestě přidat do databaze */}
-					<TextEditor
-						value={about}
-						onChange={(content) => setAbout(content)} />
+					 <TiptapEditor value={about} onChange={setAbout} />
+					 <QuillEditor value={about} onChange={setAbout} />
 					<Input
 						id='about'
 						value={about}
