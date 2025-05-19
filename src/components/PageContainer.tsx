@@ -1,7 +1,12 @@
 // components/PageContainer.tsx
 import { Container, ContainerProps } from "@mui/material";
 
-const PageContainer = ({ children, ...props }: ContainerProps) => {
+type PageContainerProps = ContainerProps & {
+  children: React.ReactNode;
+};
+
+
+const PageContainer = ({ children, ...props }: PageContainerProps) => {
 	return (
 		<>
 			<Container maxWidth='lg' sx={{ mt: 4, mb: 4 }} {...props}>

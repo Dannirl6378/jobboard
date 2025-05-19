@@ -1,14 +1,15 @@
 "use client";
-import { Box, Button, Input } from "@mui/material";
+import { Box, Button, Input, Typography } from "@mui/material";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
-import { use, useEffect, useState } from "react";
+import { Heading, Text } from "@/styles/editTypoghraphy";
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { LogInUser } from "@/app/login/LogInUser";
 import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
-import TiptapEditor from "@/components/textEditor/textEdit";
+import DOMPurify from "dompurify";
 import QuillEditor from "@/components/textEditor/textEditQuill";
+import { sanitizeHtml } from "@/lib/sanitizeHTML";
 
 export default function UserProfil(/*{
 	params,
@@ -21,6 +22,7 @@ export default function UserProfil(/*{
 	const [password, setPassword] = useState("");
 	const [rePassword, setRePassword] = useState("");
 	const [about, setAbout] = useState("");
+	const [purifyAbout, setPurifyAbout] = useState(about);
 
 	//const { id: userid } = use(params);
 	const usersArray = Object.values(useAppStore((state) => state.users));
@@ -30,6 +32,11 @@ export default function UserProfil(/*{
 
 	const user = getUser();
 	console.log("editUser", user);
+	console.log("about", about);
+
+	useEffect(() => {
+		sanitizeHtml(about).then(setPurifyAbout);
+	}, [about]);
 
 	useEffect(() => {
 		if (user) {
@@ -129,13 +136,27 @@ export default function UserProfil(/*{
 				<Box>
 					<Text>O mě </Text>
 					{/*Toto musim jestě přidat do databaze */}
-					 <TiptapEditor value={about} onChange={setAbout} />
-					 <QuillEditor value={about} onChange={setAbout} />
+					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 					<Input
 						id='about'
 						value={about}
 						disabled={!isEnable}
 						onChange={(e) => setAbout(e.target.value)}
+					/>
+				</Box>
+				<Box
+					sx={{
+						width: "50%",
+						height: "15vh",
+						overflow: "auto",
+						border: "1px solid black",
+						borderRadius: "5px",
+						color: "black",
+					}}
+				>
+					<div
+						className='rich-content'
+						dangerouslySetInnerHTML={{ __html: purifyAbout }}
 					/>
 				</Box>
 				<Box>
