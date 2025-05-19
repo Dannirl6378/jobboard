@@ -4,10 +4,9 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
 import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
-import { LogInUser } from "@/app/login/LogInUser";
+import { LogInUser,LogInFirm } from "@/app/login/LogInUser";
 import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
-import DOMPurify from "dompurify";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 
@@ -28,7 +27,7 @@ export default function UserProfil(/*{
 	const usersArray = Object.values(useAppStore((state) => state.users));
 
 	const getUser = () =>
-		usersArray?.find((user) => user.name === LogInUser.name);
+		usersArray?.find((user) => user.name === LogInFirm.name);
 
 	const user = getUser();
 	console.log("editUser", user);
@@ -49,6 +48,9 @@ export default function UserProfil(/*{
 
 	const handleEdit = () => {
 		setIsEnable(true);
+		if (isEnable) {
+			setIsEnable(false);
+		}
 	};
 
 	const handleUpdateUser = async (
@@ -74,6 +76,7 @@ export default function UserProfil(/*{
 		};
 		if (user?.id) {
 			handleUpdateUser(user.id, updateData);
+			setIsEnable(false);
 		} else {
 			console.error("User ID is undefined. Cannot update user.");
 		}
@@ -89,10 +92,10 @@ export default function UserProfil(/*{
 					alignContent: "center",
 					flexDirection: "column",
 					alignItems: "center",
-					mt: "10%",
+					mt: "3%",
 				}}
 			>
-				<Box>
+				<Box sx={{ paddingTop: "4%" }}>
 					<Heading>Profil uživatele</Heading>
 				</Box>
 				<Box>
@@ -113,57 +116,68 @@ export default function UserProfil(/*{
 						onChange={(e) => setName(e.target.value)}
 					/>
 				</Box>
-				<Box>
-					<Text>Heslo:</Text>
-					<Input
-						id='password'
-						value={password}
-						disabled={!isEnable}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-				</Box>
+
 				{isEnable ? (
-					<Box>
-						<Text>Opakovat Heslo:</Text>
-						<Input
-							id='rePassword'
-							value={isEnable ? rePassword : ""}
-							disabled={!isEnable}
-							onChange={(e) => setRePassword(e.target.value)}
-						/>
-					</Box>
+					<>
+						<Box>
+							<Text>Heslo:</Text>
+							<Input
+								id='password'
+								value={password}
+								disabled={!isEnable}
+								onChange={(e) => setPassword(e.target.value)}
+							/>
+						</Box>
+						<Box>
+							<Text>Opakovat Heslo:</Text>
+							<Input
+								id='rePassword'
+								value={isEnable ? rePassword : ""}
+								disabled={!isEnable}
+								onChange={(e) => setRePassword(e.target.value)}
+							/>
+						</Box>
+					</>
 				) : null}
 				<Box>
 					<Text>O mě </Text>
-					{/*Toto musim jestě přidat do databaze */}
-					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
-					<Input
-						id='about'
-						value={about}
-						disabled={!isEnable}
-						onChange={(e) => setAbout(e.target.value)}
-					/>
+					{/*Toto se zobrazi jen když dám upravit profil */}
+					{isEnable ? (
+						
+						
+							<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
+					
+						
+					) : (
+						<Box
+							sx={{
+								display:"flex",
+								width: "150%",
+								height: "45vh",
+								overflow: "auto",
+								border: "1px solid black",
+								borderRadius: "5px",
+								color: "black",
+								ml: "-25%",
+							}}
+						>
+							{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
+							<div
+								className='rich-content'
+								dangerouslySetInnerHTML={{ __html: purifyAbout }}
+							/>
+						</Box>
+						
+					)}
 				</Box>
-				<Box
-					sx={{
-						width: "50%",
-						height: "15vh",
-						overflow: "auto",
-						border: "1px solid black",
-						borderRadius: "5px",
-						color: "black",
-					}}
-				>
-					<div
-						className='rich-content'
-						dangerouslySetInnerHTML={{ __html: purifyAbout }}
-					/>
-				</Box>
+
+				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
 				<Box>
 					<Text>Přilož CV</Text>
 				</Box>
+
 				<Button variant='outlined' onClick={handleEdit}>
-					Edit Info
+					{!isEnable ? "Upravit" : "Konec "}
 				</Button>
 				<Button variant='contained' onClick={handleSaveChanges}>
 					Ulož

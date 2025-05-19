@@ -32,7 +32,7 @@ const QuillEditor = ({ value, onChange,edit }: Props) => {
 
 	return (
 		<>
-			<Box sx={{ border: "1px solid #ccc", borderRadius: "4px", padding: "10px",fontStyle: "italic", fontSize: "14px", fontFamily: "Arial, sans-serif",color: "black" }}>
+			<Box sx={{ border: "1px solid #ccc", borderRadius: "4px", padding: "10px",fontStyle: "italic", fontSize: "14px", fontFamily: "Arial, sans-serif",color: "black",maxWidth:"100%" }}>
 				<ReactQuill
 					value={value}
 					onChange={onChange}
