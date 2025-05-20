@@ -4,10 +4,10 @@ import { useAppStore } from "@/store/useAppStore";
 import { useEffect, useState } from "react";
 import {
 	Box,
-	Divider,
+	
 	List,
 	ListItem,
-	ListItemText,
+	
 	Typography,
 } from "@mui/material";
 import React from "react";

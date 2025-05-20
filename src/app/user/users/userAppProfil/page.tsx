@@ -25,6 +25,9 @@ export default function UserProfil(/*{
 
 	//const { id: userid } = use(params);
 	const usersArray = Object.values(useAppStore((state) => state.users));
+	const LogIn = useAppStore((state) => state.LogIn);
+	console.log("LogIn", LogIn);
+	console.log("LogIn", LogIn?.name);
 
 	const getUser = () =>
 		usersArray?.find((user) => user.name === LogInFirm.name);

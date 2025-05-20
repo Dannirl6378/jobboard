@@ -1,5 +1,6 @@
 // store/useAppStore.ts
 import { create } from 'zustand';
+import { persist } from "zustand/middleware";
 
 type User = {
   id: string;
@@ -28,51 +29,62 @@ type AppState = {
     users: Record<string, User>;
     applications: Record<string, Application>;
     jobs: Record<string, Job>;
+    LogIn: User | null;
     setUsers: (users: User[]) => void;
     setJobs: (jobs: Job[]) => void;
     getUserById: (id: string) => User | undefined;
     getJobById: (id: string) => Job | undefined;
     setApplications: (applications: Application[]) => void;
     getApplicationById: (id: string) => Application | undefined;
+    setLogIn: (user: User | null) => void;
    
 };
 
-export const useAppStore = create<AppState>((set, get) => ({
-  users: {},
-  jobs: {},
-  applications: {},
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      users: {},
+      jobs: {},
+      applications: {},
+      LogIn: null,
 
-  setApplications: (applications) => {
-    const applicationMap = applications.reduce((acc, application) => {
-      acc[application.id] = application;
-      return acc;
-    }, {} as Record<string, Application>);
-    set({ applications: applicationMap });
-  },
- 
+      setApplications: (applications) => {
+        const applicationMap = applications.reduce((acc, application) => {
+          acc[application.id] = application;
+          return acc;
+        }, {} as Record<string, Application>);
+        set({ applications: applicationMap });
+      },
 
-  setUsers: (users) => {
-    const userMap = users.reduce((acc, user) => {
-      acc[user.id] = user;
-      return acc;
-    }, {} as Record<string, User>);
-    set({ users: userMap });
-  },
-  setJobs: (jobs) => {
-    const jobMap = jobs.reduce((acc, job) => {
-      acc[job.id] = job;
-      return acc;
-    }, {} as Record<string, Job>);
-    set({ jobs: jobMap });
-  },
-  getUserById: (id) => {
-    return get().users[id];
-  },
+      setLogIn: (user) => set({ LogIn: user }),
 
-  getJobById: (id) => {
-    return get().jobs[id];
-  },
-  getApplicationById: (id) => {
-    return get().applications[id];
-  },
-}));
+      setUsers: (users) => {
+        const userMap = users.reduce((acc, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {} as Record<string, User>);
+        set({ users: userMap });
+      },
+      setJobs: (jobs) => {
+        const jobMap = jobs.reduce((acc, job) => {
+          acc[job.id] = job;
+          return acc;
+        }, {} as Record<string, Job>);
+        set({ jobs: jobMap });
+      },
+      getUserById: (id) => {
+        return get().users[id];
+      },
+
+      getJobById: (id) => {
+        return get().jobs[id];
+      },
+      getApplicationById: (id) => {
+        return get().applications[id];
+      },
+    }),
+    {
+      name: "app-storage", // unique name for localStorage
+    }
+  )
+);

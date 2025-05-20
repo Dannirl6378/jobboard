@@ -2,6 +2,7 @@ import HeaderMainPage from "@/components/HeaderMainPage"
 import { Box, Button, Typography } from "@mui/material"
 
 
+
 const MainPgFirm = () => {
 
     return (
@@ -16,7 +17,8 @@ const MainPgFirm = () => {
                 maxHeight: "90vh",
                 minHeight: "70vh",
                 width: "80%",
-                ml:'10%'
+                ml:'10%',
+                mt: "15%",
             }}>
                 <Typography>Informace pro firmy</Typography>
                 <Box>
@@ -24,7 +26,12 @@ const MainPgFirm = () => {
                     asi něco jako jak dlouho to bude registrace poplatek za zveřejnění prac nabidky  nejaky premium 
                     prostě firmy podojit tak do cenu zjistim nejake kontakni ifo jako email admin a 
                     co dělat a podobně neco z toho se zobrazi po registraci  */}</Typography>
-                    <Button>Registrace</Button>
+                  <Button>
+                    <Typography>Registrace</Typography>
+                  </Button>
+                  <Button sx={{ml:"5%"}} onClick={()=>{}}>
+                    <Typography>Přihlášení</Typography>
+                  </Button>
                 </Box>
             </Box>
         </Box>
