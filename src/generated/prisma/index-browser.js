@@ -135,7 +135,8 @@ exports.Prisma.JobScalarFieldEnum = {
   salary: 'salary',
   category: 'category',
   companyid: 'companyid',
-  createdat: 'createdat'
+  createdat: 'createdat',
+  Attendance: 'Attendance'
 };
 
 exports.Prisma.ApplicationScalarFieldEnum = {

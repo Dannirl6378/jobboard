@@ -17,6 +17,9 @@ type Job ={
     location: string;
     salary: string;
     companyid: string;
+    Attendance: string;
+    category: string;
+    createdAt: Date;
 }
 type Application = {
     id: string;

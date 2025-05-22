@@ -2,18 +2,24 @@ import { fetchjobs } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect, useState } from "react";
-import {
-	Box,
-	
-	List,
-	ListItem,
-	
-	Typography,
-} from "@mui/material";
+import { sanitizeHtml } from "@/lib/sanitizeHTML";
+import { Box, List, ListItem, Typography } from "@mui/material";
 import React from "react";
 
+type Job = {
+	id: string;
+	title: string;
+	description: string;
+	salary: string;
+	location: string;
+	createdat: string;
+};
+
 const JobPage = () => {
-	const [joby, setJoby] = useState([]);
+	const [joby, setJoby] = useState<Job[]>([]);
+	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<
+		Record<string, string>
+	>({});
 	const { data, error, isLoading } = useQuery({
 		queryKey: ["jobs"],
 		queryFn: fetchjobs,
@@ -30,7 +36,21 @@ const JobPage = () => {
 		"Stored job example:",
 		useAppStore.getState().getJobById("1fc055d8-33ee-4eb0-8d4d-e1f524042185")
 	);
-
+	useEffect(() => {
+		const fetchSanitizedDescriptions = async () => {
+			const descs: Record<string, string> = {};
+			for (const job of joby) {
+				const shortDesc =
+					job.description.length > 25
+						? job.description.slice(0, 25) + "..."
+						: job.description;
+				descs[job.id] = await sanitizeHtml(shortDesc);
+			}
+			setSanitizedDescriptions(descs);
+		};
+		fetchSanitizedDescriptions();
+	}, [joby]);
+	console.log("joby", joby);
 	if (isLoading) {
 		return (
 			<Typography
@@ -71,6 +91,7 @@ const JobPage = () => {
 		);
 	}
 	console.log(data);
+
 	return (
 		<List>
 			{joby?.map(
@@ -111,9 +132,11 @@ const JobPage = () => {
 								fontSize: "0.8rem",
 								ml: 2,
 							}}
-						>
-							{job.description}
-						</Typography>
+							component='div'
+							dangerouslySetInnerHTML={{
+								__html: sanitizedDescriptions[job.id] || "",
+							}}
+						/>
 
 						<Typography
 							variant='body2'
@@ -154,7 +177,7 @@ const JobPage = () => {
 									color: "black",
 									opacity: 0.9,
 									fontSize: "0.8rem",
-									mt:-5,
+									mt: -5,
 								}}
 							>
 								{new Date(job.createdat).toLocaleDateString()}

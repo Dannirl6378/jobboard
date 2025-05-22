@@ -8,4 +8,5 @@ export interface Job {
     companyid: string;
     createdAt: Date;
     updatedAt: Date;
+    Attendance: string;
 }

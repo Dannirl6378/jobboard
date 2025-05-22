@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, description, location, salary, category, companyid } = body;
+    const { title, description, location, salary, category, companyid,Attendance } = body;
 
-    if (!title || !description || !location || !salary || !companyid) {
+    if (!title || !description || !location || !salary || !companyid || !category || !Attendance) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -20,6 +20,7 @@ export async function POST(req: Request) {
         salary: parseFloat(salary),
         category,
         companyid,
+        Attendance,
       },
     });
 

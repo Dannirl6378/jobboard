@@ -15,9 +15,9 @@ model User {
   name        String
   role        Role?         @default(USER)
   created_at  DateTime?     @default(now()) @db.Timestamptz(6)
+  about       String
   Application Application[]
   Job         Job[]
-  about       String
 }
 
 model Job {
@@ -29,6 +29,7 @@ model Job {
   category    Category?
   companyid   String?       @db.Uuid
   createdat   DateTime?     @default(now()) @db.Timestamptz(6)
+  Attendance  String?
   Application Application[]
   User        User?         @relation(fields: [companyid], references: [id], onUpdate: NoAction)
 }

@@ -2,7 +2,7 @@
 export const LogInUser: { id: string; name: string; email: string; role:string; about:string } = {
     id: "036fb56a-723c-4a07-97fe-40a173d47711",
     name: "John Doe",
-    email: "exaple@example.com",
+    email: "example@example.com",
     role: "USER",
     about:"",
 };

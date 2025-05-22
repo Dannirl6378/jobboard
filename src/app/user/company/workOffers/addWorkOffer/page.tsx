@@ -1,11 +1,17 @@
 "use client";
 import { useAppStore } from "@/store/useAppStore";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { LogInFirm } from "@/app/login/LogInUser";
 import { useEffect, useState } from "react";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { useRouter } from "next/navigation";
+import QuillEditor from "@/components/textEditor/textEditQuill";
+import MenuItem from "@mui/material/MenuItem";
+import { JobAtending,Jobtype } from "./menuSelect";
+
+
+
 
 export default function AddWorkOffer() {
 	const [title, setTitle] = useState("");
@@ -16,6 +22,7 @@ export default function AddWorkOffer() {
 	const [companyid, setCompanyid] = useState("");
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
+	const [attending, setAttending] = useState("");
 
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const foundUser = usersArray.find((user) => user.id === LogInFirm.id);
@@ -36,7 +43,8 @@ export default function AddWorkOffer() {
 			!location ||
 			!salary ||
 			!category ||
-			!companyid
+			!companyid ||
+			!attending
 		) {
 			setError("All fields are required");
 			return;
@@ -58,6 +66,7 @@ export default function AddWorkOffer() {
 					salary,
 					category,
 					companyid,
+					Attendance: attending,
 				}),
 			});
 
@@ -93,12 +102,13 @@ export default function AddWorkOffer() {
 					maxHeight: "100vh",
 					overflowY: "auto",
 					width: "80%",
-					marginTop:"10%",
+					marginTop: "5%",
 					marginLeft: "10%",
 					display: "flex",
 					flexDirection: "column",
 					gap: "24px",
 					justifyContent: "center",
+					paddingTop: "3%",
 				}}
 			>
 				<Heading>Nová nabídka práce</Heading>
@@ -110,47 +120,86 @@ export default function AddWorkOffer() {
 						required
 					/>
 				</Box>
+				<Box
+					sx={{
+						display: "flex",
+						flexDirection: "row",
+						flexWrap: "wrap",
+						gap: "2%",
+					}}
+				>
+					<Box>
+						<Text>Location:</Text>
+						<TextField
+							type='text'
+							value={location}
+							onChange={(e) => setLocation(e.target.value)}
+							required
+						/>
+					</Box>
+					<Box>
+						<Text>Salary:</Text>
+						<TextField
+							type='number'
+							value={salary}
+							onChange={(e) => setSalary(e.target.value)}
+							required
+						/>
+					</Box>
+					<Box>
+						<Text>Category:</Text>
+						<TextField
+							id='select-Type-Job'
+							select
+							type='list'
+							value={category}
+							onChange={(e) => setCategory(e.target.value)}
+							required
+							sx={{width:'26ch'}}
+						>
+							{Jobtype.map((option) => (
+								<MenuItem key={option.value} value={option.value}>
+									{option.label}
+								</MenuItem>
+							))}
+						</TextField>
+					</Box>
+					<Box>
+						<Text>Úvazek:</Text>
+							<TextField
+							id='select-Attend-Job'
+							select
+							type='list'
+							value={attending}
+							onChange={(e) => setAttending(e.target.value)}
+							required
+							sx={{width:'26ch'}}
+						>
+							{JobAtending.map((option) => (
+								<MenuItem key={option.value} value={option.value}>
+									{option.label}
+								</MenuItem>
+							))}
+						</TextField>
+					</Box>
+				</Box>
 				<Box>
 					<Text>Description:</Text>
-					<TextField
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-						required
-					/>
+					<>
+						<QuillEditor
+							value={description}
+							onChange={setDescription}
+							edit={true}
+						/>
+					</>
 				</Box>
-				<Box>
-					<Text>Location:</Text>
-					<TextField
-						type='text'
-						value={location}
-						onChange={(e) => setLocation(e.target.value)}
-						required
-					/>
-				</Box>
-				<Box>
-					<Text>Salary:</Text>
-					<TextField
-						type='number'
-						value={salary}
-						onChange={(e) => setSalary(e.target.value)}
-						required
-					/>
-				</Box>
-				<Box>
-					<Text>Category:</Text>
-					<TextField
-						type='text'
-						value={category}
-						onChange={(e) => setCategory(e.target.value)}
-						required
-					/>
-				</Box>
+
 				{error && <p style={{ color: "red" }}>{error}</p>}
 				{success && <p style={{ color: "green" }}>Job created successfully!</p>}
-				<Button variant="contained" type='submit' onClick={handleSubmit}>
+				<Button variant='contained' type='submit' onClick={handleSubmit}>
 					Add Work Offer
 				</Button>
-				<Button variant="contained" onClick={handleBack}>
+				<Button variant='contained' onClick={handleBack}>
 					zpět
 				</Button>
 			</form>

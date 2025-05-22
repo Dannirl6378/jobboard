@@ -1,10 +1,12 @@
 import HeaderMainPage from "@/components/HeaderMainPage"
 import { Box, Button, Typography } from "@mui/material"
+import { useRouter } from "next/navigation";
+
 
 
 
 const MainPgFirm = () => {
-
+const route = useRouter();
     return (
         <Box>
         <HeaderMainPage/>
@@ -20,16 +22,13 @@ const MainPgFirm = () => {
                 ml:'10%',
                 mt: "15%",
             }}>
-                <Typography>Informace pro firmy</Typography>
+                <Typography sx={{color:"black"}}>Informace pro firmy</Typography>
                 <Box>
-                    <Typography>{/*zde vložím nějake blablabla jestě nevim musim nastudovat
-                    asi něco jako jak dlouho to bude registrace poplatek za zveřejnění prac nabidky  nejaky premium 
-                    prostě firmy podojit tak do cenu zjistim nejake kontakni ifo jako email admin a 
-                    co dělat a podobně neco z toho se zobrazi po registraci  */}</Typography>
+                    <Typography sx={{color:'black'}}>Tady bdue nějake pokecani o vyhodach pro firmy a nebo zakladni přestaveni a podobně </Typography>
                   <Button>
                     <Typography>Registrace</Typography>
                   </Button>
-                  <Button sx={{ml:"5%"}} onClick={()=>{}}>
+                  <Button sx={{ml:"5%"}} onClick={()=>{route.push('/login')}}>
                     <Typography>Přihlášení</Typography>
                   </Button>
                 </Box>

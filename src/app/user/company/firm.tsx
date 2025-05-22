@@ -1,15 +1,17 @@
 import { Box, Button, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { LogInFirm } from "../../login/LogInUser";
 import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import ApplicationPage from "@/app/application/page";
 import Badge from "@mui/material/Badge";
 import { useRouter } from "next/navigation";
+import { sanitizeHtml } from "@/lib/sanitizeHTML";
 
 const Firm = () => {
 	const router = useRouter();
 	const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<Record<string, string>>({});
 
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
@@ -36,7 +38,10 @@ const Firm = () => {
 	const company = getCompany();
 	console.log("company", company);
 
-	const companyJobs = company ? getCompanyJobs(company.id) : [];
+	const companyJobs = useMemo(
+		() => (company ? getCompanyJobs(company.id) : []),
+		[company, jobsArray]
+	);
 	console.log("companyJobs", companyJobs);
 
 	const companyApplications = getCompanyApplications(companyJobs);
@@ -60,14 +65,29 @@ const Firm = () => {
 	};
 
 	const handleEditWorkOffer = (jobId: string) => {
-    router.push(`/user/company/workOffers/${jobId}`);
+		router.push(`/user/company/workOffers/${jobId}`);
 	};
-const handleAddWorkOffer = ()=>{
-  router.push(`/user/company/workOffers/addWorkOffer`);
-}
-const handleEditUser = ()=>{
-	router.push(`/user/users/userAppProfil`);
-}
+	const handleAddWorkOffer = () => {
+		router.push(`/user/company/workOffers/addWorkOffer`);
+	};
+	const handleEditUser = () => {
+		router.push(`/user/users/userAppProfil`);
+	};
+
+	useEffect(() => {
+  const fetchSanitizedDescriptions = async () => {
+    const descs: Record<string, string> = {};
+    for (const job of companyJobs) {
+      const shortDesc =
+        job.description.length > 25
+          ? job.description.slice(0, 25) + "..."
+          : job.description;
+      descs[job.id] = await sanitizeHtml(shortDesc);
+    }
+    setSanitizedDescriptions(descs);
+  };
+  fetchSanitizedDescriptions();
+}, []);
 
 	return (
 		<Box>
@@ -128,7 +148,11 @@ const handleEditUser = ()=>{
 								}}
 							>
 								<Typography variant='h4'>{job.title}</Typography>
-								<Typography variant='h5'>{job.description}</Typography>
+								<Typography
+									variant='h5'
+									component="div"
+									dangerouslySetInnerHTML={{ __html: sanitizedDescriptions[job.id] || "" }}
+								/>
 
 								<Box sx={{ display: "flex", gap: 2 }}>
 									<Button

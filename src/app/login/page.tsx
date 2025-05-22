@@ -17,6 +17,7 @@ export default function SignIn() {
 	useEffect(() => {
 		if (data) {
 			setUsers(data); // uložíme data do zustand
+			console.log("whichUser",data)
 		}
 	}, [data, setUsers]);
 	const usersArray = Object.values(useAppStore((state) => state.users));
@@ -48,7 +49,7 @@ export default function SignIn() {
 			>
 				<Button
 					variant='contained'
-					onClick={() => handleLogin("exaple@example.com")}
+					onClick={() => handleLogin("example@example.com")}
 				>
 					User
 				</Button>

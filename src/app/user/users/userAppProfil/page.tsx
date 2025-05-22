@@ -4,7 +4,6 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
 import { useEffect, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
-import { LogInUser,LogInFirm } from "@/app/login/LogInUser";
 import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
 import QuillEditor from "@/components/textEditor/textEditQuill";
@@ -30,7 +29,7 @@ export default function UserProfil(/*{
 	console.log("LogIn", LogIn?.name);
 
 	const getUser = () =>
-		usersArray?.find((user) => user.name === LogInFirm.name);
+		usersArray?.find((user) => user.name === LogIn?.name);
 
 	const user = getUser();
 	console.log("editUser", user);
