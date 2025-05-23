@@ -33,6 +33,8 @@ type AppState = {
     applications: Record<string, Application>;
     jobs: Record<string, Job>;
     LogIn: User | null;
+    selectedJobId: string | null;
+    setSelectedJobId: (id: string | null) => void;
     setUsers: (users: User[]) => void;
     setJobs: (jobs: Job[]) => void;
     getUserById: (id: string) => User | undefined;
@@ -50,6 +52,8 @@ export const useAppStore = create<AppState>()(
       jobs: {},
       applications: {},
       LogIn: null,
+       selectedJobId: null, // ← přidat výchozí hodnotu
+      setSelectedJobId: (id) => set({ selectedJobId: id }), // ← přidat setter
 
       setApplications: (applications) => {
         const applicationMap = applications.reduce((acc, application) => {
