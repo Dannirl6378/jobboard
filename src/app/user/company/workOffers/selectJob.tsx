@@ -1,0 +1,21 @@
+import { LogInFirm } from "@/app/login/LogInUser";
+import { useAppStore } from "@/store/useAppStore";
+
+
+const selectJob = (jobid:string) => {
+    const usersArray = Object.values(useAppStore((state) => state.users));
+    const jobsArray = Object.values(useAppStore((state) => state.jobs));
+
+    const getCompany = () =>
+        usersArray?.find((user) => user.name === LogInFirm.name);
+
+    const getCompanyJobs = (comapnyid: string) =>
+        jobsArray.filter((job) => job.companyid === company?.id);
+
+    const company = getCompany();
+    const companyJobs = company ? getCompanyJobs(company.id) : [];
+    const Job = companyJobs.find((job) => job.id === jobid);
+    console.log("selectedJob", Job);
+return Job;
+}
+export default selectJob;

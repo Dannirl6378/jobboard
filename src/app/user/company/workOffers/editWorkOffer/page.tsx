@@ -1,0 +1,158 @@
+"use client";
+import { Box, Button, Input, TextField, Typography } from "@mui/material";
+import selectJob from "../selectJob";
+import { Job } from "@/types/job";
+import { use, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
+import updateJob from "./updateJob";
+import HeaderMainPage from "@/components/HeaderMainPage";
+import deleteJob from "../deleteWorkOffer/deleteJob";
+
+export default function EditWorkOffer({
+	params,
+}: {
+	params: Promise<{ id: string }>;
+}) {
+	const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [salary, setSalary] = useState("");
+const [location, setLocation] = useState("");
+
+	const { id: jobid } = use(params);
+	const router = useRouter();
+
+	const job = selectJob(jobid);
+	console.log("job", job);
+	console.log("jobid", job?.id);
+
+
+	useEffect(() => {
+		if (job) {
+			setTitle(job.title || "");
+			setDescription(job.description || "");
+			setSalary(job.salary?.toString() || "");
+			setLocation(job.location || "");
+		}
+	}, [job]);
+
+	const handleBack = () => {
+		router.push("/user"); // Použití useNavigate pro přesměrování
+	};
+
+	const handleUpdateJob = async (jobid: string, updateData: Partial<Job>) => {
+		try {
+			const updatedJob = await updateJob(jobid, updateData);
+			console.log("Updated job:", updatedJob);
+			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
+		} catch (error) {
+			console.error("Error updating job:", error);
+			// Zde můžete přidat další logiku pro zpracování chyby
+		}
+	};
+	const handleSaveChanges = () => {
+		const updateData = {
+			title,
+			description,
+			salary,
+			location,
+		};
+		handleUpdateJob(jobid, updateData);
+	};
+
+	const handleDelete = async ()=>{
+		try{
+			await deleteJob(jobid);
+		}catch(error){
+			console.error("nelze smazat",error)
+		}
+	};
+
+	return (
+		<>
+		<HeaderMainPage/>
+		<form
+			noValidate
+			autoComplete='off'
+			style={{
+				border: "1px solid gray",
+				boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+				padding: "16px",
+				backgroundColor: "#F5F5F5",
+				opacity: 0.8,
+				borderRadius: "8px",
+				maxHeight: "100vh",
+				overflowY: "auto",
+				width: "80%",
+				marginTop:"10%",
+				marginLeft: "10%",
+				display: "flex",
+				flexDirection: "column",
+				gap: "24px",
+				justifyContent: "center",
+			}}
+		>
+			<Heading>Edit Work Offer</Heading>
+			<Box>
+				<SubHeading>Job Name: {job?.title}</SubHeading>
+				<TextField
+					id='title'
+					variant='outlined'
+					defaultValue={job?.title}
+					fullWidth
+					onChange={(e) => setTitle(e.target.value)}
+				/>
+			</Box>
+			<Box>
+				<Text>Job Salary:</Text>
+				<TextField
+					id='salary'
+					variant='outlined'
+					defaultValue={job?.salary}
+					fullWidth
+					onChange={(e) => setSalary(e.target.value)}
+				/>
+			</Box>
+			<Box>
+				<Text>Job Location:</Text>
+				<TextField
+					id='location'
+					variant='outlined'
+					defaultValue={job?.location}
+					fullWidth
+					onChange={(e) => setLocation(e.target.value)}
+				/>
+			</Box>
+			<Box>
+				<Text>Job Description</Text>
+				<TextField
+					id='description'
+					variant='outlined'
+					multiline
+					rows={6}
+					defaultValue={job?.description}
+					fullWidth
+					onChange={(e) => setDescription(e.target.value)}
+				/>
+			</Box>
+
+			<Button
+				variant='contained'
+				onClick={() => {
+					// Zde byste měli implementovat logiku pro uložení změn
+					console.log("Changes saved");
+					handleSaveChanges();
+				}}
+			>
+				Uložit změny
+			</Button>
+			<Button variant='contained' onClick={handleBack}>
+				zpět
+			</Button>
+			<Button variant='contained' onClick={handleDelete}>
+				smazat nabidku
+			</Button>
+		</form>
+		</>
+	);
+}

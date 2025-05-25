@@ -123,7 +123,8 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   name: 'name',
   role: 'role',
-  created_at: 'created_at'
+  created_at: 'created_at',
+  about: 'about'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -134,7 +135,8 @@ exports.Prisma.JobScalarFieldEnum = {
   salary: 'salary',
   category: 'category',
   companyid: 'companyid',
-  createdat: 'createdat'
+  createdat: 'createdat',
+  Attendance: 'Attendance'
 };
 
 exports.Prisma.ApplicationScalarFieldEnum = {

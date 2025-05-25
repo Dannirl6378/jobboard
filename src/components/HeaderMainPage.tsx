@@ -1,40 +1,64 @@
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import {
+	AppBar,
+	Toolbar,
+	Typography,
+	Box,
+	Button,
+	Icon,
+	Link,
+} from "@mui/material";
 import { useState } from "react";
-import PageContainer from '@/components/PageContainer';
-
+import PageContainer from "@/components/PageContainer";
+import { useAppStore } from "@/store/useAppStore";
+import { useRouter } from "next/navigation";
 
 const HeaderMainPage = () => {
-	const [isloggedin, setLoggedIn] = useState(false);
+	const LogIn = useAppStore((state) => state.LogIn);
+	const setLogIn = useAppStore((state) => state.setLogIn);
+	const router = useRouter();
+
+	const handleLogout = () => {
+		setLogIn(null);
+		router.push("/");
+	};
+
+	const handleLogin = () => {
+		router.push("/login");
+	};
+    if(LogIn?.role === "COMPANY"){
+        console.log("IsCompany",LogIn)
+    }else{
+        console.log("nocompany",LogIn?.role,LogIn)
+    }
+
 	return (
 		<PageContainer>
-			<AppBar position='static'>
+			<AppBar sx={{ width: "full-width", flexGrow: 1 }}>
 				<Toolbar>
 					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-						JobBoard
+						<Link href='/' underline='none' color='inherit'>
+							JobBoard
+						</Link>
 					</Typography>
-					<Button color='inherit' href='/jobs'>
+					<Button color='inherit' onClick={() => router.push("/jobs")}>
 						Brigády
 					</Button>
-					<Button color='inherit' href='/companies'>
+                    {LogIn === null || LogIn?.role === 'COMPANY'? <Button color='inherit' onClick={() => router.push("/user")}>
 						Firmy
-					</Button>
-					<Button color='inherit' href='/profile'>
+					</Button>:null }
+					
+					<Button
+						color='inherit'
+						onClick={() => router.push("/user/users/userAppProfil")}
+					>
 						Profil
 					</Button>
-					{isloggedin === true ? (
-						<Button
-							onClick={() => setLoggedIn(false)}
-							color='inherit'
-							href='logout'
-						>
+					{LogIn ? (
+						<Button onClick={handleLogout} color='inherit'>
 							Logout
 						</Button>
 					) : (
-						<Button
-							onClick={() => setLoggedIn(true)}
-							color='inherit'
-							href='/login'
-						>
+						<Button onClick={handleLogin} color='inherit'>
 							Login
 						</Button>
 					)}

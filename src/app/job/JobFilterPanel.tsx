@@ -31,25 +31,24 @@ export default function JobFilterPanel() {
 	};
 
 	return (
-		<Box
+		<Box 
 			sx={{
+				mt:10,
 				mb: 2,
-				bgcolor: "#F9FAFB",
-				p: 1,
+				bgcolor: "#3b82f6",
+				p: 2,
+				right:'5%',
+				left:'5%',
 				borderRadius: 2,
-				boxShadow: 1,
+				boxShadow: 2,
+				minWidth:"80%",
 			}}
 		>
-			<Typography
-				variant='subtitle2'
-				sx={{ mb: 1, textAlign: "center", color: "#1f2937" }}
-			>
-				Filtr nabídek práce
-			</Typography>
-
 			<Grid container spacing={1}>
 				<Grid size={{ xs: 12, md: 3 }}>
 					<TextField
+					sx={{background: "linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+						borderRadius: 1,boxShadow: 2}}
 						fullWidth
 						size='small'
 						label='Job Name'
@@ -60,6 +59,8 @@ export default function JobFilterPanel() {
 				</Grid>
 				<Grid size={{ xs: 12, md: 3 }}>
 					<TextField
+					sx={{background: "linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+						borderRadius: 1,boxShadow: 2}}
 						fullWidth
 						size='small'
 						label='Category'
@@ -70,6 +71,9 @@ export default function JobFilterPanel() {
 				</Grid>
 				<Grid size={{ xs: 12, md: 3 }}>
 					<TextField
+					sx={{background: "linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+						borderRadius: 1,
+						boxShadow: 2}}
 						fullWidth
 						size='small'
 						label='Location'
@@ -80,6 +84,8 @@ export default function JobFilterPanel() {
 				</Grid>
 				<Grid size={{ xs: 12, md: 3 }}>
 					<TextField
+					sx={{background: "linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+						borderRadius: 1,boxShadow: 2}}
 						fullWidth
 						size='small'
 						label='Salary'
@@ -94,9 +100,10 @@ export default function JobFilterPanel() {
 						variant='contained'
 						size='small'
 						sx={{
-							bgcolor: "#4f46e5",
-							color: "white",
-							":hover": { bgcolor: "#4338ca" },
+							bgcolor: "rgb(194, 176, 138)",
+							color: "black",
+							boxShadow: 2,
+							":hover": { bgcolor: "#4338ca",color: "white" },
 							px: 4,
 							py: 0.8,
 							fontSize: "0.8rem",
@@ -106,8 +113,18 @@ export default function JobFilterPanel() {
 						Search
 					</Button>
 
-					<IconButton sx={{ ml: 2 }} onClick={() => setShowMore(!showMore)}>
-						<ExpandMoreIcon sx={{ fontSize: "1.2rem", color: "#4f46e5" }} />
+					<IconButton sx={{ ml: 2,bgcolor:"transparent", borderRadius:0,":hover": { bgcolor: "#4338ca",borderRadius:1, } }} onClick={() => setShowMore(!showMore)}>
+						<ExpandMoreIcon sx={{ fontSize: "1.2rem", color: "rgb(194, 176, 138)" }} />
+						<Typography
+							sx={{
+								color: "black",
+								fontSize: "0.8rem",
+								ml: 1,
+							}}
+							variant='body2'
+						>
+							{showMore ? "Zavřít" : "Více možností"}
+						</Typography>
 					</IconButton>
 				</Grid>
 
@@ -124,6 +141,7 @@ export default function JobFilterPanel() {
 								justifyContent: "center",
 								gap: 1,
 								px: 1,
+								color:"black",
 								"& .MuiFormControlLabel-root": {
 									m: 0,
 									fontSize: "0.75rem",

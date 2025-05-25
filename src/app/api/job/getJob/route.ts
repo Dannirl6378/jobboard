@@ -1,4 +1,5 @@
 import { PrismaClient } from "@/generated/prisma";
+import { NextResponse } from 'next/server';
 const prisma = new PrismaClient();
 
 export async function GET() {
@@ -11,3 +12,5 @@ export async function GET() {
       }); // ✔️ chyba jako Response
     }
   }
+
+  

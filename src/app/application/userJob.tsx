@@ -1,16 +1,19 @@
 import { fetchApplication } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 import { LogInUser } from "../login/LogInUser";
+import { User } from "@/types/user";
 
-export const getUserJob = async () => {
+
+export const getUserJob = async ( ) => {
     // Získání ID uživatele z LogInUser
   // Předpokládáme, že LogInUser je objekt s informacemi o přihlášeném uživateli
   // a obsahuje id, name, email a role
-  const userTest: { id: string; name: string; email: string; role: string } = {
+  const userTest: Partial<User> = {
     id: LogInUser.id,
     name: LogInUser.name,
     email: LogInUser.email,
-    role: LogInUser.role,
+    role: ["admin", "user", "firm"].includes(LogInUser.role) ? LogInUser.role as "admin" | "user" | "firm" : undefined,
+    about: LogInUser.about,
   };
 
 
