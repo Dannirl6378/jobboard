@@ -7,12 +7,13 @@ import {
 	Icon,
 	Link,
 } from "@mui/material";
-import { useState } from "react";
 import PageContainer from "@/components/PageContainer";
 import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation";
 
+
 const HeaderMainPage = () => {
+	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const LogIn = useAppStore((state) => state.LogIn);
 	const setLogIn = useAppStore((state) => state.setLogIn);
 	const router = useRouter();
@@ -30,6 +31,10 @@ const HeaderMainPage = () => {
     }else{
         console.log("nocompany",LogIn?.role,LogIn)
     }
+	const handleProfil =()=>{
+		setSelectedUserId(null);
+		router.push("/user/users/userAppProfil");
+	}
 
 	return (
 		<PageContainer>
@@ -49,7 +54,7 @@ const HeaderMainPage = () => {
 					
 					<Button
 						color='inherit'
-						onClick={() => router.push("/user/users/userAppProfil")}
+						onClick={handleProfil}
 					>
 						Profil
 					</Button>

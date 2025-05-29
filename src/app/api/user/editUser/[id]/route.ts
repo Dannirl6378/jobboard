@@ -9,12 +9,12 @@ export async function PUT(
     const params =await context.params; // ✅ správně
     const {id} = params; 
   
-    const { name, email, password, about} = await request.json();
+    const { name, email, password, about, CV ,Phone, CoverLetter} = await request.json();
   
     try {
       const updated = await prisma.user.update({
         where: { id },
-        data: { name, email, password, about },
+        data: { name, email, password, about, CV, Phone, CoverLetter},
       });
       console.log("updated", updated);
   

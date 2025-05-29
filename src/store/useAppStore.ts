@@ -9,6 +9,9 @@ type User = {
   role:string; 
   passwordHash:string;
   about:string;
+  Phone: string;
+  CoverLetter: string;
+  CV: string;
 };
 type Job ={
     id: string;
@@ -34,6 +37,8 @@ type AppState = {
     jobs: Record<string, Job>;
     LogIn: User | null;
     selectedJobId: string | null;
+    selectedUserId: string | null; // Přidáno pro uložení ID vybraného uživatele
+    setSelectedUserId: (id: string | null) => void; // Přidáno pro setter ID vybraného uživatele
     setSelectedJobId: (id: string | null) => void;
     setUsers: (users: User[]) => void;
     setJobs: (jobs: Job[]) => void;
@@ -53,6 +58,8 @@ export const useAppStore = create<AppState>()(
       applications: {},
       LogIn: null,
        selectedJobId: null, // ← přidat výchozí hodnotu
+       selectedUserId: null, // Přidáno pro uložení ID vybraného uživatele
+      setSelectedUserId: (id) => set({ selectedUserId: id }), // Přidáno pro setter ID vybraného uživatele
       setSelectedJobId: (id) => set({ selectedJobId: id }), // ← přidat setter
 
       setApplications: (applications) => {

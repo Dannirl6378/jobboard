@@ -1,8 +1,9 @@
 "use client";
 import { Box, Button, Input, Typography } from "@mui/material";
+import { usePathname } from "next/navigation";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
@@ -18,9 +19,13 @@ export default function UserProfil(/*{
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [phone, setPhone] = useState("");
 	const [rePassword, setRePassword] = useState("");
 	const [about, setAbout] = useState("");
 	const [purifyAbout, setPurifyAbout] = useState(about);
+
+	const pathname = usePathname();
+    const prevPath = useRef(pathname);
 
 	//const { id: userid } = use(params);
 	const usersArray = Object.values(useAppStore((state) => state.users));
@@ -28,31 +33,48 @@ export default function UserProfil(/*{
 	console.log("LogIn", LogIn);
 	console.log("LogIn", LogIn?.name);
 
-	const getUser = () =>
-		usersArray?.find((user) => user.name === LogIn?.name);
+	 const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
+	const selectedUserId = useAppStore((state) => state.selectedUserId);
+	const users = useAppStore((state) => state.users);
+	const userVsFirm = selectedUserId ? users[selectedUserId] : null;
+	const hasMounted = useRef(false);
 
-	const user = getUser();
-	console.log("editUser", user);
-	console.log("about", about);
+	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
+
+	useEffect(() => {
+        prevPath.current = pathname;
+    }, [pathname]);
+
+
+    
+
+    useEffect(() => {
+        if (!hasMounted.current) {
+            hasMounted.current = true;
+			console.log("hasMounted", hasMounted.current);
+            return;
+        }
+        return () => {
+            setSelectedUserId(null);
+        };
+    }, []);
 
 	useEffect(() => {
 		sanitizeHtml(about).then(setPurifyAbout);
 	}, [about]);
 
 	useEffect(() => {
-		if (user) {
-			setName(user.name || "");
-			setEmail(user.email || "");
-			setPassword(user.passwordHash || "");
-			setAbout(user.about || "");
+		if (profileUser) {
+			setName(profileUser.name || "");
+			setEmail(profileUser.email || "");
+			setPassword(profileUser.passwordHash || "");
+			setAbout(profileUser.about || "");
+			setPhone(profileUser.Phone || "");
 		}
-	}, [user]);
+	}, [profileUser]);
 
 	const handleEdit = () => {
-		setIsEnable(true);
-		if (isEnable) {
-			setIsEnable(false);
-		}
+		setIsEnable((prev) => !prev);
 	};
 
 	const handleUpdateUser = async (
@@ -75,9 +97,10 @@ export default function UserProfil(/*{
 			email,
 			password,
 			about,
+			Phone: phone,
 		};
-		if (user?.id) {
-			handleUpdateUser(user.id, updateData);
+		if (LogIn?.id) {
+			handleUpdateUser(LogIn.id, updateData);
 			setIsEnable(false);
 		} else {
 			console.error("User ID is undefined. Cannot update user.");
@@ -118,6 +141,15 @@ export default function UserProfil(/*{
 						onChange={(e) => setName(e.target.value)}
 					/>
 				</Box>
+				<Box>
+					<Text>Telefon</Text>
+					<Input
+						id='Telefon'
+						value={phone}
+						disabled={!isEnable}
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</Box>
 
 				{isEnable ? (
 					<>
@@ -145,15 +177,11 @@ export default function UserProfil(/*{
 					<Text>O mě </Text>
 					{/*Toto se zobrazi jen když dám upravit profil */}
 					{isEnable ? (
-						
-						
-							<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
-					
-						
+						<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 					) : (
 						<Box
 							sx={{
-								display:"flex",
+								display: "flex",
 								width: "150%",
 								height: "45vh",
 								overflow: "auto",
@@ -169,21 +197,21 @@ export default function UserProfil(/*{
 								dangerouslySetInnerHTML={{ __html: purifyAbout }}
 							/>
 						</Box>
-						
 					)}
 				</Box>
 
 				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
-				<Box>
-					<Text>Přilož CV</Text>
-				</Box>
-
-				<Button variant='outlined' onClick={handleEdit}>
-					{!isEnable ? "Upravit" : "Konec "}
-				</Button>
-				<Button variant='contained' onClick={handleSaveChanges}>
-					Ulož
-				</Button>
+				{userVsFirm === null ? (
+					<Box>
+						<Button variant='outlined' onClick={handleEdit}>
+							{!isEnable ? "Upravit" : "Konec "}
+						</Button>
+						<Button variant='contained' onClick={handleSaveChanges}>
+							Ulož
+						</Button>
+						<Text>Přilož CV</Text>
+					</Box>
+				) : null}
 			</Box>
 		</>
 	);
