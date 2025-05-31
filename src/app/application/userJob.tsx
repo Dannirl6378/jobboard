@@ -21,15 +21,18 @@ export const getUserJob = async ( ) => {
     // Zavolání API pro získání dat
     const applications = await fetchApplication();
 
-    const userApplication = applications.find(
-        (app: { userid: string; }) => app.userid === userTest.id
-      );
+   const userApplications = applications.filter(
+    (app: { userid: string }) => app.userid === LogInUser.id
+  );
 
-      if (!userApplication) throw new Error("No application found for user");
+      if (!userApplications) throw new Error("No application found for user");
     // Získání uživatele podle ID
-    const job = useAppStore.getState().getJobById(userApplication.jobid); // Získání jobu podle ID aplikace
+    const job = useAppStore.getState().jobs; // Získání jobu podle ID aplikace
 
-    return {userApplication, userTest, job }; // Vrácení dat
+    return userApplications.map((app: any) => ({
+    application: app,
+    job: job[app.jobid],
+  }));
   } catch (error) {
     console.error("Error fetching user job:", error);
     throw error; // Propagace chyby

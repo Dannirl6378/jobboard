@@ -102,13 +102,14 @@ export default function AddWorkOffer() {
 					maxHeight: "100vh",
 					overflowY: "auto",
 					width: "80%",
-					marginTop: "5%",
+					marginTop: "10%",
 					marginLeft: "10%",
 					display: "flex",
 					flexDirection: "column",
 					gap: "24px",
 					justifyContent: "center",
-					paddingTop: "3%",
+					paddingTop: "10%",
+					
 				}}
 			>
 				<Heading>Nová nabídka práce</Heading>

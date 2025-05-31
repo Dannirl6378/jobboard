@@ -15,20 +15,22 @@ const UserLogInPage = () => {
 	const selectedUserId = useAppStore((state) => state.selectedUserId);
 	const users = useAppStore((state) => state.users);
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
+	const logIn = useAppStore((state) => state.LogIn);
 
 	const dataUser = selectedUserId ? users[selectedUserId] : user;
+	console.log("application userLogin",logIn)
 
-	const [name, setName] = useState(dataUser?.name || "");
-	const [email, setEmail] = useState(dataUser?.email || "");
-	const [phone, setPhone] = useState(dataUser?.Phone || "");
-	const [about, setAbout] = useState(dataUser?.CoverLetter || "");
+	const [name, setName] = useState(logIn?.name || "");
+	const [email, setEmail] = useState(logIn?.email || "");
+	const [phone, setPhone] = useState(logIn?.Phone || "");
+	const [about, setAbout] = useState(logIn?.CoverLetter || "");
 
 	useEffect(() => {
-		setName(dataUser?.name || "");
-		setEmail(dataUser?.email || "");
-		setPhone(dataUser?.Phone || "");
-		setAbout(dataUser?.CoverLetter || "");
-	}, [dataUser]);
+		setName(logIn?.name || "");
+		setEmail(logIn?.email || "");
+		setPhone(logIn?.Phone || "");
+		setAbout(logIn?.CoverLetter || "");
+	}, [logIn]);
 
 	console.log("jobId", selectedJobId);
 	/*const handleEdit = () => {
@@ -47,7 +49,7 @@ const UserLogInPage = () => {
 	const handleEdit = () => setIsEnable(true);
 	const handleSave = async () => {
 		setIsEnable(false);
-		if (!dataUser) return;
+		if (!logIn) return;
 		const updateData = {
 			name,
 			email,
@@ -55,7 +57,7 @@ const UserLogInPage = () => {
 			CoverLetter: about,
 		};
 		try {
-			const updatedUser = await updateUser(dataUser.id, updateData);
+			const updatedUser = await updateUser(logIn?.id, updateData);
 			console.log("Updated job:", updatedUser);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
@@ -64,14 +66,14 @@ const UserLogInPage = () => {
 		}
 	};
 	const handleApply = async () => {
-    if (!dataUser || selectedJobId === null) return;
-    try {
-        const response = await createApplication(dataUser.id, selectedJobId);
-        console.log("Application created:", response);
-        // případně další logika (např. přesměrování, notifikace)
-    } catch (error) {
-        console.error("Error creating application:", error);
-    }
+	if (!logIn?.id || selectedJobId === null) return;
+	try {
+		const response = await createApplication(logIn.id, selectedJobId);
+		console.log("Application created:", response);
+		// případně další logika (např. přesměrování, notifikace)
+	} catch (error) {
+		console.error("Error creating application:", error);
+	}
 };
 	return (
 		<>

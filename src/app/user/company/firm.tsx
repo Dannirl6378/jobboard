@@ -231,7 +231,6 @@ const handleDelete = (jobId:string) => {
 						);
 					})}
 				</Box>
-				<ApplicationPage />
 			</Box>
 		</Box>
 	);
