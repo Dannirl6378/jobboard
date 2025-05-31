@@ -54,6 +54,7 @@ enum Role {
   USER
   COMPANY
   ADMIN
+  TEMPORAL
 }
 
 enum Category {

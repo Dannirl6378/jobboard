@@ -7,6 +7,7 @@ import ApplicationPage from "@/app/application/page";
 import Badge from "@mui/material/Badge";
 import { useRouter } from "next/navigation";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
+import deleteJob from "./workOffers/deleteWorkOffer/deleteJob";
 
 const Firm = () => {
 	const router = useRouter();
@@ -97,6 +98,25 @@ const Firm = () => {
   fetchSanitizedDescriptions();
 }, []);
 
+const handleDelete = (jobId:string) => {
+	console.log("jobIdDelte", jobId);
+	if (!jobId) return;
+	const updatedJobs = companyJobs.filter((job) => job.id !== jobId);
+	useAppStore.getState().setJobs(updatedJobs);
+	deleteJob(jobId)
+		.then(() => {
+			console.log("Job deleted successfully");
+		}
+		)
+		.catch((error) => {
+			console.error("Error deleting job:", error);
+			alert("Chyba při mazání pracovní nabídky.");
+		}
+	);
+}
+
+
+
 	return (
 		<Box>
 			<HeaderMainPage />
@@ -169,6 +189,7 @@ const Firm = () => {
 									>
 										Upravit pracovní nabídku
 									</Button>
+									<Button variant='contained' onClick={()=>handleDelete(job.id)}>Delete Job</Button>
 									<Button
 										variant='contained'
 										onClick={() => setSelectedJobId(isOpen ? null : job.id)}

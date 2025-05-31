@@ -30,7 +30,12 @@ const JobDetail = () => {
 	console.log("jobdescrip", job.description);
 	console.log("purify", purifyDescr);
 	const handleApply = () => {
+		if(usersArray=== null ) {
+			router.push("/application/noLogUser");
+			return;
+		}else{
 		router.push("/application/userLogIn");
+		}
 	}
 
 	return (

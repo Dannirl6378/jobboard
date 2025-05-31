@@ -23,6 +23,7 @@ export default function UserProfil(/*{
 	const [rePassword, setRePassword] = useState("");
 	const [about, setAbout] = useState("");
 	const [purifyAbout, setPurifyAbout] = useState(about);
+	const [purifyCoverLetter, setPurifyCoverLetter] = useState<string>("")
 
 	const pathname = usePathname();
     const prevPath = useRef(pathname);
@@ -61,7 +62,8 @@ export default function UserProfil(/*{
 
 	useEffect(() => {
 		sanitizeHtml(about).then(setPurifyAbout);
-	}, [about]);
+		sanitizeHtml(purifyCoverLetter).then(setPurifyCoverLetter);
+	}, [about, purifyCoverLetter]);
 
 	useEffect(() => {
 		if (profileUser) {
@@ -70,6 +72,7 @@ export default function UserProfil(/*{
 			setPassword(profileUser.passwordHash || "");
 			setAbout(profileUser.about || "");
 			setPhone(profileUser.Phone || "");
+			setPurifyCoverLetter(profileUser?.CoverLetter || "");
 		}
 	}, [profileUser]);
 
@@ -173,7 +176,27 @@ export default function UserProfil(/*{
 						</Box>
 					</>
 				) : null}
-				<Box>
+				{userVsFirm && purifyCoverLetter !== null?<>
+				<Text>Cover Letter </Text>
+				<Box
+							sx={{
+								display: "flex",
+								width: "50%",
+								height: "45vh",
+								overflow: "auto",
+								border: "1px solid black",
+								borderRadius: "5px",
+								color: "black",
+								
+							}}
+						>
+							{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
+							
+							<div
+								className='rich-content'
+								dangerouslySetInnerHTML={{ __html: purifyCoverLetter }}
+							/>
+						</Box> </>: null}
 					<Text>O mě </Text>
 					{/*Toto se zobrazi jen když dám upravit profil */}
 					{isEnable ? (
@@ -182,13 +205,13 @@ export default function UserProfil(/*{
 						<Box
 							sx={{
 								display: "flex",
-								width: "150%",
+								width: "75%",
 								height: "45vh",
 								overflow: "auto",
 								border: "1px solid black",
 								borderRadius: "5px",
 								color: "black",
-								ml: "-25%",
+								
 							}}
 						>
 							{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
@@ -198,8 +221,6 @@ export default function UserProfil(/*{
 							/>
 						</Box>
 					)}
-				</Box>
-
 				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
 				{userVsFirm === null ? (
 					<Box>
