@@ -8,10 +8,8 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { useRouter } from "next/navigation";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import MenuItem from "@mui/material/MenuItem";
-import { JobAtending,Jobtype } from "./menuSelect";
-
-
-
+import { JobAtending, Jobtype } from "./menuSelect";
+import { fetchCreateJob } from "@/lib/api";
 
 export default function AddWorkOffer() {
 	const [title, setTitle] = useState("");
@@ -54,27 +52,15 @@ export default function AddWorkOffer() {
 		setSuccess(false);
 		//nezpomen pracovat s companID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!§
 		try {
-			const response = await fetch("/api/job/addJob", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					title,
-					description,
-					location,
-					salary,
-					category,
-					companyid,
-					Attendance: attending,
-				}),
+			const data = await fetchCreateJob({
+				title,
+				description,
+				location,
+				salary,
+				category,
+				companyid,
+				Attendance: attending,
 			});
-
-			if (!response.ok) {
-				throw new Error("Failed to create job");
-			}
-
-			const data = await response.json();
 			console.log("Job created:", data);
 			setSuccess(true);
 		} catch (error) {
@@ -109,7 +95,6 @@ export default function AddWorkOffer() {
 					gap: "24px",
 					justifyContent: "center",
 					paddingTop: "10%",
-					
 				}}
 			>
 				<Heading>Nová nabídka práce</Heading>
@@ -156,7 +141,7 @@ export default function AddWorkOffer() {
 							value={category}
 							onChange={(e) => setCategory(e.target.value)}
 							required
-							sx={{width:'26ch'}}
+							sx={{ width: "26ch" }}
 						>
 							{Jobtype.map((option) => (
 								<MenuItem key={option.value} value={option.value}>
@@ -167,14 +152,14 @@ export default function AddWorkOffer() {
 					</Box>
 					<Box>
 						<Text>Úvazek:</Text>
-							<TextField
+						<TextField
 							id='select-Attend-Job'
 							select
 							type='list'
 							value={attending}
 							onChange={(e) => setAttending(e.target.value)}
 							required
-							sx={{width:'26ch'}}
+							sx={{ width: "26ch" }}
 						>
 							{JobAtending.map((option) => (
 								<MenuItem key={option.value} value={option.value}>

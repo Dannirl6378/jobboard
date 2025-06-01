@@ -3,11 +3,10 @@ import React, { useEffect, useState, useMemo } from "react";
 
 import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import ApplicationPage from "@/app/application/page";
 import Badge from "@mui/material/Badge";
 import { useRouter } from "next/navigation";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
-import deleteJob from "./workOffers/deleteWorkOffer/deleteJob";
+import { fetchDeleteJob } from "@/lib/api";
 
 const Firm = () => {
 	const router = useRouter();
@@ -103,7 +102,7 @@ const handleDelete = (jobId:string) => {
 	if (!jobId) return;
 	const updatedJobs = companyJobs.filter((job) => job.id !== jobId);
 	useAppStore.getState().setJobs(updatedJobs);
-	deleteJob(jobId)
+	fetchDeleteJob(jobId)
 		.then(() => {
 			console.log("Job deleted successfully");
 		}

@@ -4,9 +4,9 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import { useEffect, useState } from "react";
-import createApplication from "../userVsApplication/page";
-import tempUser from "@/app/user/users/createUser/tempUser";
-import getUserByEmail from './temporalUser';
+import { fetchCreateApplication } from "@/lib/api";
+import { fetchCreateUser } from "@/lib/api";
+import { fetchUserByEmail } from "@/lib/api";
 
 
 const UserLogInPage = () => {
@@ -37,7 +37,7 @@ const UserLogInPage = () => {
 			role: "TEMPORAL" as const, // Předpokládám, že role by měla zůstat stejná
 		};
 		try {
-			const temporaryUser = await tempUser(updateData);
+			const temporaryUser = await fetchCreateUser(updateData);
 			console.log("createTempUser:", temporaryUser);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
@@ -48,9 +48,9 @@ const UserLogInPage = () => {
 	const handleApply = async () => {
 		if (selectedJobId === null) return;
 		try {
-            const user = await getUserByEmail(email);
+            const user = await fetchUserByEmail(email);
             const userId = user.id;
-			const response = await createApplication(userId, selectedJobId);
+			const response = await fetchCreateApplication(userId, selectedJobId);
 			console.log("Application created:", response);
 			// případně další logika (např. přesměrování, notifikace)
 		} catch (error) {

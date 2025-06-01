@@ -7,15 +7,6 @@ export const getUserJob = async () => {
 	// Získání ID uživatele z LogInUser
 	// Předpokládáme, že LogInUser je objekt s informacemi o přihlášeném uživateli
 	// a obsahuje id, name, email a role
-	const userTest: Partial<User> = {
-		id: LogInUser.id,
-		name: LogInUser.name,
-		email: LogInUser.email,
-		role: ["admin", "user", "firm"].includes(LogInUser.role)
-			? (LogInUser.role as "admin" | "user" | "firm")
-			: undefined,
-		about: LogInUser.about,
-	};
 
 	try {
 		// Zavolání API pro získání dat

@@ -6,7 +6,7 @@ import { Heading, Text } from "@/styles/editTypoghraphy";
 import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { User } from "@/types/user";
-import updateUser from "../updateUser/updateUser";
+import { fetchUpdateUser } from "@/lib/api";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import { getUserJob } from "@/app/user/users/userJob/userJob";
@@ -97,7 +97,7 @@ export default function UserProfil(/*{
 		updateData: Partial<User>
 	) => {
 		try {
-			const updatedUser = await updateUser(userid, updateData);
+			const updatedUser = await fetchUpdateUser(userid, updateData);
 			console.log("Updated job:", updatedUser);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {

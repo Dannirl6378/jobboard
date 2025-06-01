@@ -4,8 +4,8 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import { useEffect, useState } from "react";
-import createApplication from "../userVsApplication/page";
-import updateUser from "@/app/user/users/updateUser/updateUser";
+import { fetchCreateApplication } from "@/lib/api";
+import { fetchUpdateUser } from "@/lib/api";
 
 const UserLogInPage = () => {
 	const [isEnable, setIsEnable] = useState<boolean>(false);
@@ -57,7 +57,7 @@ const UserLogInPage = () => {
 			CoverLetter: about,
 		};
 		try {
-			const updatedUser = await updateUser(logIn?.id, updateData);
+			const updatedUser = await fetchUpdateUser(logIn?.id, updateData);
 			console.log("Updated job:", updatedUser);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
@@ -68,7 +68,7 @@ const UserLogInPage = () => {
 	const handleApply = async () => {
 	if (!logIn?.id || selectedJobId === null) return;
 	try {
-		const response = await createApplication(logIn.id, selectedJobId);
+		const response = await fetchCreateApplication(logIn.id, selectedJobId);
 		console.log("Application created:", response);
 		// případně další logika (např. přesměrování, notifikace)
 	} catch (error) {

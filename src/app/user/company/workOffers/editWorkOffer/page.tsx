@@ -1,14 +1,14 @@
 "use client";
 import { Box, Button, Input, TextField, Typography } from "@mui/material";
-import selectJob from "../selectJob/selectJob";
+import selectJob from "../selectJob*/selectJob";
 import { Job } from "@/types/job";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
-import updateJob from "./updateJob";
+import { fetchUpdateJob } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import deleteJob from "../deleteWorkOffer/deleteJob";
+import { fetchDeleteJob } from "@/lib/api";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 
 export default function EditWorkOffer() {
@@ -19,7 +19,7 @@ export default function EditWorkOffer() {
 	const [location, setLocation] = useState("");
 	const [about, setAbout] = useState<string>("");
 	const [isEnable, setIsEnable] = useState<boolean>(true); // Set default as needed
-	const [purifyAbout, setPurifyAbout] = useState<string>("");
+	const [purifyAbout, setPurifyAbout] = useState<string>("");//tady se zamyslet jestli budu toto potřebovat 
 
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 	const jobs = useAppStore((state) => state.jobs);
@@ -44,7 +44,7 @@ export default function EditWorkOffer() {
 
 	const handleUpdateJob = async (jobid: string, updateData: Partial<Job>) => {
 		try {
-			const updatedJob = await updateJob(jobid, updateData);
+			const updatedJob = await fetchUpdateJob(jobid, updateData);
 			console.log("Updated job:", updatedJob);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
@@ -66,14 +66,13 @@ export default function EditWorkOffer() {
 	const handleDelete = async () => {
 		if (!selectedJobId) return;
 		try {
-			await deleteJob(selectedJobId);
+			await fetchDeleteJob(selectedJobId);
 		} catch (error) {
 			console.error("nelze smazat", error);
 		}
 	};
 
 	// Add missing state variables for about, isEnable, and purifyAbout
-	
 
 	useEffect(() => {
 		if (job) {
@@ -140,14 +139,8 @@ export default function EditWorkOffer() {
 				<Box>
 					<Text>Job Description</Text>
 					{/*Toto se zobrazi jen když dám upravit profil */}
-					
-						
-						
-							<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
-					
-						
-					
-						
+
+					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 				</Box>
 
 				<Button
