@@ -1,5 +1,5 @@
 import { PrismaClient } from "@/generated/prisma";
-import { Application } from '../../../generated/prisma/index';
+import { Application } from '../../../../generated/prisma/index';
 const prisma = new PrismaClient();
 
 export async function GET() {

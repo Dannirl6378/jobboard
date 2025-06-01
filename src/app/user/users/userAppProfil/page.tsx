@@ -9,7 +9,7 @@ import { User } from "@/types/user";
 import updateUser from "../updateUser/updateUser";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
-import { getUserJob } from "@/app/application/userJob";
+import { getUserJob } from "@/app/user/users/userJob/userJob";
 import { useRouter } from "next/navigation";
 
 export default function UserProfil(/*{
@@ -27,7 +27,9 @@ export default function UserProfil(/*{
 	const [about, setAbout] = useState("");
 	const [purifyAbout, setPurifyAbout] = useState(about);
 	const [purifyCoverLetter, setPurifyCoverLetter] = useState<string>("");
-	const [appliedJobs, setAppliedJobs] = useState<{ application: { id: string }, job?: { title?: string,jobId?:string } }[]>([]);
+	const [appliedJobs, setAppliedJobs] = useState<
+		{ application: { id: string }; job?: { title?: string; jobId?: string } }[]
+	>([]);
 
 	const pathname = usePathname();
 	const prevPath = useRef(pathname);
@@ -81,7 +83,10 @@ export default function UserProfil(/*{
 		getUserJob().then(setAppliedJobs);
 	}, []);
 	const jobIds = appliedJobs.map(({ job }) => job?.jobId);
-	console.log("appliedJobsMap", appliedJobs.map((job) => job.job?.jobId));
+	console.log(
+		"appliedJobsMap",
+		appliedJobs.map((job) => job.job?.jobId)
+	);
 
 	const handleEdit = () => {
 		setIsEnable((prev) => !prev);
@@ -240,12 +245,16 @@ export default function UserProfil(/*{
 						overflow: "auto",
 					}}
 				>
-					{appliedJobs.map(({ application, job, }) => (
-      <Box sx={{paddingLeft:"5%"}} key={application.id}>
-		<Typography sx={{ cursor: "pointer", color: "blue" }} onClick={()=>router.push(`/job/jobDetail${jobIds}`)} >{job?.title || "Neznámá pozice"}</Typography>
-        
-      </Box>
-    ))}
+					{appliedJobs.map(({ application, job }) => (
+						<Box sx={{ paddingLeft: "5%" }} key={application.id}>
+							<Typography
+								sx={{ cursor: "pointer", color: "blue" }}
+								onClick={() => router.push(`/job/jobDetail${jobIds}`)}
+							>
+								{job?.title || "Neznámá pozice"}
+							</Typography>
+						</Box>
+					))}
 				</Box>
 				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
 				{userVsFirm === null ? (
