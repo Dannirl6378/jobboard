@@ -24,7 +24,7 @@ const UserPage = () => {
     return (
       <>
       <HeaderMainPage/>
-          {LogInCompany ? (<Box sx={{display:'flex',flexDirection:'column',alignItems:'center',mt:5,bgcolor:'#D5DEFF',width:'100vw',height:'100vh', color: "black",p:5}}> 
+          {LogInCompany || LogIn?.role ==='ADMIN' ? (<Box sx={{display:'flex',flexDirection:'column',alignItems:'center',mt:5,bgcolor:'#D5DEFF',width:'100vw',height:'100vh', color: "black",p:5}}> 
             <Firm/>
           </Box>):(<MainPgFirm/>)}      
       </>

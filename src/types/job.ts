@@ -7,6 +7,5 @@ export interface Job {
     category: string;
     companyid: string;
     createdAt: Date;
-    updatedAt: Date;
     Attendance: string;
 }

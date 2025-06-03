@@ -26,12 +26,11 @@ const HeaderMainPage = () => {
 	const handleLogin = () => {
 		router.push("/login");
 	};
-    if(LogIn?.role === "COMPANY"){
-        console.log("IsCompany",LogIn)
-    }else{
-        console.log("nocompany",LogIn?.role,LogIn)
-    }
 	const handleProfil =()=>{
+		if(LogIn?.role === 'ADMIN'){
+			router.push("/user/admin");
+			return;
+		}
 		setSelectedUserId(null);
 		router.push("/user/users/userAppProfil");
 	}
@@ -48,7 +47,7 @@ const HeaderMainPage = () => {
 					<Button color='inherit' onClick={() => router.push("/jobs")}>
 						Brigády
 					</Button>
-                    {LogIn === null || LogIn?.role === 'COMPANY'? <Button color='inherit' onClick={() => router.push("/user")}>
+                    {LogIn === null || LogIn?.role === 'COMPANY'||'ADMIN'? <Button color='inherit' onClick={() => router.push("/user")}>
 						Firmy
 					</Button>:null }
 					

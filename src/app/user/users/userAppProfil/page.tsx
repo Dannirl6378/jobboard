@@ -38,7 +38,7 @@ export default function UserProfil(/*{
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const LogIn = useAppStore((state) => state.LogIn);
 	console.log("LogIn", LogIn);
-	console.log("LogIn", LogIn?.name);
+	console.log("LogIn", LogIn?.role);
 
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const selectedUserId = useAppStore((state) => state.selectedUserId);
@@ -234,28 +234,32 @@ export default function UserProfil(/*{
 						/>
 					</Box>
 				)}
-				<Typography>Apply Job List</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						border: "1px solid black",
-						borderRadius: "15px",
-						width: "25%",
-						height: "15vh",
-						overflow: "auto",
-					}}
-				>
-					{appliedJobs.map(({ application, job }) => (
-						<Box sx={{ paddingLeft: "5%" }} key={application.id}>
-							<Typography
-								sx={{ cursor: "pointer", color: "blue" }}
-								onClick={() => router.push(`/job/jobDetail${jobIds}`)}
-							>
-								{job?.title || "Neznámá pozice"}
-							</Typography>
+				{LogIn?.role === "COMPANY" ? null : (
+					<>
+						<Typography>Apply Job List</Typography>
+						<Box
+							sx={{
+								display: "flex",
+								border: "1px solid black",
+								borderRadius: "15px",
+								width: "25%",
+								height: "15vh",
+								overflow: "auto",
+							}}
+						>
+							{appliedJobs.map(({ application, job }) => (
+								<Box sx={{ paddingLeft: "5%" }} key={application.id}>
+									<Typography
+										sx={{ cursor: "pointer", color: "blue" }}
+										onClick={() => router.push(`/job/jobDetail${jobIds}`)}
+									>
+										{job?.title || "Neznámá pozice"}
+									</Typography>
+								</Box>
+							))}
 						</Box>
-					))}
-				</Box>
+					</>
+				)}
 				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
 				{userVsFirm === null ? (
 					<Box>
@@ -265,7 +269,8 @@ export default function UserProfil(/*{
 						<Button variant='contained' onClick={handleSaveChanges}>
 							Ulož
 						</Button>
-						<Text>Přilož CV</Text>
+						{LogIn?.role === "COMPANY" ? null :<Text>Přilož CV</Text> }
+						
 					</Box>
 				) : null}
 			</Box>

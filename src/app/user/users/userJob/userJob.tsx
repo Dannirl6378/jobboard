@@ -1,6 +1,5 @@
 import { fetchApplication } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
-import { LogInUser } from "../../../login/LogInUser";
 import { User } from "@/types/user";
 
 export const getUserJob = async () => {
@@ -11,10 +10,14 @@ export const getUserJob = async () => {
 	try {
 		// Zavolání API pro získání dat
 		const applications = await fetchApplication();
+    const LogIn = useAppStore.getState().LogIn; // Získání přihlášeného uživatele z globálního stavu
+    console.log("applications", applications);
+    console.log("LogInUser", LogIn);
 
 		const userApplications = applications.filter(
-			(app: { userid: string }) => app.userid === LogInUser.id
+			(app: { userid: string }) => app.userid === LogIn?.id
 		);
+    console.log("userApplications", userApplications);
 
 		if (!userApplications) throw new Error("No application found for user");
 		// Získání uživatele podle ID

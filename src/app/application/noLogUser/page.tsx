@@ -84,7 +84,7 @@ const UserLogInPage = () => {
 			>
 				<Box>
 					<Typography variant='h4' sx={{ textAlign: "center", mb: 2 }}>
-						Kontola udaju
+						Vyplňte zakladni udaje 
 					</Typography>
 				</Box>
 				<Box

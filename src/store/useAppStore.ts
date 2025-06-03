@@ -2,6 +2,8 @@
 import { create } from 'zustand';
 import { persist } from "zustand/middleware";
 
+
+
 type User = {
   id: string;
   name: string;
@@ -36,8 +38,10 @@ type AppState = {
     applications: Record<string, Application>;
     jobs: Record<string, Job>;
     LogIn: User | null;
+    selectedUserData: User | null; // Přidáno pro uložení dat vybraného uživatele
     selectedJobId: string | null;
     selectedUserId: string | null; // Přidáno pro uložení ID vybraného uživatele
+    setSelectedUserData: (user: User | null) => void; // Přidáno pro setter dat vybraného uživatele
     setSelectedUserId: (id: string | null) => void; // Přidáno pro setter ID vybraného uživatele
     setSelectedJobId: (id: string | null) => void;
     setUsers: (users: User[]) => void;
@@ -59,8 +63,10 @@ export const useAppStore = create<AppState>()(
       LogIn: null,
        selectedJobId: null, // ← přidat výchozí hodnotu
        selectedUserId: null, // Přidáno pro uložení ID vybraného uživatele
+       selectedUserData:null,
       setSelectedUserId: (id) => set({ selectedUserId: id }), // Přidáno pro setter ID vybraného uživatele
       setSelectedJobId: (id) => set({ selectedJobId: id }), // ← přidat setter
+      setSelectedUserData: (user) => set({ selectedUserData: user }), // Přidáno pro setter dat vybraného uživatele
 
       setApplications: (applications) => {
         const applicationMap = applications.reduce((acc, application) => {

@@ -19,7 +19,7 @@ export const fetchjobs = async () => {
 };
 
 export const fetchApplication = async () => {
-	const res = await fetch("/api/application"); // Volání našeho API
+	const res = await fetch("/api/application/getApplication"); // Volání našeho API
 	if (!res.ok) {
 		throw new Error("Failed to fetch users");
 	}
