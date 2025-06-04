@@ -1,28 +1,40 @@
 "use client";
+
 import { Heading, Text } from "@/styles/editTypoghraphy";
 import { useAppStore } from "@/store/useAppStore";
-import { Box, Button, Input, ListItem, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import { fetchUserByEmail } from "@/lib/api";
-import { User } from "@/types/user";
+import {
+	Box,
+	Button,
+	Checkbox,
+	Input,
+	ListItem,
+	Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { Job } from "@/types/job";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
+import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
 
-const adminMainPage = () => {
-	const [email, setEmail] = useState("");
-	const [userId, setUserId] = useState("");
-	const [copmanyJobs, setCompanyJobs] = useState<Job[]>([]);
+//admiin hleda uživatele přes email ---check
+//jak najde uživatele tak má možnosti ---check
+//když je to user:
+//uprav data user smaž application smaž user
+//když je to Company:
+//uprav data, uprav job, smaž company, smaž job, zobraz všechny application
+//tzn nazev job a rozbalovaci okno list user
+// když klinu na user vyskoci maly panel pro možnost upravy mazani a info
+//jestě sem musim našroubovat datum vytvořeni uživatele jobu a application
+
+const AdminMainPage = () => {
+	const [companyJobs, setCompanyJobs] = useState<Job[]>([]);
 	const [aboutHtml, setAboutHtml] = useState<string>("");
 
-	const jobs = useAppStore((state) => state.jobs);
-	const setSelectedUserData = useAppStore((state) => state.setSelectedUserData);
 	const selectedUserData = useAppStore((state) => state.selectedUserData);
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
-	const JobById = useAppStore((state) => state.getJobById);
 
 	useEffect(() => {
 		if (selectedUserData?.about) {
@@ -34,13 +46,12 @@ const adminMainPage = () => {
 
 	useEffect(() => {
 		if (selectedUserData?.role === "COMPANY") {
-			const getCompanyJobs = (comapnyid: string) =>
-				jobsArray.filter((job) => job.companyid === selectedUserData?.id);
-			const companyJobs = getCompanyJobs(selectedUserData.id);
-
-			setCompanyJobs(companyJobs);
+			const Jobs = jobsArray.filter(
+				(job) => job.companyid === selectedUserData?.id
+			);
+			setCompanyJobs(Jobs);
 		}
-	}, [userId]);
+	}, [selectedUserData]);
 
 	const getApplicantsForJob = () => {
 		return applicationsArray
@@ -49,86 +60,62 @@ const adminMainPage = () => {
 				const job = jobsArray.find((job) => job.id === application.jobid);
 				return job ? { ...application, JobTitle: job.title } : null;
 			})
-			.filter(Boolean); // Odstraní `null` hodnoty
+			.filter(Boolean);
 	};
+
 	const applicationJob = getApplicantsForJob();
 	const jobsFromApplications = applicationJob
 		.map((app) => jobsArray.find((job) => job.id === app?.jobid))
-		.filter(Boolean); // Odstraní undefined, pokud nějaký job nenajdeš
-	console.log(
-		"allJobs",
-		jobsFromApplications.map((job) => {
-			job?.id, job?.title;
-		})
-	);
-	console.log("aplicationJob", applicationJob);
+		.filter(Boolean);
 
-	const handleFindUser = async (email: string) => {
-		return fetchUserByEmail(email)
-			.then((user) => {
-				setUserId(user.id);
-				setSelectedUserData(user);
-				setEmail(user.email);
-			})
-			.catch((error) => {
-				console.error("Error fetching user by email:", error);
-				setSelectedUserData(null);
-			});
-	};
-
-	console.log("foundUser", selectedUserData);
+	console.log("selectedUser", selectedUserData);
+	console.log("companyJob", companyJobs);
 	return (
 		<>
 			<HeaderMainPage />
-			<Box
-				sx={{
-					padding: "2%",
-					border: "1px solid #ccc",
-					boxShadow: 3,
-					backgroundColor: "#f9f9f9",
-				}}
-			>
-				<Box sx={{ paddingTop: "4%" }}>
+			<Box sx={{ padding: 2, border: 1, boxShadow: 3, bgcolor: "#f9f9f9" }}>
+				<Box pt={4}>
 					<Heading>Admin Page</Heading>
 				</Box>
-				<Box sx={{ padding: "2%" }}>
+				<Box py={2}>
 					<Typography>Welcome to the Admin Dashboard</Typography>
 				</Box>
-				<Box sx={{ padding: "2%", gap: "10px" }}>
-					<Box sx={{ padding: "2%", gap: "10px" }}>
-						<Typography>Njadi ID podle emailu:</Typography>
-						<Input
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-						></Input>
-						<Button onClick={() => handleFindUser(email)}>
-							Najdi uživatele
-						</Button>
-					</Box>
-					<Box sx={{ padding: "2%", gap: "10px" }}>
-						<Typography>Přidej si ID pro spravu:</Typography>
-						<Input></Input>
-						<Button>Konec</Button>
-					</Box>
+
+				<AdminSearchPanel />
+
+				<Box p={2}>
+					<Typography>Přidej si ID pro spravu:</Typography>
+					<Input />
+					<Button>Konec</Button>
 				</Box>
+
 				<Box>
 					<Typography>Výsledky hledání:</Typography>
 					{selectedUserData ? (
-						<Box sx={{ padding: "5%", gap: "10px" }}>
+						<Box p={5}>
 							<Typography>ID: {selectedUserData?.id}</Typography>
 							<Typography>Name: {selectedUserData?.name}</Typography>
 							<Typography>Email: {selectedUserData?.email}</Typography>
 							<Typography>Role: {selectedUserData?.role}</Typography>
-							<Typography>Phone:{selectedUserData.Phone}</Typography>
-                            <Typography>ApplicationJobs:</Typography>
-                            {jobsFromApplications.map((job) => (
-										<ListItem key={job?.id}>
-											<Typography>{job?.title}</Typography>
-										</ListItem>
-									))}
+							<Typography>Phone: {selectedUserData.Phone}</Typography>
+							<Typography>
+								Profil vytvořen:{" "}
+								{selectedUserData?.created_at
+									? new Date(selectedUserData.created_at).toLocaleDateString(
+											"cs-CZ"
+										)
+									: ""}
+							</Typography>
+
+							<Typography>ApplicationJobs:</Typography>
+							{jobsFromApplications.map((job) => (
+								<ListItem key={job?.id}>
+									<Typography>{job?.title}</Typography>
+								</ListItem>
+							))}
 
 							{aboutHtml && (
-								<Box sx={{ mt: 2 }}>
+								<Box mt={2}>
 									<Typography variant='h6'>O uživateli:</Typography>
 									<div
 										className='rich-content'
@@ -136,25 +123,34 @@ const adminMainPage = () => {
 									/>
 								</Box>
 							)}
-							<Box sx={{ padding: "2%", gap: "10px" }}>
+
+							<Box p={2}>
 								<Typography>Možnosti uprav</Typography>
 								<Button>Edit User</Button>
 								<Button>Delete User</Button>
 								<Button>Applications</Button>
 								<Button>Jobs</Button>
 							</Box>
-							{selectedUserData?.role === "COMPANY" ? (
-								<Box sx={{ padding: "2%" }}>
-									{copmanyJobs.map((job) => (
+
+							{selectedUserData?.role === "COMPANY" && (
+								<Box p={2}>
+									<Typography>Jobs</Typography>
+									{companyJobs.map((job) => (
 										<ListItem key={job.id}>
 											<Typography>{job.title}</Typography>
+											<Typography>
+												{": "}
+												{job?.createdat
+													? new Date(job.createdat).toLocaleDateString("cs-CZ")
+													: ""}
+											</Typography>
+											<Checkbox />
 										</ListItem>
 									))}
-									<Typography>Jobs</Typography>
-									
+									<Button>Delete Job</Button>
 									<Button>Uprav Jobs</Button>
 								</Box>
-							) : null}
+							)}
 						</Box>
 					) : (
 						<Typography>No user found with this email.</Typography>
@@ -164,5 +160,5 @@ const adminMainPage = () => {
 		</>
 	);
 };
-export default adminMainPage;
-//firma@example.com
+
+export default AdminMainPage;
