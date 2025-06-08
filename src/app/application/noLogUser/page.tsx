@@ -34,6 +34,7 @@ const UserLogInPage = () => {
 			Phone: phone,
             about:"",
 			CoverLetter: about,
+			CV:"",
 			role: "TEMPORAL" as const, // Předpokládám, že role by měla zůstat stejná
 		};
 		try {

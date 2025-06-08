@@ -92,63 +92,84 @@ export const fetchUpdateUser = async (
 };
 
 export const fetchCreateJob = async (jobData: {
-  title: string;
-  description: string;
-  location: string;
-  salary: string;
-  category: string;
-  companyid: string;
-  Attendance: string;
+	title: string;
+	description: string;
+	location: string;
+	salary: string;
+	category: string;
+	companyid: string;
+	Attendance: string;
 }) => {
-  const response = await fetch("/api/job/addJob", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(jobData),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to create job");
-  }
-  return await response.json();
+	const response = await fetch("/api/job/addJob", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(jobData),
+	});
+	if (!response.ok) {
+		throw new Error("Failed to create job");
+	}
+	return await response.json();
+};
+
+export const fetchDeleteUser = async (userid: string) => {
+	try {
+		const res = await fetch(`/api/user/deleteUser/${userid}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (!res.ok) {
+			const errorData = await res.json();
+			throw new Error(errorData.error || "Failed to delete");
+		}
+		const deleted = await res.json();
+		console.log("Deleted:", deleted);
+	} catch (err) {
+		console.error("Error deleting job:", err);
+	}
 };
 
 export const fetchDeleteJob = async (jobId: string) => {
-  try {
-    const res = await fetch(`/api/job/deleteJob/${jobId}`, {
-      method: "DELETE",
-      headers: {
-        "x-company-id": LogInFirm?.id || "", // firma musí být přihlášená
-      },
-    });
+	try {
+		const res = await fetch(`/api/job/deleteJob/${jobId}`, {
+			method: "DELETE",
+			headers: {
+				"x-company-id": LogInFirm?.id || "", // firma musí být přihlášená
+			},
+		});
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || "Failed to delete");
-    }
+		if (!res.ok) {
+			const errorData = await res.json();
+			throw new Error(errorData.error || "Failed to delete");
+		}
 
-    const deleted = await res.json();
-    console.log("Deleted:", deleted);
-  } catch (err) {
-    console.error("Error deleting job:", err);
-  }
+		const deleted = await res.json();
+		console.log("Deleted:", deleted);
+	} catch (err) {
+		console.error("Error deleting job:", err);
+	}
 };
 
-export const fetchUpdateJob = async (jobId: string, updateData: Partial<Job>) => {
-    const response = await fetch(`/api/job/editJob/${jobId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify( updateData ),
-    });
-    console.log("response", response);
-    // Check if the response is ok (status in the range 200-299)
-    if (!response.ok) {
-      throw new Error('Failed to update job');
-    }
-  
-    const updatedJob = await response.json();
-    return updatedJob;
-  };
- 
+export const fetchUpdateJob = async (
+	jobId: string,
+	updateData: Partial<Job>
+) => {
+	const response = await fetch(`/api/job/editJob/${jobId}`, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(updateData),
+	});
+	console.log("response", response);
+	// Check if the response is ok (status in the range 200-299)
+	if (!response.ok) {
+		throw new Error("Failed to update job");
+	}
+
+	const updatedJob = await response.json();
+	return updatedJob;
+};

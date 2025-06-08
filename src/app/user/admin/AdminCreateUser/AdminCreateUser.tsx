@@ -2,12 +2,14 @@
 import { fetchCreateUser } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 import {
+    Alert,
 	Box,
 	Button,
 	FormControl,
 	InputLabel,
 	MenuItem,
 	Select,
+	Snackbar,
 	TextField,
 	Typography,
 } from "@mui/material";
@@ -17,7 +19,9 @@ type UserRole = "admin" | "user" | "TEMPORAL" | "COMPANY";
 
 const AdminCreateUser = () => {
 	const users = useAppStore((state) => state.users);
-
+    
+    const [success, setSuccess] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
@@ -48,29 +52,9 @@ const AdminCreateUser = () => {
 			role: role === "" ? undefined : role,
 		};
 		try {
-            console.log("Odesílám data:", updateData);
 			const user = await fetchCreateUser(updateData);
 			setCreatedUser(user);
 			console.log("User:", user);
-			return (
-				<Box
-					sx={{
-						border: "1px solid",
-						boxShadow: "6",
-						zIndex: 1,
-						position: "fixed",
-						right: "50%",
-						top: "50%",
-						alignContent: "center",
-					}}
-				>
-					<Typography>Jmeno: {createdUser.name}</Typography>
-					<Typography>email: {createdUser.email}</Typography>
-					<Typography>Phone: {createdUser.phone}</Typography>
-					<Typography>Generovane Heslo: {createdUser.password}</Typography>
-					<Button>Pošli email</Button>
-				</Box>
-			);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
 			console.error("nepovedlo se vytvoři User:", error);
@@ -132,6 +116,23 @@ const AdminCreateUser = () => {
 			<Button variant='outlined' onClick={handleGenerate}>
 				Generate User
 			</Button>
+
+            {createdUser && success && (
+				<Box mt={3} p={2} border={1} bgcolor='white' boxShadow={2}>
+					<Typography variant='h6'>Uživatel vytvořen:</Typography>
+					<Typography>Jméno: {createdUser.name}</Typography>
+					<Typography>Email: {createdUser.email}</Typography>
+					<Typography>Telefon: {createdUser.Phone}</Typography>
+					<Typography>Heslo: {password}</Typography>
+					<Button>Pošli email</Button>
+				</Box>
+			)}
+
+			<Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)}>
+				<Alert severity="error" onClose={() => setError(null)}>
+					{error}
+				</Alert>
+			</Snackbar>
 		</Box>
 	);
 };

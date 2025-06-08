@@ -16,6 +16,7 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
 import AdminCreateUser from "./AdminCreateUser/AdminCreateUser";
+import { AdminDeleteUser } from "./AdminDeleteUser/AdminDeleteUser";
 
 //admiin hleda uživatele přes email ---check
 //jak najde uživatele tak má možnosti ---check
@@ -31,12 +32,49 @@ const AdminMainPage = () => {
 	const [companyJobs, setCompanyJobs] = useState<Job[]>([]);
 	const [aboutHtml, setAboutHtml] = useState<string>("");
 	const [isCreateEnable, setIsCreateEnable] = useState<boolean>(false);
+	const [deleteStatus, setDeleteStatus] = useState<null | {
+		success: boolean;
+		message: string;
+	}>(null);
 
 	const selectedUserData = useAppStore((state) => state.selectedUserData);
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
+
+	const handleDelete = async (id: string) => {
+		const result = await AdminDeleteUser(id);
+		setDeleteStatus(result);
+		if (deleteStatus?.success) {
+			return (
+				<Box
+					sx={{
+						border: "1px solid",
+						zIndex: 1,
+						margin: "auto",
+						background: "white",
+					}}
+				>
+					<Typography>Uživatel uspěšně smazan</Typography>
+				</Box>
+			);
+		}
+		return (
+			<Box
+				sx={{
+					border: "1px solid",
+					zIndex: 1,
+					margin: "auto",
+					background: "white",
+				}}
+			>
+				<Typography>
+					uživatel se nepoveld smazat: {deleteStatus?.message}
+				</Typography>
+			</Box>
+		);
+	};
 
 	useEffect(() => {
 		if (selectedUserData?.about) {
@@ -86,8 +124,18 @@ const AdminMainPage = () => {
 					Vytvoř Uživatele
 				</Button>
 				{isCreateEnable ? (
-					<Box sx={{ zIndex: 1, position: "absolute", right: "50%", top: "50",background:"white",border:"2px solid" }}>
+					<Box
+						sx={{
+							zIndex: 1,
+							position: "absolute",
+							right: "50%",
+							top: "50",
+							background: "white",
+							border: "2px solid",
+						}}
+					>
 						<AdminCreateUser />
+						<Button onClick={()=>setIsCreateEnable(false)}>Close</Button>
 					</Box>
 				) : null}
 
@@ -137,7 +185,22 @@ const AdminMainPage = () => {
 							<Box p={2}>
 								<Typography>Možnosti uprav</Typography>
 								<Button>Edit User</Button>
-								<Button>Delete User</Button>
+								<Button
+									variant='contained'
+									onClick={() => handleDelete(selectedUserData.id)}
+								>
+									Delete User
+								</Button>
+								{deleteStatus && (
+    <Box sx={{ border: "1px solid", zIndex: 1, margin: "auto", background: "white",top:"25%" }}>
+        <Typography>
+            {deleteStatus.success
+                ? "Uživatel úspěšně smazán"
+                : `Uživatel se nepovedl smazat: ${deleteStatus.message}`}
+        </Typography>
+		<Button onClick={()=>setDeleteStatus(null)}>Zavřít</Button>
+    </Box>
+)}
 								<Button>Applications</Button>
 								<Button>Jobs</Button>
 							</Box>
