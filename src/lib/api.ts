@@ -67,8 +67,8 @@ export const fetchCreateUser = async (updateData: Partial<User>) => {
 	if (!response.ok) {
 		throw new Error("Failed to update User");
 	}
-	const tempUser = await response.json();
-	return tempUser;
+	const User = await response.json();
+	return User;
 };
 
 export const fetchUpdateUser = async (

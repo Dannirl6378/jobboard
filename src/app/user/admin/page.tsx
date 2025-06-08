@@ -15,11 +15,12 @@ import { Job } from "@/types/job";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
+import AdminCreateUser from "./AdminCreateUser/AdminCreateUser";
 
 //admiin hleda uživatele přes email ---check
 //jak najde uživatele tak má možnosti ---check
 //když je to user:
-//uprav data user smaž application smaž user
+//uprav data user smaž application smaž user vytvoř user
 //když je to Company:
 //uprav data, uprav job, smaž company, smaž job, zobraz všechny application
 //tzn nazev job a rozbalovaci okno list user
@@ -29,6 +30,7 @@ import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
 const AdminMainPage = () => {
 	const [companyJobs, setCompanyJobs] = useState<Job[]>([]);
 	const [aboutHtml, setAboutHtml] = useState<string>("");
+	const [isCreateEnable, setIsCreateEnable] = useState<boolean>(false);
 
 	const selectedUserData = useAppStore((state) => state.selectedUserData);
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
@@ -80,6 +82,14 @@ const AdminMainPage = () => {
 				<Box py={2}>
 					<Typography>Welcome to the Admin Dashboard</Typography>
 				</Box>
+				<Button variant='contained' onClick={() => setIsCreateEnable(true)}>
+					Vytvoř Uživatele
+				</Button>
+				{isCreateEnable ? (
+					<Box sx={{ zIndex: 1, position: "absolute", right: "50%", top: "50",background:"white",border:"2px solid" }}>
+						<AdminCreateUser />
+					</Box>
+				) : null}
 
 				<AdminSearchPanel />
 

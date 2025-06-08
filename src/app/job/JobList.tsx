@@ -171,9 +171,9 @@ const JobList = () => {
 								mt: -5,
 							}}
 						>
-							{job.createdAt instanceof Date
-								? job.createdAt.toLocaleDateString()
-								: new Date(job.createdAt).toLocaleDateString()}
+							{job.createdat instanceof Date
+								? job.createdat.toLocaleDateString()
+								: new Date(job.createdat).toLocaleDateString()}
 						</Typography>
 					</Box>
 				</ListItem>
