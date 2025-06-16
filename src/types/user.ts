@@ -2,9 +2,13 @@ export interface User {
 	id: string;
 	name: string;
 	email: string;
-	password: string;
+	password:string;
+	passwordHash?: string;
 	about: string;
-	role: "admin" | "user" | "firm";
+	Phone: string;
+	CoverLetter: string;
+	CV: string;
+	role: "admin" | "user" |"TEMPORAL" |"COMPANY";
 	createdAt: Date;
 	updatedAt: Date;
 }

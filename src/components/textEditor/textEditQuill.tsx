@@ -10,10 +10,10 @@ const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 type Props = {
 	value: string;
 	onChange: (val: string) => void;
-    edit: boolean;
+	edit: boolean;
 };
 
-const QuillEditor = ({ value, onChange,edit }: Props) => {
+const QuillEditor = ({ value, onChange, edit }: Props) => {
 	const modules = useMemo(
 		() => ({
 			toolbar: [
@@ -32,13 +32,25 @@ const QuillEditor = ({ value, onChange,edit }: Props) => {
 
 	return (
 		<>
-			<Box sx={{ border: "1px solid #ccc", borderRadius: "4px", padding: "10px",fontStyle: "italic", fontSize: "14px", fontFamily: "Arial, sans-serif",color: "black",maxWidth:"100%" }}>
+			<Box
+				sx={{
+					border: "1px solid black",
+					borderRadius: "4px",
+					padding: "10px",
+					fontStyle: "italic",
+					fontSize: "14px",
+					fontFamily: "Arial, sans-serif",
+					color: "black",
+					maxWidth: "100%",
+				}}
+			>
 				<ReactQuill
 					value={value}
 					onChange={onChange}
 					modules={modules}
 					theme='snow'
-                    readOnly={!edit}
+					readOnly={!edit}
+					style={{ color: "black",backgroundColor: "#D5DEFF", height: "25vh", overflow: "auto" }}
 				/>
 			</Box>
 		</>

@@ -6,13 +6,16 @@ import { useAppStore } from "@/store/useAppStore";
 import { Heading } from "@/styles/editTypoghraphy";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const JobDetail = () => {
-  //tady pak načitam job a přihlašeneho uživatele 
+	const router = useRouter();
+	//tady pak načitam job a přihlašeneho uživatele
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 	const jobs = useAppStore((state) => state.jobs);
 	const job = selectedJobId ? jobs[selectedJobId] : null;
- const usersArray = useAppStore((state) => state.LogIn);
+	const isLogin = useAppStore((state) => state.LogIn);
+	const usersArray = useAppStore((state) => state.LogIn);
 	const [purifyDescr, setPurifyDescr] = useState("");
 
 	useEffect(() => {
@@ -27,6 +30,14 @@ const JobDetail = () => {
 
 	console.log("jobdescrip", job.description);
 	console.log("purify", purifyDescr);
+	const handleApply = () => {
+		if (usersArray === null) {
+			router.push("/application/noLogUser");
+			return;
+		} else {
+			router.push("/application/userLogIn");
+		}
+	};
 
 	return (
 		<>
@@ -60,17 +71,11 @@ const JobDetail = () => {
 					}}
 				>
 					<Heading>Práce</Heading>
-					<Button
-						variant='contained'
-						color='primary'
-						onClick={() => {
-							// Handle apply action here
-							console.log("Apply for job:", job.id);
-              console.log("logIn", usersArray);
-						}}
-					>
-						Apply
-					</Button>
+					{isLogin?.role === "COMPANY" ? null : (
+						<Button variant='contained' color='primary' onClick={handleApply}>
+							Apply
+						</Button>
+					)}
 				</Box>
 
 				<Box

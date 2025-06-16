@@ -21,6 +21,12 @@ export async function DELETE(
     const deletedJob = await prisma.job.delete({
       where: { id },
     });
+    await prisma.user.deleteMany({
+  where: {
+    role: "TEMPORAL",
+    Application: { none: {} }
+  }
+});
 
     return NextResponse.json(deletedJob, { status: 200 });
   } catch (error) {

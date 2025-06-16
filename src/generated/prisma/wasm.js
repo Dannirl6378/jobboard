@@ -124,7 +124,10 @@ exports.Prisma.UserScalarFieldEnum = {
   name: 'name',
   role: 'role',
   created_at: 'created_at',
-  about: 'about'
+  about: 'about',
+  Phone: 'Phone',
+  CoverLetter: 'CoverLetter',
+  CV: 'CV'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -164,7 +167,8 @@ exports.Prisma.NullsOrder = {
 exports.Role = exports.$Enums.Role = {
   USER: 'USER',
   COMPANY: 'COMPANY',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  TEMPORAL: 'TEMPORAL'
 };
 
 exports.Category = exports.$Enums.Category = {

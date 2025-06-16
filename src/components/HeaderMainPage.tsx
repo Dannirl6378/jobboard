@@ -7,12 +7,13 @@ import {
 	Icon,
 	Link,
 } from "@mui/material";
-import { useState } from "react";
 import PageContainer from "@/components/PageContainer";
 import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation";
 
+
 const HeaderMainPage = () => {
+	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const LogIn = useAppStore((state) => state.LogIn);
 	const setLogIn = useAppStore((state) => state.setLogIn);
 	const router = useRouter();
@@ -25,11 +26,14 @@ const HeaderMainPage = () => {
 	const handleLogin = () => {
 		router.push("/login");
 	};
-    if(LogIn?.role === "COMPANY"){
-        console.log("IsCompany",LogIn)
-    }else{
-        console.log("nocompany",LogIn?.role,LogIn)
-    }
+	const handleProfil =()=>{
+		if(LogIn?.role === 'ADMIN'){
+			router.push("/user/admin");
+			return;
+		}
+		setSelectedUserId(null);
+		router.push("/user/users/userAppProfil");
+	}
 
 	return (
 		<PageContainer>
@@ -43,13 +47,13 @@ const HeaderMainPage = () => {
 					<Button color='inherit' onClick={() => router.push("/jobs")}>
 						Brigády
 					</Button>
-                    {LogIn === null || LogIn?.role === 'COMPANY'? <Button color='inherit' onClick={() => router.push("/user")}>
+                    {LogIn === null || LogIn?.role === 'COMPANY'||'ADMIN'? <Button color='inherit' onClick={() => router.push("/user")}>
 						Firmy
 					</Button>:null }
 					
 					<Button
 						color='inherit'
-						onClick={() => router.push("/user/users/userAppProfil")}
+						onClick={handleProfil}
 					>
 						Profil
 					</Button>

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #080808;
+  --background: #080a9b;
+  --foreground: #b90909;
 }
 
 :root {
@@ -14,14 +14,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ad1818;
+    --foreground: #0c27a0;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: rgba(10, 19, 141, 0.747);
+  color: rgb(155, 12, 12);
   font-family: Arial, Helvetica, sans-serif;
 }
 .rich-content h1 {

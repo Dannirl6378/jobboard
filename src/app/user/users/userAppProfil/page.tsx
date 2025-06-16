@@ -1,58 +1,95 @@
 "use client";
 import { Box, Button, Input, Typography } from "@mui/material";
+import { usePathname } from "next/navigation";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { User } from "@/types/user";
-import updateUser from "../updateUser/updateUser";
+import { fetchUpdateUser } from "@/lib/api";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
+import { getUserJob } from "@/app/user/users/userJob/userJob";
+import { useRouter } from "next/navigation";
 
 export default function UserProfil(/*{
 	params,
 }: {
 	params: Promise<{ id: string }>;
 }*/) {
+	const router = useRouter();
 	const [isEnable, setIsEnable] = useState<boolean>(false);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [phone, setPhone] = useState("");
 	const [rePassword, setRePassword] = useState("");
 	const [about, setAbout] = useState("");
 	const [purifyAbout, setPurifyAbout] = useState(about);
+	const [purifyCoverLetter, setPurifyCoverLetter] = useState<string>("");
+	const [appliedJobs, setAppliedJobs] = useState<
+		{ application: { id: string }; job?: { title?: string; jobId?: string } }[]
+	>([]);
+
+	const pathname = usePathname();
+	const prevPath = useRef(pathname);
 
 	//const { id: userid } = use(params);
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const LogIn = useAppStore((state) => state.LogIn);
 	console.log("LogIn", LogIn);
-	console.log("LogIn", LogIn?.name);
+	console.log("LogIn", LogIn?.role);
 
-	const getUser = () =>
-		usersArray?.find((user) => user.name === LogIn?.name);
+	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
+	const selectedUserId = useAppStore((state) => state.selectedUserId);
+	const users = useAppStore((state) => state.users);
+	const userVsFirm = selectedUserId ? users[selectedUserId] : null;
+	const hasMounted = useRef(false);
 
-	const user = getUser();
-	console.log("editUser", user);
-	console.log("about", about);
+	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
+
+	useEffect(() => {
+		prevPath.current = pathname;
+	}, [pathname]);
+
+	useEffect(() => {
+		if (!hasMounted.current) {
+			hasMounted.current = true;
+			console.log("hasMounted", hasMounted.current);
+			return;
+		}
+		return () => {
+			setSelectedUserId(null);
+		};
+	}, []);
 
 	useEffect(() => {
 		sanitizeHtml(about).then(setPurifyAbout);
-	}, [about]);
+		sanitizeHtml(purifyCoverLetter).then(setPurifyCoverLetter);
+	}, [about, purifyCoverLetter]);
 
 	useEffect(() => {
-		if (user) {
-			setName(user.name || "");
-			setEmail(user.email || "");
-			setPassword(user.passwordHash || "");
-			setAbout(user.about || "");
+		if (profileUser) {
+			setName(profileUser.name || "");
+			setEmail(profileUser.email || "");
+			setPassword(profileUser.passwordHash || "");
+			setAbout(profileUser.about || "");
+			setPhone(profileUser.Phone || "");
+			setPurifyCoverLetter(profileUser?.CoverLetter || "");
 		}
-	}, [user]);
+	}, [profileUser]);
+
+	useEffect(() => {
+		getUserJob().then(setAppliedJobs);
+	}, []);
+	const jobIds = appliedJobs.map(({ job }) => job?.jobId);
+	console.log(
+		"appliedJobsMap",
+		appliedJobs.map((job) => job.job?.jobId)
+	);
 
 	const handleEdit = () => {
-		setIsEnable(true);
-		if (isEnable) {
-			setIsEnable(false);
-		}
+		setIsEnable((prev) => !prev);
 	};
 
 	const handleUpdateUser = async (
@@ -60,7 +97,7 @@ export default function UserProfil(/*{
 		updateData: Partial<User>
 	) => {
 		try {
-			const updatedUser = await updateUser(userid, updateData);
+			const updatedUser = await fetchUpdateUser(userid, updateData);
 			console.log("Updated job:", updatedUser);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
@@ -75,9 +112,10 @@ export default function UserProfil(/*{
 			email,
 			password,
 			about,
+			Phone: phone,
 		};
-		if (user?.id) {
-			handleUpdateUser(user.id, updateData);
+		if (LogIn?.id) {
+			handleUpdateUser(LogIn.id, updateData);
 			setIsEnable(false);
 		} else {
 			console.error("User ID is undefined. Cannot update user.");
@@ -118,6 +156,15 @@ export default function UserProfil(/*{
 						onChange={(e) => setName(e.target.value)}
 					/>
 				</Box>
+				<Box>
+					<Text>Telefon</Text>
+					<Input
+						id='Telefon'
+						value={phone}
+						disabled={!isEnable}
+						onChange={(e) => setName(e.target.value)}
+					/>
+				</Box>
 
 				{isEnable ? (
 					<>
@@ -141,49 +188,91 @@ export default function UserProfil(/*{
 						</Box>
 					</>
 				) : null}
-				<Box>
-					<Text>O mě </Text>
-					{/*Toto se zobrazi jen když dám upravit profil */}
-					{isEnable ? (
-						
-						
-							<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
-					
-						
-					) : (
+				{userVsFirm && purifyCoverLetter !== null ? (
+					<>
+						<Text>Cover Letter </Text>
 						<Box
 							sx={{
-								display:"flex",
-								width: "150%",
+								display: "flex",
+								width: "50%",
 								height: "45vh",
 								overflow: "auto",
 								border: "1px solid black",
 								borderRadius: "5px",
 								color: "black",
-								ml: "-25%",
 							}}
 						>
 							{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
+
 							<div
 								className='rich-content'
-								dangerouslySetInnerHTML={{ __html: purifyAbout }}
+								dangerouslySetInnerHTML={{ __html: purifyCoverLetter }}
 							/>
+						</Box>{" "}
+					</>
+				) : null}
+				<Text>O mě </Text>
+				{/*Toto se zobrazi jen když dám upravit profil */}
+				{isEnable ? (
+					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
+				) : (
+					<Box
+						sx={{
+							display: "flex",
+							width: "75%",
+							height: "45vh",
+							overflow: "auto",
+							border: "1px solid black",
+							borderRadius: "5px",
+							color: "black",
+						}}
+					>
+						{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
+						<div
+							className='rich-content'
+							dangerouslySetInnerHTML={{ __html: purifyAbout }}
+						/>
+					</Box>
+				)}
+				{LogIn?.role === "COMPANY" ? null : (
+					<>
+						<Typography>Apply Job List</Typography>
+						<Box
+							sx={{
+								display: "flex",
+								border: "1px solid black",
+								borderRadius: "15px",
+								width: "25%",
+								height: "15vh",
+								overflow: "auto",
+							}}
+						>
+							{appliedJobs.map(({ application, job }) => (
+								<Box sx={{ paddingLeft: "5%" }} key={application.id}>
+									<Typography
+										sx={{ cursor: "pointer", color: "blue" }}
+										onClick={() => router.push(`/job/jobDetail${jobIds}`)}
+									>
+										{job?.title || "Neznámá pozice"}
+									</Typography>
+								</Box>
+							))}
 						</Box>
-						
-					)}
-				</Box>
-
+					</>
+				)}
 				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
-				<Box>
-					<Text>Přilož CV</Text>
-				</Box>
-
-				<Button variant='outlined' onClick={handleEdit}>
-					{!isEnable ? "Upravit" : "Konec "}
-				</Button>
-				<Button variant='contained' onClick={handleSaveChanges}>
-					Ulož
-				</Button>
+				{userVsFirm === null ? (
+					<Box>
+						<Button variant='outlined' onClick={handleEdit}>
+							{!isEnable ? "Upravit" : "Konec "}
+						</Button>
+						<Button variant='contained' onClick={handleSaveChanges}>
+							Ulož
+						</Button>
+						{LogIn?.role === "COMPANY" ? null :<Text>Přilož CV</Text> }
+						
+					</Box>
+				) : null}
 			</Box>
 		</>
 	);

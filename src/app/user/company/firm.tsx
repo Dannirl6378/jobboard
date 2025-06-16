@@ -1,18 +1,20 @@
 import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect, useState, useMemo } from "react";
-import { LogInFirm } from "../../login/LogInUser";
+
 import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import ApplicationPage from "@/app/application/page";
 import Badge from "@mui/material/Badge";
 import { useRouter } from "next/navigation";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
+import { fetchDeleteJob } from "@/lib/api";
 
 const Firm = () => {
 	const router = useRouter();
 	const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<Record<string, string>>({});
 
+	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
+	const logIn = useAppStore((state) => state.LogIn )
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const applicationsArray = Object.values(
@@ -21,10 +23,11 @@ const Firm = () => {
 	console.log("users", usersArray);
 	console.log("applications", applicationsArray);
 	console.log("jobs", jobsArray);
+	console. log("LogIn", logIn);
 
 	// Ověření že users je pole
 	const getCompany = () =>
-		usersArray?.find((user) => user.name === LogInFirm.name);
+		usersArray?.find((user) => user.name === logIn?.name);
 
 	const getCompanyJobs = (comapnyid: string) =>
 		jobsArray.filter((job) => job.companyid === company?.id);
@@ -65,7 +68,8 @@ const Firm = () => {
 	};
 
 	const handleEditWorkOffer = (jobId: string) => {
-		router.push(`/user/company/workOffers/${jobId}`);
+		setSelectedJobId(jobId);
+		router.push(`/user/company/workOffers/editWorkOffer`);
 	};
 	const handleAddWorkOffer = () => {
 		router.push(`/user/company/workOffers/addWorkOffer`);
@@ -73,6 +77,10 @@ const Firm = () => {
 	const handleEditUser = () => {
 		router.push(`/user/users/userAppProfil`);
 	};
+
+	const handleWiewUserProfile = (userId: string) => {
+		setSelectedUserId(userId);
+		router.push(`/user/users/userAppProfil/`);}
 
 	useEffect(() => {
   const fetchSanitizedDescriptions = async () => {
@@ -88,6 +96,25 @@ const Firm = () => {
   };
   fetchSanitizedDescriptions();
 }, []);
+
+const handleDelete = (jobId:string) => {
+	console.log("jobIdDelte", jobId);
+	if (!jobId) return;
+	const updatedJobs = companyJobs.filter((job) => job.id !== jobId);
+	useAppStore.getState().setJobs(updatedJobs);
+	fetchDeleteJob(jobId)
+		.then(() => {
+			console.log("Job deleted successfully");
+		}
+		)
+		.catch((error) => {
+			console.error("Error deleting job:", error);
+			alert("Chyba při mazání pracovní nabídky.");
+		}
+	);
+}
+
+
 
 	return (
 		<Box>
@@ -161,6 +188,7 @@ const Firm = () => {
 									>
 										Upravit pracovní nabídku
 									</Button>
+									<Button variant='contained' onClick={()=>handleDelete(job.id)}>Delete Job</Button>
 									<Button
 										variant='contained'
 										onClick={() => setSelectedJobId(isOpen ? null : job.id)}
@@ -182,11 +210,17 @@ const Firm = () => {
 									<Box mt={2}>
 										<Typography variant='h6'>Uchazeči:</Typography>
 										{applicants.length > 0 ? (
-											applicants.map((user) => (
-												<Typography key={user?.applicationId}>
-													{user?.name}
-												</Typography>
-											))
+											applicants.map((user) =>
+												user ? (
+													<Typography
+														key={user.applicationId}
+														sx={{ cursor: "pointer", textDecoration: "underline" }}
+														onClick={() => handleWiewUserProfile(user.id)}
+													>
+														{user.name}
+													</Typography>
+												) : null
+											)
 										) : (
 											<Typography variant='body2'>Žádní uchazeči</Typography>
 										)}
@@ -196,7 +230,6 @@ const Firm = () => {
 						);
 					})}
 				</Box>
-				<ApplicationPage />
 			</Box>
 		</Box>
 	);
