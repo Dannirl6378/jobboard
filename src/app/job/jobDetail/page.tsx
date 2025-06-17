@@ -92,6 +92,7 @@ const JobDetail = () => {
 							id='title'
 							variant='outlined'
 							defaultValue={job?.title}
+							disabled={false}
 						/>
 					</Box>
 					<Box>
@@ -100,6 +101,7 @@ const JobDetail = () => {
 							id='salary'
 							variant='outlined'
 							defaultValue={job?.salary}
+							disabled={false}
 						/>
 					</Box>
 					<Box>
@@ -108,6 +110,7 @@ const JobDetail = () => {
 							id='location'
 							variant='outlined'
 							defaultValue={job?.location}
+							disabled={false}
 						/>
 					</Box>
 				</Box>
@@ -121,6 +124,7 @@ const JobDetail = () => {
 						borderRadius: "5px",
 						color: "black",
 						boxShadow: 5,
+						padding: 2,
 					}}
 				>
 					{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}

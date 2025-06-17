@@ -17,6 +17,7 @@ import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
 import AdminCreateUser from "./AdminCreateUser/AdminCreateUser";
 import { AdminDeleteUser } from "./AdminDeleteUser/AdminDeleteUser";
+import AdminCreateJob from "./AdminCreateJob/AdminCreateJob";
 
 //admiin hleda uživatele přes email ---check
 //jak najde uživatele tak má možnosti ---check
@@ -32,6 +33,8 @@ const AdminMainPage = () => {
 	const [companyJobs, setCompanyJobs] = useState<Job[]>([]);
 	const [aboutHtml, setAboutHtml] = useState<string>("");
 	const [isCreateEnable, setIsCreateEnable] = useState<boolean>(false);
+	const [createJob,setCreateJob] = useState<boolean>(false);
+	const [email,setEmail] = useState<string>("");
 	const [deleteStatus, setDeleteStatus] = useState<null | {
 		success: boolean;
 		message: string;
@@ -46,34 +49,20 @@ const AdminMainPage = () => {
 	const handleDelete = async (id: string) => {
 		const result = await AdminDeleteUser(id);
 		setDeleteStatus(result);
-		if (deleteStatus?.success) {
-			return (
-				<Box
-					sx={{
-						border: "1px solid",
-						zIndex: 1,
-						margin: "auto",
-						background: "white",
-					}}
-				>
-					<Typography>Uživatel uspěšně smazan</Typography>
-				</Box>
-			);
+		if (result.success) {
+			// Optionally, you can reset the selected user data or perform other actions
+			useAppStore.getState().setSelectedUserData(null);
 		}
-		return (
-			<Box
-				sx={{
-					border: "1px solid",
-					zIndex: 1,
-					margin: "auto",
-					background: "white",
-				}}
-			>
-				<Typography>
-					uživatel se nepoveld smazat: {deleteStatus?.message}
-				</Typography>
-			</Box>
-		);
+	};
+
+	const handleEnd = () => {
+		useAppStore.getState().setSelectedUserData(null);
+		console.log("End of admin page reached");
+		setIsCreateEnable(false);
+		setDeleteStatus(null);
+		setAboutHtml("");
+		
+		
 	};
 
 	useEffect(() => {
@@ -102,6 +91,8 @@ const AdminMainPage = () => {
 			})
 			.filter(Boolean);
 	};
+	const handleCreateOpenJob = () => {
+		setCreateJob(true);};
 
 	const applicationJob = getApplicantsForJob();
 	const jobsFromApplications = applicationJob
@@ -120,9 +111,12 @@ const AdminMainPage = () => {
 				<Box py={2}>
 					<Typography>Welcome to the Admin Dashboard</Typography>
 				</Box>
-				<Button variant='contained' onClick={() => setIsCreateEnable(true)}>
-					Vytvoř Uživatele
-				</Button>
+				<Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+					<Button variant='contained' onClick={() => setIsCreateEnable(true)}>
+						Vytvoř Uživatele
+					</Button>
+					
+				</Box>
 				{isCreateEnable ? (
 					<Box
 						sx={{
@@ -135,17 +129,11 @@ const AdminMainPage = () => {
 						}}
 					>
 						<AdminCreateUser />
-						<Button onClick={()=>setIsCreateEnable(false)}>Close</Button>
+						<Button onClick={() => setIsCreateEnable(false)}>Close</Button>
 					</Box>
 				) : null}
 
 				<AdminSearchPanel />
-
-				<Box p={2}>
-					<Typography>Přidej si ID pro spravu:</Typography>
-					<Input />
-					<Button>Konec</Button>
-				</Box>
 
 				<Box>
 					<Typography>Výsledky hledání:</Typography>
@@ -192,15 +180,25 @@ const AdminMainPage = () => {
 									Delete User
 								</Button>
 								{deleteStatus && (
-    <Box sx={{ border: "1px solid", zIndex: 1, margin: "auto", background: "white",top:"25%" }}>
-        <Typography>
-            {deleteStatus.success
-                ? "Uživatel úspěšně smazán"
-                : `Uživatel se nepovedl smazat: ${deleteStatus.message}`}
-        </Typography>
-		<Button onClick={()=>setDeleteStatus(null)}>Zavřít</Button>
-    </Box>
-)}
+									<Box
+										sx={{
+											border: "1px solid",
+											zIndex: 1,
+											margin: "auto",
+											background: "white",
+											top: "25%",
+										}}
+									>
+										<Typography>
+											{deleteStatus.success
+												? "Uživatel úspěšně smazán"
+												: `Uživatel se nepovedl smazat: ${deleteStatus.message}`}
+										</Typography>
+										<Button onClick={() => setDeleteStatus(null)}>
+											Zavřít
+										</Button>
+									</Box>
+								)}
 								<Button>Applications</Button>
 								<Button>Jobs</Button>
 							</Box>
@@ -220,7 +218,23 @@ const AdminMainPage = () => {
 											<Checkbox />
 										</ListItem>
 									))}
+									{createJob && (
+										<Box
+											sx={{
+												zIndex: 1,
+												background:"rgba(255, 255, 255, 0)",
+												position: "absolute",
+												width: "70vw",
+												right: "3%",
+												top: "10%",
+
+											}}
+										>
+											<AdminCreateJob email={selectedUserData.email||""}setCreateJob={setCreateJob}/>
+										</Box>
+									)}
 									<Button>Delete Job</Button>
+									<Button variant="contained" onClick={()=>handleCreateOpenJob()}>Create Job</Button>
 									<Button>Uprav Jobs</Button>
 								</Box>
 							)}
@@ -228,6 +242,9 @@ const AdminMainPage = () => {
 					) : (
 						<Typography>No user found with this email.</Typography>
 					)}
+					<Button variant='contained' onClick={() => handleEnd()}>
+						Konec
+					</Button>
 				</Box>
 			</Box>
 		</>

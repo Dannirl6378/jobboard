@@ -7,7 +7,7 @@ export const LogInUser: { id: string; name: string; email: string; role:string; 
     about:"",
 };
 export const LogInFirm: { id: string; name: string; email: string; role: string; about:string } = { 
-    id: "a1eeafec-552f-413d-89aa-d2e46b485a59",
+    id: "59b509a9-cac8-45f7-bec6-4ccb6bf775f9",
     name: "Firma s.r.o.",
     email: "firma@example.com",
     role: "FIRM",

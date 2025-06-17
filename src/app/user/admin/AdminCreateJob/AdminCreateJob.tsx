@@ -1,18 +1,22 @@
-"use client";
 import { useAppStore } from "@/store/useAppStore";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { LogInFirm } from "@/app/login/LogInUser";
 import { useEffect, useState } from "react";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { useRouter } from "next/navigation";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import MenuItem from "@mui/material/MenuItem";
-import { JobAtending, Jobtype } from "./menuSelect";
+ import { JobAtending, Jobtype } from "../../company/workOffers/addWorkOffer/menuSelect";
 import { fetchCreateJob } from "@/lib/api";
 
-export default function AddWorkOffer() {
-	const [title, setTitle] = useState("");
+type AdminCreateJobProps = {
+  email: string;
+  setCreateJob: (value: boolean) => void;
+};
+
+
+const AdminCreateJob = ({email,setCreateJob}:AdminCreateJobProps)=>{
+    const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [location, setLocation] = useState("");
 	const [salary, setSalary] = useState("");
@@ -21,13 +25,11 @@ export default function AddWorkOffer() {
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
 	const [attending, setAttending] = useState("");
+   
 
 	const usersArray = Object.values(useAppStore((state) => state.users));
-	const foundUser = usersArray.find((user) => user.id === LogInFirm.id);
+	const foundUser = usersArray.find((user) => user.email === email);
 	const router = useRouter();
-	console.log("usersArray", usersArray);
-	console.log("foundUser", foundUser);
-	console.log("LogInFirm", LogInFirm.id);
 
 	useEffect(() => {
 		if (foundUser) {
@@ -36,7 +38,7 @@ export default function AddWorkOffer() {
 			setError("nic sem nenašel");
 		}
 	}, [foundUser]);
-	console.log("companyid", companyid);
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		if (
 			!title ||
@@ -72,7 +74,7 @@ export default function AddWorkOffer() {
 		}
 	};
 	const handleBack = () => {
-		router.push("/user"); // Použití useNavigate pro přesměrování
+		router.push("/user/admin"); // Použití useNavigate pro přesměrování
 	};
 
 	return (
@@ -83,7 +85,7 @@ export default function AddWorkOffer() {
 				autoComplete='off'
 				style={{
 					border: "1px solid gray",
-					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
+					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.73)",
 					padding: "16px",
 					backgroundColor: "#F5F5F5",
 					opacity: 0.8,
@@ -188,11 +190,11 @@ export default function AddWorkOffer() {
 				<Button variant='contained' type='submit' onClick={handleSubmit}>
 					Add Work Offer
 				</Button>
-				<Button variant='contained' onClick={handleBack}>
-					zpět
+                <Button variant='contained' type='submit' onClick={()=>setCreateJob(false)}>
+					zavřít
 				</Button>
 			</form>
 		</>
 	);
 }
-// 				<TextField
+export default AdminCreateJob;

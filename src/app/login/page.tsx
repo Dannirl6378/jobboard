@@ -21,6 +21,8 @@ export default function SignIn() {
 		}
 	}, [data, setUsers]);
 	const usersArray = Object.values(useAppStore((state) => state.users));
+
+	
 	const handleLogin = (userType: string) => {
 		const user = usersArray?.find((user) => user.email === userType);
 		console.log("userLogIn", user);

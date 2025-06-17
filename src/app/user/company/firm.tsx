@@ -10,11 +10,14 @@ import { fetchDeleteJob } from "@/lib/api";
 
 const Firm = () => {
 	const router = useRouter();
-	const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<Record<string, string>>({});
+
+	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<
+		Record<string, string>
+	>({});
 
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
-	const logIn = useAppStore((state) => state.LogIn )
+	const setSelectedJobId = useAppStore((state) => state.setSelectedJobId);
+	const logIn = useAppStore((state) => state.LogIn);
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const applicationsArray = Object.values(
@@ -23,14 +26,14 @@ const Firm = () => {
 	console.log("users", usersArray);
 	console.log("applications", applicationsArray);
 	console.log("jobs", jobsArray);
-	console. log("LogIn", logIn);
+	console.log("LogIn", logIn);
 
 	// Ověření že users je pole
 	const getCompany = () =>
 		usersArray?.find((user) => user.name === logIn?.name);
 
-	const getCompanyJobs = (comapnyid: string) =>
-		jobsArray.filter((job) => job.companyid === company?.id);
+	const getCompanyJobs = (companyid: string) =>
+		jobsArray.filter((job) => job.companyid === companyid);
 
 	// Výběr uchazečů na zákl. jobId
 	const getCompanyApplications = (companyJobs: any[]) =>
@@ -80,41 +83,38 @@ const Firm = () => {
 
 	const handleWiewUserProfile = (userId: string) => {
 		setSelectedUserId(userId);
-		router.push(`/user/users/userAppProfil/`);}
+		router.push(`/user/users/userAppProfil/`);
+	};
 
 	useEffect(() => {
-  const fetchSanitizedDescriptions = async () => {
-    const descs: Record<string, string> = {};
-    for (const job of companyJobs) {
-      const shortDesc =
-        job.description.length > 25
-          ? job.description.slice(0, 25) + "..."
-          : job.description;
-      descs[job.id] = await sanitizeHtml(shortDesc);
-    }
-    setSanitizedDescriptions(descs);
-  };
-  fetchSanitizedDescriptions();
-}, []);
+		const fetchSanitizedDescriptions = async () => {
+			const descs: Record<string, string> = {};
+			for (const job of companyJobs) {
+				const shortDesc =
+					job.description.length > 25
+						? job.description.slice(0, 25) + "..."
+						: job.description;
+				descs[job.id] = await sanitizeHtml(shortDesc);
+			}
+			setSanitizedDescriptions(descs);
+		};
+		fetchSanitizedDescriptions();
+	}, []);
 
-const handleDelete = (jobId:string) => {
-	console.log("jobIdDelte", jobId);
-	if (!jobId) return;
-	const updatedJobs = companyJobs.filter((job) => job.id !== jobId);
-	useAppStore.getState().setJobs(updatedJobs);
-	fetchDeleteJob(jobId)
-		.then(() => {
-			console.log("Job deleted successfully");
-		}
-		)
-		.catch((error) => {
-			console.error("Error deleting job:", error);
-			alert("Chyba při mazání pracovní nabídky.");
-		}
-	);
-}
-
-
+	const handleDelete = (jobId: string) => {
+		console.log("jobIdDelte", jobId);
+		if (!jobId) return;
+		const updatedJobs = companyJobs.filter((job) => job.id !== jobId);
+		useAppStore.getState().setJobs(updatedJobs);
+		fetchDeleteJob(jobId)
+			.then(() => {
+				console.log("Job deleted successfully");
+			})
+			.catch((error) => {
+				console.error("Error deleting job:", error);
+				alert("Chyba při mazání pracovní nabídky.");
+			});
+	};
 
 	return (
 		<Box>
@@ -161,7 +161,7 @@ const handleDelete = (jobId:string) => {
 					<Typography>{/* Dynamický nadpis */}</Typography>
 					{companyJobs.map((job) => {
 						const applicants = getApplicantsForJob(job.id);
-						const isOpen = selectedJobId === job.id;
+						const isOpen = null === job.id ? false : true;
 						return (
 							<Box
 								key={job.id}
@@ -177,8 +177,10 @@ const handleDelete = (jobId:string) => {
 								<Typography variant='h4'>{job.title}</Typography>
 								<Typography
 									variant='h5'
-									component="div"
-									dangerouslySetInnerHTML={{ __html: sanitizedDescriptions[job.id] || "" }}
+									component='div'
+									dangerouslySetInnerHTML={{
+										__html: sanitizedDescriptions[job.id] || "",
+									}}
 								/>
 
 								<Box sx={{ display: "flex", gap: 2 }}>
@@ -188,7 +190,12 @@ const handleDelete = (jobId:string) => {
 									>
 										Upravit pracovní nabídku
 									</Button>
-									<Button variant='contained' onClick={()=>handleDelete(job.id)}>Delete Job</Button>
+									<Button
+										variant='contained'
+										onClick={() => handleDelete(job.id)}
+									>
+										Delete Job
+									</Button>
 									<Button
 										variant='contained'
 										onClick={() => setSelectedJobId(isOpen ? null : job.id)}
@@ -214,7 +221,10 @@ const handleDelete = (jobId:string) => {
 												user ? (
 													<Typography
 														key={user.applicationId}
-														sx={{ cursor: "pointer", textDecoration: "underline" }}
+														sx={{
+															cursor: "pointer",
+															textDecoration: "underline",
+														}}
 														onClick={() => handleWiewUserProfile(user.id)}
 													>
 														{user.name}

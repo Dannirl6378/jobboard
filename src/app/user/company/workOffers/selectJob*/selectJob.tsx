@@ -9,8 +9,8 @@ const selectJob = (jobid:string) => {
     const getCompany = () =>
         usersArray?.find((user) => user.name === LogInFirm.name);
 
-    const getCompanyJobs = (comapnyid: string) =>
-        jobsArray.filter((job) => job.companyid === company?.id);
+    const getCompanyJobs = (companyid: string) =>
+        jobsArray.filter((job) => job.companyid === companyid);
 
     const company = getCompany();
     const companyJobs = company ? getCompanyJobs(company.id) : [];
