@@ -11,7 +11,6 @@ import PageContainer from "@/components/PageContainer";
 import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation";
 
-
 const HeaderMainPage = () => {
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const LogIn = useAppStore((state) => state.LogIn);
@@ -26,14 +25,14 @@ const HeaderMainPage = () => {
 	const handleLogin = () => {
 		router.push("/login");
 	};
-	const handleProfil =()=>{
-		if(LogIn?.role === 'ADMIN'){
+	const handleProfil = () => {
+		if (LogIn?.role === "admin") {
 			router.push("/user/admin");
 			return;
 		}
 		setSelectedUserId(null);
 		router.push("/user/users/userAppProfil");
-	}
+	};
 
 	return (
 		<PageContainer>
@@ -47,14 +46,13 @@ const HeaderMainPage = () => {
 					<Button color='inherit' onClick={() => router.push("/jobs")}>
 						Brigády
 					</Button>
-                    {LogIn === null || LogIn?.role === 'COMPANY'||'ADMIN'? <Button color='inherit' onClick={() => router.push("/user")}>
-						Firmy
-					</Button>:null }
-					
-					<Button
-						color='inherit'
-						onClick={handleProfil}
-					>
+					{LogIn === null || LogIn?.role === "COMPANY" || "ADMIN" ? (
+						<Button color='inherit' onClick={() => router.push("/user")}>
+							Firmy
+						</Button>
+					) : null}
+
+					<Button color='inherit' onClick={handleProfil}>
 						Profil
 					</Button>
 					{LogIn ? (

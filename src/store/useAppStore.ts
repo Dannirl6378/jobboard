@@ -1,4 +1,5 @@
 // store/useAppStore.ts
+import { fetchUserByEmail, fetchUsers } from "@/lib/api";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -6,7 +7,7 @@ type User = {
 	id: string;
 	name: string;
 	email: string;
-	role: string;
+	role: "admin" | "user" | "TEMPORAL" | "COMPANY";
 	passwordHash: string;
 	about: string;
 	Phone: string;
@@ -50,6 +51,7 @@ type AppState = {
 	setApplications: (applications: Application[]) => void;
 	getApplicationById: (id: string) => Application | undefined;
 	setLogIn: (user: User | null) => void;
+	fetchAndSetUsers: (email:string) => Promise<void>;
 };
 
 export const useAppStore = create<AppState>()(
@@ -108,6 +110,10 @@ export const useAppStore = create<AppState>()(
 			},
 			getApplicationById: (id) => {
 				return get().applications[id];
+			},
+			fetchAndSetUsers: async (email:string) => {
+				const selectedUserData = await fetchUserByEmail(email);
+				set({ selectedUserData }); // nebo jak ukládáš uživatele do store
 			},
 		}),
 		{
