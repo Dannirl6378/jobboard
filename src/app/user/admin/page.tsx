@@ -6,6 +6,9 @@ import {
 	Box,
 	Button,
 	Checkbox,
+	Dialog,
+	DialogActions,
+	DialogTitle,
 	Input,
 	ListItem,
 	Typography,
@@ -20,15 +23,16 @@ import { AdminDeleteUser } from "./AdminDeleteUser/AdminDeleteUser";
 import AdminCreateJob from "./AdminCreateJob/AdminCreateJob";
 import AdminDeleteJob from "./AdminDeleteJob/AdminDeleteJob";
 import AdminEditUser from "./AdminEditUser/AdminEditUser";
+import AdminEditJobs from "./AdminEditJobs/AdminEditJobs";
 
 //admiin hleda uživatele přes email ---check
 //jak najde uživatele tak má možnosti ---check
 //když je to user:
-//uprav data user smaž application smaž user vytvoř user
+//uprav data user vypiš application smaž user vytvoř user
 //když je to Company:
-//uprav data, uprav job, smaž company, smaž job, zobraz všechny application
+//uprav data, uprav job, smaž company, smaž job, zobraz všechny joby ---check
+//udělej pro každy job jestě tlačitko application kde bude seznam users a bude onHover kde bude jmeno Email
 //tzn nazev job a rozbalovaci okno list user
-// když klinu na user vyskoci maly panel pro možnost upravy mazani a info
 //jestě sem musim našroubovat datum vytvořeni uživatele jobu a application --check
 
 const AdminMainPage = () => {
@@ -36,22 +40,23 @@ const AdminMainPage = () => {
 	const [aboutHtml, setAboutHtml] = useState<string>("");
 	const [isCreateEnable, setIsCreateEnable] = useState<boolean>(false);
 	const [createJob, setCreateJob] = useState<boolean>(false);
-	const [email, setEmail] = useState<string>("");
 	const [selectedJobId, setSelectedJobId] = useState<string[]>([]);
-	const [isChecked, setIsChecked] = useState<boolean>(false);
-	const [editOpen, setEditOpen] = useState<boolean>(false);
+	const [editUserOpen, setEditUserOpen] = useState<boolean>(false);
+	const [editJobsOpen, setEditJobsOpen] = useState<boolean>(false);
+	const [editJobError, setEditJobError] = useState<boolean>(false);
+	const [editDialogJobOpen, setEditDialogJobOpen] = useState<boolean>(false);
 	const [deleteStatus, setDeleteStatus] = useState<null | {
 		success: boolean;
 		message: string;
 	}>(null);
 
+	const setSelectedJobsId = useAppStore((state) => state.setSelectedJobId);
 	const selectedUserData = useAppStore((state) => state.selectedUserData);
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
 
-	
 	const toggleAllJobs = () => {
 		if (selectedJobId.length === companyJobs.length) {
 			setSelectedJobId([]); // vše zruší
@@ -83,6 +88,16 @@ const AdminMainPage = () => {
 					? prev.filter((id) => id !== jobId) // odškrtnutí
 					: [...prev, jobId] // zaškrtnutí
 		);
+	};
+
+	const handleEditJobs = () => {
+		if (selectedJobId.length !== 1) {
+			setEditJobError(true);
+			setEditDialogJobOpen(true);
+			return;
+		}
+		setSelectedJobsId(selectedJobId[0]);
+		setEditJobsOpen(true);
 	};
 
 	const handleEnd = () => {
@@ -200,25 +215,12 @@ const AdminMainPage = () => {
 
 							<Box p={2}>
 								<Typography>Možnosti uprav</Typography>
-								<Button variant='contained' onClick={() => setEditOpen(true)}>
+								<Button
+									variant='contained'
+									onClick={() => setEditUserOpen(true)}
+								>
 									Edit User
 								</Button>
-								{editOpen ? (
-									<Box
-										sx={{
-											box:"0px solid black",
-											position: "relative",
-											width: "50%",
-											height: "15%",
-											right: "center",
-											top: "center",
-											zIndex: 1,
-										}}
-									>
-										<AdminEditUser />
-										<Button variant="contained" onClick={() => setEditOpen(false)}>Close</Button>
-									</Box>
-								) : null}
 								<Button
 									variant='contained'
 									onClick={() => handleDelete(selectedUserData.id)}
@@ -245,10 +247,39 @@ const AdminMainPage = () => {
 										</Button>
 									</Box>
 								)}
-								<Button>Applications</Button>
-								<Button>Jobs</Button>
+								{selectedUserData.role === "USER" ? (
+									<Button>Applications</Button>
+								) : null}
+								{editUserOpen ? (
+									<Box>
+										<AdminEditUser setEditUserOpen={setEditUserOpen} />
+									</Box>
+								) : null}
 							</Box>
-
+							{editJobsOpen ? (
+								<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
+							) : null}
+							{editJobError === true ? (
+								<Dialog
+									open={editDialogJobOpen}
+									onClick={() => setEditDialogJobOpen(false)}
+								>
+									<DialogTitle>Chyba</DialogTitle>
+									<DialogActions>
+										<Typography sx={{ p: 2 }}>
+											Vyberte právě jeden job pro úpravu!
+										</Typography>
+										<Button
+											onClick={() => {
+												setEditDialogJobOpen(false);
+												setEditJobError(false);
+											}}
+										>
+											Zrušit
+										</Button>
+									</DialogActions>
+								</Dialog>
+							) : null}
 							{selectedUserData?.role === "COMPANY" && (
 								<Box p={2}>
 									<Typography>Jobs</Typography>
@@ -289,14 +320,16 @@ const AdminMainPage = () => {
 											/>
 										</Box>
 									)}
-									<Button onClick={() => handleDeleteJob()}>Delete Job</Button>
+									<Button variant='contained' onClick={() => handleDeleteJob()}>
+										Delete Job
+									</Button>
 									<Button
 										variant='contained'
 										onClick={() => handleCreateOpenJob()}
 									>
 										Create Job
 									</Button>
-									<Button>Uprav Jobs</Button>
+									<Button variant="contained" onClick={() => handleEditJobs()}>Uprav Jobs</Button>
 								</Box>
 							)}
 						</Box>

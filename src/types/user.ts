@@ -8,7 +8,7 @@ export interface User {
 	Phone: string;
 	CoverLetter: string;
 	CV: string;
-	role: "admin" | "user" | "TEMPORAL" | "COMPANY";
+	role: "admin" | "USER" | "TEMPORAL" | "COMPANY";
 	createdAt?: Date;
 	updatedAt?: Date;
 }

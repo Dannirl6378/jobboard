@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-type UserRole = "admin" | "user" | "TEMPORAL" | "COMPANY";
+type UserRole = "admin" | "USER" | "TEMPORAL" | "COMPANY";
 
 const AdminCreateUser = () => {
 	const users = useAppStore((state) => state.users);
