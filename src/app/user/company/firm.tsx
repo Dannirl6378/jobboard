@@ -10,7 +10,9 @@ import { fetchDeleteJob } from "@/lib/api";
 
 const Firm = () => {
 	const router = useRouter();
-
+	const [openApplicantsJobId, setOpenApplicantsJobId] = useState<string | null>(
+		null
+	);
 	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<
 		Record<string, string>
 	>({});
@@ -161,7 +163,7 @@ const Firm = () => {
 					<Typography>{/* Dynamický nadpis */}</Typography>
 					{companyJobs.map((job) => {
 						const applicants = getApplicantsForJob(job.id);
-						const isOpen = null === job.id ? false : true;
+						const isOpen = openApplicantsJobId === job.id;
 						return (
 							<Box
 								key={job.id}
@@ -198,7 +200,9 @@ const Firm = () => {
 									</Button>
 									<Button
 										variant='contained'
-										onClick={() => setSelectedJobId(isOpen ? null : job.id)}
+										onClick={() => {
+											setOpenApplicantsJobId(isOpen ? null : job.id);
+										}}
 									>
 										<Badge
 											anchorOrigin={{

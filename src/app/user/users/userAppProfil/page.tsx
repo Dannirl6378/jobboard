@@ -129,10 +129,12 @@ export default function UserProfil(/*{
 				sx={{
 					bgcolor: "white",
 					display: "flex",
+					height: "100vh",
 					alignContent: "center",
 					flexDirection: "column",
 					alignItems: "center",
 					mt: "3%",
+					overflow: "auto",
 				}}
 			>
 				<Box sx={{ paddingTop: "4%" }}>
@@ -211,7 +213,9 @@ export default function UserProfil(/*{
 						</Box>{" "}
 					</>
 				) : null}
-				<Text>O mě </Text>
+				<Typography color='textPrimary' variant='h3' sx={{ marginTop: "1%" }}>
+					O mě{" "}
+				</Typography>
 				{/*Toto se zobrazi jen když dám upravit profil */}
 				{isEnable ? (
 					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
@@ -262,15 +266,14 @@ export default function UserProfil(/*{
 				)}
 				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
 				{userVsFirm === null ? (
-					<Box>
+					<Box sx={{ marginTop: "1%", display: "flex", gap: 2 }}>
 						<Button variant='outlined' onClick={handleEdit}>
 							{!isEnable ? "Upravit" : "Konec "}
 						</Button>
 						<Button variant='contained' onClick={handleSaveChanges}>
 							Ulož
 						</Button>
-						{LogIn?.role === "COMPANY" ? null :<Text>Přilož CV</Text> }
-						
+						{LogIn?.role === "COMPANY" ? null : <Text>Přilož CV</Text>}
 					</Box>
 				) : null}
 			</Box>

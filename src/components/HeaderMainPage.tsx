@@ -12,6 +12,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation";
 
 const HeaderMainPage = () => {
+	const isAdmin = useAppStore((state) => state.LogIn?.role === "ADMIN");
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const LogIn = useAppStore((state) => state.LogIn);
 	const setLogIn = useAppStore((state) => state.setLogIn);
@@ -26,7 +27,7 @@ const HeaderMainPage = () => {
 		router.push("/login");
 	};
 	const handleProfil = () => {
-		if (LogIn?.role === "admin") {
+		if (LogIn?.role === "ADMIN") {
 			router.push("/user/admin");
 			return;
 		}

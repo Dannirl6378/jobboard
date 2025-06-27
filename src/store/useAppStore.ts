@@ -7,7 +7,7 @@ type User = {
 	id: string;
 	name: string;
 	email: string;
-	role: "admin" | "USER" | "TEMPORAL" | "COMPANY";
+	role: "ADMIN" | "USER" | "TEMPORAL" | "COMPANY";
 	passwordHash: string;
 	about: string;
 	Phone: string;
