@@ -15,6 +15,11 @@ import {
 import { useEffect, useState } from "react";
 import ToolTip from "@mui/material/Tooltip";
 import { Job } from "@/types/job";
+import UserDetailBox from "./AdminPanelParts/UserDetailBox";
+import {
+	getUsersForJob,
+	getCopanyNameJobFormApplication,
+} from "./adminHelpers";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
@@ -24,6 +29,8 @@ import AdminCreateJob from "./AdminCreateJob/AdminCreateJob";
 import AdminDeleteJob from "./AdminDeleteJob/AdminDeleteJob";
 import AdminEditUser from "./AdminEditUser/AdminEditUser";
 import AdminEditJobs from "./AdminEditJobs/AdminEditJobs";
+import ApplicationJobList from "./AdminPanelParts/ApplicationJobList";
+import { get } from "http";
 
 //admiin hleda uživatele přes email ---check
 //jak najde uživatele tak má možnosti ---check
@@ -52,6 +59,7 @@ const AdminMainPage = () => {
 	const setSelectedJobsId = useAppStore((state) => state.setSelectedJobId);
 	const selectedUserData = useAppStore((state) => state.selectedUserData);
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
+	const getUserById = useAppStore((state) => state.getUserById);
 	const user = useAppStore((state) =>
 		state.getUserById(selectedUserData?.id || "")
 	);
@@ -143,7 +151,9 @@ const AdminMainPage = () => {
 	};
 
 	const applicationJob = getApplicantsForJob();
-	const userAppJob = applicationJob.find(app => app?.userid === selectedUserData?.id);
+	const userAppJob = applicationJob.find(
+		(app) => app?.userid === selectedUserData?.id
+	);
 	console.log("userAppJob", userAppJob);
 	const jobsFromApplications = [
 		...new Map(
@@ -153,26 +163,6 @@ const AdminMainPage = () => {
 				.map((job) => [job?.id, job])
 		).values(),
 	];
-
-	const getUsersForJob = (jobId: string) => {
-		// Najdi všechny aplikace pro daný job
-		const applicants = applicationsArray.filter((app) => app.jobid === jobId);
-
-		// Získej informace o uživatelích podle userId z aplikací
-		const users = applicants
-			.map((app) => useAppStore.getState().getUserById(app.userid))
-			.filter(Boolean); // odstraní případné null hodnoty
-
-		return users;
-	};
-	const getCopanyNameJobFormApplication = (jobId: string) => {
-		const job = jobsArray.find((job) => job.id === jobId);
-		if (job) {
-			const company = useAppStore.getState().getUserById(job.companyid);
-			return company || null;
-		}
-		return null;
-	};
 
 	console.log("applicationJob", applicationJob);
 	console.log("jobsFromApplications", jobsFromApplications);
@@ -214,75 +204,16 @@ const AdminMainPage = () => {
 				<Box>
 					<Typography>Výsledky hledání:</Typography>
 					{selectedUserData ? (
-						<Box p={5}>
-							<Typography>ID: {selectedUserData?.id}</Typography>
-							<Typography>Name: {selectedUserData?.name}</Typography>
-							<Typography>Email: {selectedUserData?.email}</Typography>
-							<Typography>Role: {selectedUserData?.role}</Typography>
-							<Typography>Phone: {selectedUserData.Phone}</Typography>
-							<Typography>
-								Profil vytvořen:{" "}
-								{selectedUserData?.created_at
-									? new Date(selectedUserData.created_at).toLocaleDateString(
-											"cs-CZ"
-										)
-									: ""}
-							</Typography>
-
-							<Typography>ApplicationJobs:</Typography>
-							{selectedUserData?.role === "COMPANY"
-								? jobsFromApplications.map((job) => (
-										<ListItem key={job?.id}>
-											<ToolTip
-												title={(() => {
-													const users = getUsersForJob(job?.id ?? "");
-													return users.length > 0 ? (
-														<Box>
-															{users.map((user) => (
-																<Box key={user?.id}>
-																	<Typography>Jméno: {user?.name ?? ""}</Typography>
-																	<Typography>Email: {user?.email ?? ""}</Typography>
-																</Box>
-															))}
-														</Box>
-													) : (
-														"Žádný uchazeč"
-													);
-												})()}
-												arrow
-											>
-												<Typography>{job?.title ?? ""}</Typography>
-											</ToolTip>
-										</ListItem>
-									))
-								: applicationJob.map((app) => (
-										<ListItem key={app?.id}>
-											<ToolTip
-												title={
-													app && (() => {
-														const company = getCopanyNameJobFormApplication(app.jobid);
-														if (company && typeof company === "object") {
-															return (
-																<Box>
-																	<Typography>Jméno: {company.name ?? ""}</Typography>
-																	<Typography>Email: {company.email ?? ""}</Typography>
-																</Box>
-															);
-														}
-														return "Žádná firma";
-													})()
-												}
-												arrow
-											>
-												<Box>
-													<Typography>
-														{app?.JobTitle ?? ""} {/* název jobu */}
-													</Typography>
-												</Box>
-											</ToolTip>
-										</ListItem>
-									))}
-
+						<Box>
+							<UserDetailBox user={selectedUserData} aboutHtml={aboutHtml} />
+							<ApplicationJobList
+								selectedUserData={selectedUserData}
+								jobsFromApplications={jobsFromApplications}
+								applicationsArray={applicationsArray}
+								applicationJob={applicationJob}
+								jobsArray={jobsArray}
+								getUserById={getUserById}
+							/>
 							{aboutHtml && (
 								<Box mt={2}>
 									<Typography variant='h6'>O uživateli:</Typography>
@@ -292,7 +223,7 @@ const AdminMainPage = () => {
 									/>
 								</Box>
 							)}
-
+{/*tady bude UserActionsPanel*/}
 							<Box p={2}>
 								<Typography>Možnosti uprav</Typography>
 								<Button
@@ -361,6 +292,7 @@ const AdminMainPage = () => {
 								</Dialog>
 							) : null}
 							{selectedUserData?.role === "COMPANY" && (
+								//tady bdue CopmapnyJObsPanel
 								<Box p={2}>
 									<Typography>Jobs</Typography>
 									<Button onClick={toggleAllJobs}>
