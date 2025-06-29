@@ -1,45 +1,37 @@
 "use client";
 
-import { Heading, Text } from "@/styles/editTypoghraphy";
+import { Heading } from "@/styles/editTypoghraphy";
 import { useAppStore } from "@/store/useAppStore";
 import {
 	Box,
 	Button,
-	Checkbox,
 	Dialog,
 	DialogActions,
 	DialogTitle,
-	ListItem,
 	Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import ToolTip from "@mui/material/Tooltip";
 import { Job } from "@/types/job";
 import UserDetailBox from "./AdminPanelParts/UserDetailBox";
-import {
-	getUsersForJob,
-	getCopanyNameJobFormApplication,
-} from "./adminHelpers";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import AdminSearchPanel from "./AdminSearchPanel/AdminSearchPanel";
 import AdminCreateUser from "./AdminCreateUser/AdminCreateUser";
 import { AdminDeleteUser } from "./AdminDeleteUser/AdminDeleteUser";
-import AdminCreateJob from "./AdminCreateJob/AdminCreateJob";
 import AdminDeleteJob from "./AdminDeleteJob/AdminDeleteJob";
-import AdminEditUser from "./AdminEditUser/AdminEditUser";
 import AdminEditJobs from "./AdminEditJobs/AdminEditJobs";
 import ApplicationJobList from "./AdminPanelParts/ApplicationJobList";
-import { get } from "http";
+import UserActionsPanel from "./AdminPanelParts/UserActionPanel";
+import CompanyJobsPanel from "./AdminPanelParts/CompanyJobsPanel";
 
 //admiin hleda uživatele přes email ---check
 //jak najde uživatele tak má možnosti ---check
 //když je to user:
-//uprav data user vypiš application smaž user vytvoř user
+//uprav data user vypiš application smaž user vytvoř user ---check
 //když je to Company:
 //uprav data, uprav job, smaž company, smaž job, zobraz všechny joby ---check
-//udělej pro každy job jestě tlačitko application kde bude seznam users a bude onHover kde bude jmeno Email
-//tzn nazev job a rozbalovaci okno list user
+//udělej pro každy job jestě tlačitko application kde bude seznam users a bude onHover kde bude jmeno Email---check
+//tzn nazev job a rozbalovaci okno list user ---check
 //jestě sem musim našroubovat datum vytvořeni uživatele jobu a application --check
 
 const AdminMainPage = () => {
@@ -60,13 +52,9 @@ const AdminMainPage = () => {
 	const selectedUserData = useAppStore((state) => state.selectedUserData);
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const getUserById = useAppStore((state) => state.getUserById);
-	const user = useAppStore((state) =>
-		state.getUserById(selectedUserData?.id || "")
-	);
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
-	console.log("applicatioanArray", applicationsArray);
 
 	const toggleAllJobs = () => {
 		if (selectedJobId.length === companyJobs.length) {
@@ -113,7 +101,6 @@ const AdminMainPage = () => {
 
 	const handleEnd = () => {
 		useAppStore.getState().setSelectedUserData(null);
-		console.log("End of admin page reached");
 		setIsCreateEnable(false);
 		setDeleteStatus(null);
 		setAboutHtml("");
@@ -151,10 +138,6 @@ const AdminMainPage = () => {
 	};
 
 	const applicationJob = getApplicantsForJob();
-	const userAppJob = applicationJob.find(
-		(app) => app?.userid === selectedUserData?.id
-	);
-	console.log("userAppJob", userAppJob);
 	const jobsFromApplications = [
 		...new Map(
 			applicationsArray
@@ -164,10 +147,6 @@ const AdminMainPage = () => {
 		).values(),
 	];
 
-	console.log("applicationJob", applicationJob);
-	console.log("jobsFromApplications", jobsFromApplications);
-	console.log("selectedUser", selectedUserData);
-	console.log("companyJob", companyJobs);
 	return (
 		<>
 			<HeaderMainPage />
@@ -214,63 +193,21 @@ const AdminMainPage = () => {
 								jobsArray={jobsArray}
 								getUserById={getUserById}
 							/>
-							{aboutHtml && (
-								<Box mt={2}>
-									<Typography variant='h6'>O uživateli:</Typography>
-									<div
-										className='rich-content'
-										dangerouslySetInnerHTML={{ __html: aboutHtml }}
-									/>
-								</Box>
-							)}
-{/*tady bude UserActionsPanel*/}
-							<Box p={2}>
-								<Typography>Možnosti uprav</Typography>
-								<Button
-									variant='contained'
-									onClick={() => setEditUserOpen(true)}
-								>
-									Edit User
-								</Button>
-								<Button
-									variant='contained'
-									onClick={() => handleDelete(selectedUserData.id)}
-								>
-									Delete User
-								</Button>
-								{deleteStatus && (
-									<Box
-										sx={{
-											border: "1px solid",
-											zIndex: 1,
-											margin: "auto",
-											background: "white",
-											top: "25%",
-										}}
-									>
-										<Typography>
-											{deleteStatus.success
-												? "Uživatel úspěšně smazán"
-												: `Uživatel se nepovedl smazat: ${deleteStatus.message}`}
-										</Typography>
-										<Button onClick={() => setDeleteStatus(null)}>
-											Zavřít
-										</Button>
-									</Box>
-								)}
-								{selectedUserData.role === "USER" ? (
-									<Button>Applications</Button>
-								) : null}
-								{editUserOpen ? (
-									<Box>
-										<AdminEditUser setEditUserOpen={setEditUserOpen} />
-									</Box>
-								) : null}
-							</Box>
-							{editJobsOpen ? (
+							
+
+							<UserActionsPanel
+								selectedUserData={selectedUserData}
+								onEdit={() => setEditUserOpen(true)}
+								handleDelete={() => handleDelete(selectedUserData.id)}
+								deleteStatus={deleteStatus}
+								setDeleteStatus={setDeleteStatus}
+								editUserOpen={editUserOpen}
+								setEditUserOpen={setEditUserOpen}
+							/>
+							{editJobsOpen && (
 								<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
-							) : null}
-							{editJobError === true ? (
+							)}
+							{editJobError === true && (
 								<Dialog
 									open={editDialogJobOpen}
 									onClick={() => setEditDialogJobOpen(false)}
@@ -290,60 +227,22 @@ const AdminMainPage = () => {
 										</Button>
 									</DialogActions>
 								</Dialog>
-							) : null}
+							) }
 							{selectedUserData?.role === "COMPANY" && (
-								//tady bdue CopmapnyJObsPanel
+
 								<Box p={2}>
-									<Typography>Jobs</Typography>
-									<Button onClick={toggleAllJobs}>
-										{selectedJobId.length === companyJobs.length
-											? "Odznačit vše"
-											: "Vybrat vše"}
-									</Button>
-									{companyJobs.map((job) => (
-										<ListItem key={job.id}>
-											<Typography>{job.title}</Typography>
-											<Typography>
-												{": "}
-												{job?.createdat
-													? new Date(job.createdat).toLocaleDateString("cs-CZ")
-													: ""}
-											</Typography>
-											<Checkbox
-												checked={selectedJobId.includes(job.id)}
-												onChange={() => handleCheckboxChange(job.id)}
-											/>
-										</ListItem>
-									))}
-									{createJob && (
-										<Box
-											sx={{
-												zIndex: 1,
-												background: "rgba(255, 255, 255, 0)",
-												position: "absolute",
-												width: "70vw",
-												right: "3%",
-												top: "10%",
-											}}
-										>
-											<AdminCreateJob
-												email={selectedUserData.email || ""}
-												setCreateJob={setCreateJob}
-											/>
-										</Box>
-									)}
-									<Button variant='contained' onClick={() => handleDeleteJob()}>
-										Delete Job
-									</Button>
-									<Button
-										variant='contained'
-										onClick={() => handleCreateOpenJob()}
-									>
-										Create Job
-									</Button>
-									<Button variant='contained' onClick={() => handleEditJobs()}>
-										Uprav Job
-									</Button>
+									<CompanyJobsPanel
+										selectedUserData={selectedUserData}
+										companyJobs={companyJobs}
+										selectedJobId={selectedJobId}
+										toggleAllJobs={toggleAllJobs}
+										handleCheckboxChange={handleCheckboxChange}
+										setCreateJob={setCreateJob}
+										createJob={createJob}
+										handleDeleteJob={handleDeleteJob}
+										handleCreateOpenJob={handleCreateOpenJob}
+										handleEditJobs={handleEditJobs}
+									/>
 								</Box>
 							)}
 						</Box>

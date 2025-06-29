@@ -15,7 +15,7 @@ export default function UserDetailBox({ user, aboutHtml }: { user: any, aboutHtm
                     : ""}
             </Typography>
             {aboutHtml && (
-                <Box mt={2}>
+                <Box mt={2} sx={{ maxWidth: "50%" ,border: "1px solid #ccc", padding: "10px", borderRadius: "5px", boxShadow:2}}>
                     <Typography variant='h6'>O uživateli:</Typography>
                     <div className='rich-content' dangerouslySetInnerHTML={{ __html: aboutHtml }} />
                 </Box>
