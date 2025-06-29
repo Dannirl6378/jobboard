@@ -2,7 +2,7 @@
 "use client";
 
 import { Box } from "@mui/system";
-import JobList from "./JobList";
+import JobList from "./JobList/JobList";
 import { Typography } from "@mui/material";
 
 const JobsPage = () => {

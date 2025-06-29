@@ -1,7 +1,7 @@
 "use client";
 
 import { Grid, Box } from "@mui/material";
-import JobFilterPanel from "./job/JobFilterPanel";
+import JobFilterPanel from "./job/JobFilterPanel/JobFilterPanel";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { useEffect, useState } from "react";
 import JobsList from "@/app/job/page";
