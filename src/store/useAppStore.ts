@@ -41,6 +41,8 @@ type AppState = {
 	selectedUserData: User | null; // Přidáno pro uložení dat vybraného uživatele
 	selectedJobId: string | null;
 	selectedUserId: string | null; // Přidáno pro uložení ID vybraného uživatele
+	filteredJobs: Job[];
+	setFilteredJobs: (jobs: Job[]) => void; // Přidáno pro setter filtrovaných pracovních nabídek
 	setSelectedUserData: (user: User | null) => void; // Přidáno pro setter dat vybraného uživatele
 	setSelectedUserId: (id: string | null) => void; // Přidáno pro setter ID vybraného uživatele
 	setSelectedJobId: (id: string | null) => void;
@@ -51,7 +53,7 @@ type AppState = {
 	setApplications: (applications: Application[]) => void;
 	getApplicationById: (id: string) => Application | undefined;
 	setLogIn: (user: User | null) => void;
-	fetchAndSetUsers: (email:string) => Promise<void>;
+	fetchAndSetUsers: (email: string) => Promise<void>;
 };
 
 export const useAppStore = create<AppState>()(
@@ -64,6 +66,8 @@ export const useAppStore = create<AppState>()(
 			selectedJobId: null, // ← přidat výchozí hodnotu
 			selectedUserId: null, // Přidáno pro uložení ID vybraného uživatele
 			selectedUserData: null,
+			filteredJobs: [], // Přidáno pro uložení filtrovaných pracovních nabídek
+			setFilteredJobs: (jobs) => set({ filteredJobs: jobs }), // Přid
 			setSelectedUserId: (id) => set({ selectedUserId: id }), // Přidáno pro setter ID vybraného uživatele
 			setSelectedJobId: (id) => set({ selectedJobId: id }), // ← přidat setter
 			setSelectedUserData: (user) => set({ selectedUserData: user }), // Přidáno pro setter dat vybraného uživatele
@@ -111,7 +115,7 @@ export const useAppStore = create<AppState>()(
 			getApplicationById: (id) => {
 				return get().applications[id];
 			},
-			fetchAndSetUsers: async (email:string) => {
+			fetchAndSetUsers: async (email: string) => {
 				const selectedUserData = await fetchUserByEmail(email);
 				set({ selectedUserData }); // nebo jak ukládáš uživatele do store
 			},

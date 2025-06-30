@@ -1,3 +1,4 @@
+"use client";
 import { fetchjobs } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
@@ -15,17 +16,22 @@ const JobList = () => {
 	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<
 		Record<string, string>
 	>({});
-	const { data, error, isLoading } = useQuery({
+	const { data, error, isLoading } = useQuery<Job[]>({
 		queryKey: ["jobs"],
 		queryFn: fetchjobs,
 	});
+	const filteredJobs = useAppStore((state) => state.filteredJobs);
 
 	useEffect(() => {
 		if (data) {
-			useAppStore.getState().setJobs(data);
-			setJoby(data);
+			useAppStore.getState().setJobs(data); // předpokládám, že chceš uložit všechny joby
+			if (filteredJobs && filteredJobs.length > 0) {
+				setJoby(filteredJobs);
+			} else {
+				setJoby(data);
+			}
 		}
-	}, [data]);
+	}, [data, filteredJobs]);
 
 	useEffect(() => {
 		const fetchSanitizedDescriptions = async () => {
