@@ -29,9 +29,11 @@ export default function Home() {
 			<Box
 				sx={{
 					flexGrow: 1,
-					bgcolor: "#f9fafb",
-					height: "100vh",
-					width: "100vw",
+					bgcolor: "#cee5fdff",
+					minHeight: "100vh",
+					minWidth: "100vw",
+					height: "100%",
+					zIndex: -1,
 				}}
 			>
 				{/* <HeaderMainPage /> */}
@@ -42,7 +44,8 @@ export default function Home() {
 							display: "flex",
 							flexDirection: "column",
 							alignItems: "center",
-							mt: -4,
+							p: { xs: 1, md: 4 },
+							mt: { xs: 0, md: -4 },
 							maxWidth: "100vw",
 							justifyContent: "center",
 						}}

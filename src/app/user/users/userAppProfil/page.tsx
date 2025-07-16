@@ -12,11 +12,7 @@ import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import { getUserJob } from "@/app/user/users/userJob/userJob";
 import { useRouter } from "next/navigation";
 
-export default function UserProfil(/*{
-	params,
-}: {
-	params: Promise<{ id: string }>;
-}*/) {
+export default function UserProfil() {
 	const router = useRouter();
 	const [isEnable, setIsEnable] = useState<boolean>(false);
 	const [name, setName] = useState("");
@@ -127,155 +123,262 @@ export default function UserProfil(/*{
 			<HeaderMainPage />
 			<Box
 				sx={{
-					bgcolor: "white",
+					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
+					minHeight: "100vh",
 					display: "flex",
-					height: "100vh",
-					alignContent: "center",
-					flexDirection: "column",
-					alignItems: "center",
-					mt: "3%",
+					justifyContent: "center",
+					alignItems: "flex-start",
 					overflow: "auto",
+					py: 4,
 				}}
 			>
-				<Box sx={{ paddingTop: "4%" }}>
-					<Heading>Profil uživatele</Heading>
-				</Box>
-				<Box>
-					<Text>Email:</Text>
-					<Input
-						id='email'
-						value={email}
-						disabled={!isEnable}
-						onChange={(e) => setEmail(e.target.value)}
-					/>
-				</Box>
-				<Box>
-					<Text>Uživatelské Jméno</Text>
-					<Input
-						id='userName'
-						value={name}
-						disabled={!isEnable}
-						onChange={(e) => setName(e.target.value)}
-					/>
-				</Box>
-				<Box>
-					<Text>Telefon</Text>
-					<Input
-						id='Telefon'
-						value={phone}
-						disabled={!isEnable}
-						onChange={(e) => setName(e.target.value)}
-					/>
-				</Box>
-
-				{isEnable ? (
-					<>
-						<Box>
-							<Text>Heslo:</Text>
-							<Input
-								id='password'
-								value={password}
-								disabled={!isEnable}
-								onChange={(e) => setPassword(e.target.value)}
-							/>
-						</Box>
-						<Box>
-							<Text>Opakovat Heslo:</Text>
-							<Input
-								id='rePassword'
-								value={isEnable ? rePassword : ""}
-								disabled={!isEnable}
-								onChange={(e) => setRePassword(e.target.value)}
-							/>
-						</Box>
-					</>
-				) : null}
-				{userVsFirm && purifyCoverLetter !== null ? (
-					<>
-						<Text>Cover Letter </Text>
-						<Box
+				<Box
+					sx={{
+						bgcolor: "white",
+						borderRadius: 3,
+						boxShadow: 6,
+						width: { xs: "98vw", sm: 600 },
+						maxWidth: 700,
+						mx: "auto",
+						p: { xs: 2, sm: 4 },
+						display: "flex",
+						flexDirection: "column",
+						alignItems: "center",
+						gap: 2,
+						fontFamily: "Montserrat, Arial, sans-serif",
+					}}
+				>
+					<Box sx={{ width: "100%", textAlign: "center", mb: 2 }}>
+						<Heading sx={{ color: "#1976d2", fontWeight: "bold" }}>
+							Profil uživatele
+						</Heading>
+					</Box>
+					<Box sx={{ width: "100%" }}>
+						<Text sx={{ color: "#1976d2" }}>Email:</Text>
+						<Input
+							id='email'
+							value={email}
+							disabled={!isEnable}
+							onChange={(e) => setEmail(e.target.value)}
+							fullWidth
 							sx={{
-								display: "flex",
-								width: "50%",
-								height: "45vh",
-								overflow: "auto",
-								border: "1px solid black",
-								borderRadius: "5px",
-								color: "black",
+								bgcolor: "#f5f7fa",
+								borderRadius: 1,
+								mb: 1,
+								fontFamily: "Montserrat, Arial, sans-serif",
 							}}
-						>
-							{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
-
-							<div
-								className='rich-content'
-								dangerouslySetInnerHTML={{ __html: purifyCoverLetter }}
-							/>
-						</Box>{" "}
-					</>
-				) : null}
-				<Typography color='textPrimary' variant='h3' sx={{ marginTop: "1%" }}>
-					O mě{" "}
-				</Typography>
-				{/*Toto se zobrazi jen když dám upravit profil */}
-				{isEnable ? (
-					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
-				) : (
-					<Box
-						sx={{
-							display: "flex",
-							width: "75%",
-							height: "45vh",
-							overflow: "auto",
-							border: "1px solid black",
-							borderRadius: "5px",
-							color: "black",
-						}}
-					>
-						{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
-						<div
-							className='rich-content'
-							dangerouslySetInnerHTML={{ __html: purifyAbout }}
 						/>
 					</Box>
-				)}
-				{LogIn?.role === "COMPANY" ? null : (
-					<>
-						<Typography>Apply Job List</Typography>
+					<Box sx={{ width: "100%" }}>
+						<Text sx={{ color: "#1976d2" }}>Uživatelské jméno:</Text>
+						<Input
+							id='userName'
+							value={name}
+							disabled={!isEnable}
+							onChange={(e) => setName(e.target.value)}
+							fullWidth
+							sx={{
+								bgcolor: "#f5f7fa",
+								borderRadius: 1,
+								mb: 1,
+								fontFamily: "Montserrat, Arial, sans-serif",
+							}}
+						/>
+					</Box>
+					<Box sx={{ width: "100%" }}>
+						<Text sx={{ color: "#1976d2" }}>Telefon:</Text>
+						<Input
+							id='Telefon'
+							value={phone}
+							disabled={!isEnable}
+							onChange={(e) => setPhone(e.target.value)}
+							fullWidth
+							sx={{
+								bgcolor: "#f5f7fa",
+								borderRadius: 1,
+								mb: 1,
+								fontFamily: "Montserrat, Arial, sans-serif",
+							}}
+						/>
+					</Box>
+					{isEnable && (
+						<>
+							<Box sx={{ width: "100%" }}>
+								<Text sx={{ color: "#1976d2" }}>Heslo:</Text>
+								<Input
+									id='password'
+									type='password'
+									value={password}
+									disabled={!isEnable}
+									onChange={(e) => setPassword(e.target.value)}
+									fullWidth
+									sx={{
+										bgcolor: "#f5f7fa",
+										borderRadius: 1,
+										mb: 1,
+										fontFamily: "Montserrat, Arial, sans-serif",
+									}}
+								/>
+							</Box>
+							<Box sx={{ width: "100%" }}>
+								<Text sx={{ color: "#1976d2" }}>Opakovat heslo:</Text>
+								<Input
+									id='rePassword'
+									type='password'
+									value={isEnable ? rePassword : ""}
+									disabled={!isEnable}
+									onChange={(e) => setRePassword(e.target.value)}
+									fullWidth
+									sx={{
+										bgcolor: "#f5f7fa",
+										borderRadius: 1,
+										mb: 1,
+										fontFamily: "Montserrat, Arial, sans-serif",
+									}}
+								/>
+							</Box>
+						</>
+					)}
+					{userVsFirm && purifyCoverLetter !== null && (
+						<>
+							<Text sx={{ color: "#388e3c" }}>Cover Letter</Text>
+							<Box
+								sx={{
+									width: "100%",
+									minHeight: 120,
+									maxHeight: 250,
+									overflow: "auto",
+									border: "1px solid #cee5fd",
+									borderRadius: 2,
+									bgcolor: "#e3fcec",
+									color: "#222",
+									p: 2,
+									mb: 2,
+								}}
+							>
+								<div
+									className='rich-content'
+									dangerouslySetInnerHTML={{ __html: purifyCoverLetter }}
+								/>
+							</Box>
+						</>
+					)}
+					<Typography
+						color='#1976d2'
+						variant='h5'
+						sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
+					>
+						O mě
+					</Typography>
+					{isEnable ? (
+						<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
+					) : (
 						<Box
 							sx={{
-								display: "flex",
-								border: "1px solid black",
-								borderRadius: "15px",
-								width: "25%",
-								height: "15vh",
+								width: "100%",
+								minHeight: 120,
+								maxHeight: 250,
 								overflow: "auto",
+								border: "1px solid #cee5fd",
+								borderRadius: 2,
+								bgcolor: "#e3fcec",
+								color: "#222",
+								p: 2,
+								mb: 2,
 							}}
 						>
-							{appliedJobs.map(({ application, job }) => (
-								<Box sx={{ paddingLeft: "5%" }} key={application.id}>
-									<Typography
-										sx={{ cursor: "pointer", color: "blue" }}
-										onClick={() => router.push(`/job/jobDetail${jobIds}`)}
-									>
-										{job?.title || "Neznámá pozice"}
-									</Typography>
-								</Box>
-							))}
+							<div
+								className='rich-content'
+								dangerouslySetInnerHTML={{ __html: purifyAbout }}
+							/>
 						</Box>
-					</>
-				)}
-				{/*Toto se zobrazi jen když přihlašeny uživatel klikne na profil */}
-				{userVsFirm === null ? (
-					<Box sx={{ marginTop: "1%", display: "flex", gap: 2 }}>
-						<Button variant='outlined' onClick={handleEdit}>
-							{!isEnable ? "Upravit" : "Konec "}
-						</Button>
-						<Button variant='contained' onClick={handleSaveChanges}>
-							Ulož
-						</Button>
-						{LogIn?.role === "COMPANY" ? null : <Text>Přilož CV</Text>}
-					</Box>
-				) : null}
+					)}
+					{LogIn?.role === "COMPANY" ? null : (
+						<>
+							<Typography sx={{ color: "#388e3c", fontWeight: 600, mt: 2 }}>
+								Moje přihlášky
+							</Typography>
+							<Box
+								sx={{
+									width: "100%",
+									minHeight: 60,
+									maxHeight: 180,
+									overflow: "auto",
+									border: "1px solid #cee5fd",
+									borderRadius: 2,
+									bgcolor: "#f5f7fa",
+									p: 2,
+									mb: 2,
+									display: "flex",
+									flexWrap: "wrap",
+									gap: 2,
+								}}
+							>
+								{appliedJobs.map(({ application, job }) => (
+									<Box sx={{ minWidth: 120 }} key={application.id}>
+										<Typography
+											sx={{
+												cursor: "pointer",
+												color: "#1976d2",
+												fontWeight: "bold",
+												"&:hover": { textDecoration: "underline" },
+											}}
+											onClick={() =>
+												router.push(
+													`/job/jobDetail${job?.jobId ? `/${job.jobId}` : ""}`
+												)
+											}
+										>
+											{job?.title || "Neznámá pozice"}
+										</Typography>
+									</Box>
+								))}
+							</Box>
+						</>
+					)}
+					{userVsFirm === null && (
+						<Box
+							sx={{
+								mt: 2,
+								display: "flex",
+								gap: 2,
+								width: "100%",
+								justifyContent: "center",
+							}}
+						>
+							<Button
+								variant='outlined'
+								onClick={handleEdit}
+								sx={{
+									fontWeight: "bold",
+									color: "#1976d2",
+									borderColor: "#1976d2",
+									"&:hover": { bgcolor: "#e3fcec", borderColor: "#1976d2" },
+								}}
+							>
+								{!isEnable ? "Upravit" : "Konec "}
+							</Button>
+							<Button
+								variant='contained'
+								onClick={handleSaveChanges}
+								sx={{
+									bgcolor: "#43a047",
+									color: "#fff",
+									fontWeight: "bold",
+									fontFamily: "Montserrat, Arial, sans-serif",
+									"&:hover": { bgcolor: "#2e7031" },
+								}}
+							>
+								Ulož
+							</Button>
+							{LogIn?.role === "COMPANY" ? null : (
+								<Text sx={{ color: "#1976d2", alignSelf: "center" }}>
+									Přilož CV
+								</Text>
+							)}
+						</Box>
+					)}
+				</Box>
 			</Box>
 		</>
 	);

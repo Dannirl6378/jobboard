@@ -38,7 +38,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 	}, [job]);
 
 	const handleUpdateJob = async (jobid: string, updateData: Partial<Job>) => {
-		console.log(updateData)
+		console.log(updateData);
 		console.log(jobid);
 		try {
 			const updatedJob = await fetchUpdateJob(jobid, updateData);
@@ -60,7 +60,6 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 		handleUpdateJob(selectedJobId, updateData);
 	};
 
-
 	// Add missing state variables for about, isEnable, and purifyAbout
 
 	useEffect(() => {
@@ -75,69 +74,99 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 			<Box
 				sx={{
 					display: "flex",
-					justifyContent: "space-between",
 					flexDirection: "column",
-					width: "50%",
-					height: "fitContent",
-					border: "0px solid",
-					boxShadow: "5",
-					borderRadius: "10",
-					overflow:"auto",
-					zIndex:1,
-					marginLeft:"25%",
+					width: { xs: "95vw", sm: 500 },
+					maxWidth: 600,
+					mx: "auto",
+					mt: 4,
+					p: { xs: 2, sm: 4 },
+					bgcolor: "#f5f7fa",
+					borderRadius: 3,
+					boxShadow: 6,
+					overflow: "auto",
+					zIndex: 10,
+					fontFamily: "Montserrat, Arial, sans-serif",
+					gap: 3,
 				}}
 			>
-				<Heading>Edit Work Offer</Heading>
+				<Heading
+					sx={{
+						color: "#1976d2",
+						fontFamily: "Montserrat, Arial, sans-serif",
+						fontWeight: "bold",
+						textAlign: "center",
+						mb: 2,
+					}}
+				>
+					Upravit pracovní nabídku
+				</Heading>
 				<Box>
-					<SubHeading>Job Name: {job?.title}</SubHeading>
+					<SubHeading sx={{ color: "#388e3c" }}>Název pozice:</SubHeading>
 					<TextField
 						id='title'
 						variant='outlined'
-						defaultValue={job?.title}
+						value={title}
 						fullWidth
 						onChange={(e) => setTitle(e.target.value)}
+						sx={{ bgcolor: "white", borderRadius: 1 }}
 					/>
 				</Box>
 				<Box>
-					<Text>Job Salary:</Text>
+					<SubHeading sx={{ color: "#388e3c" }}>Mzda:</SubHeading>
 					<TextField
 						id='salary'
 						variant='outlined'
-						defaultValue={job?.salary}
+						value={salary}
 						fullWidth
 						onChange={(e) => setSalary(e.target.value)}
+						sx={{ bgcolor: "white", borderRadius: 1 }}
 					/>
 				</Box>
 				<Box>
-					<Text>Job Location:</Text>
+					<SubHeading sx={{ color: "#388e3c" }}>Lokalita:</SubHeading>
 					<TextField
 						id='location'
 						variant='outlined'
-						defaultValue={job?.location}
+						value={location}
 						fullWidth
 						onChange={(e) => setLocation(e.target.value)}
+						sx={{ bgcolor: "white", borderRadius: 1 }}
 					/>
 				</Box>
 				<Box>
-					<Text>Job Description</Text>
-					{/*Toto se zobrazi jen když dám upravit profil */}
-
+					<SubHeading sx={{ color: "#388e3c" }}>Popis pozice:</SubHeading>
 					<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 				</Box>
-
-				<Button
-					variant='contained'
-					onClick={() => {
-						// Zde byste měli implementovat logiku pro uložení změn
-						console.log("Changes saved");
-						handleSaveChanges();
-					}}
-				>
-					Uložit změny
-				</Button>
-				<Button variant='contained' onClick={() => setEditJobsOpen(false)}>
-					zavřít
-				</Button>
+				<Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 2 }}>
+					<Button
+						variant='contained'
+						onClick={() => {
+							handleSaveChanges();
+						}}
+						sx={{
+							bgcolor: "#1976d2",
+							color: "#fff",
+							fontWeight: "bold",
+							fontFamily: "Montserrat, Arial, sans-serif",
+							"&:hover": { bgcolor: "#1565c0" },
+						}}
+					>
+						Uložit změny
+					</Button>
+					<Button
+						variant='contained'
+						onClick={() => setEditJobsOpen(false)}
+						sx={{
+							bgcolor: "#43a047",
+							color: "#fff",
+							fontWeight: "bold",
+							fontFamily: "Montserrat, Arial, sans-serif",
+							"&:hover": { bgcolor: "#2e7031" },
+						}}
+					>
+						Zavřít
+					</Button>
+				</Box>
 			</Box>
 		</>
 	);

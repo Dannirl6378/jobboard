@@ -8,13 +8,14 @@ const filterFns = {
     job.title.toLowerCase().includes(value.toLowerCase()),
   category: (job: Job, value: string) => job.category === value,
   location: (job: Job, value: string) => job.location === value,
-  salary: (job: Job, value: string) => !value || Number(job.salary) >= Number(value),
+  salary: (job: Job, value: string) => !value || Number(job.salary?.toString()) >= Number(value),
 
   full: (job: Job, value: boolean) => !value || job.Attendance === "Full",
   part: (job: Job, value: boolean) => !value || job.Attendance === "partTime",
   remote: (job: Job, value: boolean) => !value || job.Attendance === "HomeOffice",
   hybrid: (job: Job, value: boolean) => !value || job.Attendance === "Hybrid",
 } as const;
+
 
 type Filter = {
   [K in keyof typeof filterFns]?: Parameters<(typeof filterFns)[K]>[1];

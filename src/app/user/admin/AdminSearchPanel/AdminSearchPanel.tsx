@@ -1,12 +1,20 @@
-import { Box, Button, Input, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	Typography,
+	TextField,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+} from "@mui/material";
 import { useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { fetchUserByEmail } from "@/lib/api";
-import { User } from "@/types/user";
 
 const AdminSearchPanel = () => {
 	const [email, setEmail] = useState("");
-    const [popUp,setPopUp]= useState(false);
+	const [popUp, setPopUp] = useState(false);
 	const [error, setErorr] = useState("");
 
 	const isValid = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -24,48 +32,102 @@ const AdminSearchPanel = () => {
 
 	const handleFindUser = async (email: string) => {
 		if (email === "") {
-             setPopUp(true);
-			return console.error("email nezadán");
-           
-		}else{
-		try {
-			const user = await fetchUserByEmail(email);
-			setUserId(user.id);
-			setSelectedUserData(user);
-			setEmail(user.email);
-		} catch (error) {
-			console.error("Error fetching user by email:", error);
-			setSelectedUserData(null);
+			setPopUp(true);
+			return;
+		} else {
+			try {
+				const user = await fetchUserByEmail(email);
+				setUserId(user.id);
+				setSelectedUserData(user);
+				setEmail(user.email);
+			} catch (error) {
+				setErorr("Uživatel s tímto emailem nebyl nalezen.");
+				setSelectedUserData(null);
+			}
 		}
-    }
 	};
 
 	return (
-		<Box p={2}>
-			<Typography>Najdi ID podle emailu:</Typography>
-			<Input value={email} onChange={handleChange} />
-			<Button onClick={() => handleFindUser(email)}>Najdi uživatele</Button>
-			{popUp ? (
-				<Box
-					sx={{
-                        position:"absolute",
-						border: "1px solid",
-						boxShadow: "5",
-						borderRadius: "15px",
-						zIndex: "1",
-						left:"45%",
-						top: "15%",
-                        maxWidth:"50vw",
-                        height:"20vh",
-                        minWidth:"15vw",
-						width: "fitContent",
-					}}
-				>
-                    <Typography >Erorr</Typography>
-					<Typography sx={{paddingLeft:"5%",mt:"15%",top:"5%"}}>špatně zadany email</Typography>
-					<Button onClick={() => setPopUp(false)}>Zavřít</Button>
-				</Box>
-			) : null}
+		<Box
+			sx={{
+				p: 3,
+				bgcolor: "#f5f7fa",
+				borderRadius: 3,
+				boxShadow: 2,
+				fontFamily: "Montserrat, Arial, sans-serif",
+				mt: 2,
+				display: "flex",
+				flexDirection: "column",
+				alignItems: "flex-start",
+				gap: 2,
+				maxWidth: 400,
+			}}
+		>
+			<Typography
+				variant='h6'
+				sx={{
+					fontWeight: "bold",
+					color: "#1976d2",
+					fontFamily: "Montserrat, Arial, sans-serif",
+					mb: 1,
+				}}
+			>
+				Najdi uživatele podle emailu
+			</Typography>
+			<TextField
+				value={email}
+				onChange={handleChange}
+				type='email'
+				label='Email'
+				variant='outlined'
+				fullWidth
+				sx={{
+					bgcolor: "white",
+					borderRadius: 1,
+					fontFamily: "Montserrat, Arial, sans-serif",
+				}}
+				error={!!error}
+				helperText={error}
+			/>
+			<Button
+				variant='contained'
+				onClick={() => handleFindUser(email)}
+				sx={{
+					bgcolor: "#1976d2",
+					color: "#fff",
+					fontWeight: "bold",
+					fontFamily: "Montserrat, Arial, sans-serif",
+					"&:hover": { bgcolor: "#1565c0" },
+					mt: 1,
+					width: "100%",
+				}}
+			>
+				Najdi uživatele
+			</Button>
+			<Dialog open={popUp} onClose={() => setPopUp(false)}>
+				<DialogTitle sx={{ color: "#d32f2f", fontWeight: "bold" }}>
+					Chyba
+				</DialogTitle>
+				<DialogContent>
+					<Typography sx={{ mt: 1, color: "#222" }}>
+						Zadej prosím email.
+					</Typography>
+				</DialogContent>
+				<DialogActions>
+					<Button
+						onClick={() => setPopUp(false)}
+						variant='outlined'
+						sx={{
+							fontWeight: "bold",
+							color: "#1976d2",
+							borderColor: "#1976d2",
+							"&:hover": { bgcolor: "#e3fcec", borderColor: "#1976d2" },
+						}}
+					>
+						Zavřít
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</Box>
 	);
 };

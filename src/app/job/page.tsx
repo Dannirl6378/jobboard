@@ -10,7 +10,7 @@ const JobsPage = () => {
 		<Box
 			position='relative'
 			sx={{
-				bgcolor: "#D5DEFF",
+				bgcolor: "#cee5fdff",
 				p: 2,
 				borderRadius: 2,
 				maxHeight: "90vh",
@@ -21,9 +21,9 @@ const JobsPage = () => {
 		>
 			<Typography
 				variant='h6'
-				sx={{ color: "black", display: "flex", justifyContent: "center" }}
+				sx={{ color: "black", display: "flex", justifyContent: "center",fontFamily:"serif", fontWeight: "bold", mb: 1,fontSize: "1.5rem"	}}
 			>
-				Seznam nabídek
+				Nabídky práce
 			</Typography>
 			<JobList />
 		</Box>

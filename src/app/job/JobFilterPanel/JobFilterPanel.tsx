@@ -11,6 +11,9 @@ import {
 	IconButton,
 	Autocomplete,
 } from "@mui/material";
+import InputAdornment from '@mui/material/InputAdornment';
+import { filledInputClasses } from '@mui/material/FilledInput';
+import { inputBaseClasses } from '@mui/material/InputBase';
 import { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useAppStore } from "@/store/useAppStore";
@@ -91,11 +94,13 @@ export default function JobFilterPanel() {
 								"linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
 							borderRadius: 1,
 							boxShadow: 2,
+							color: "black",
 						}}
 						fullWidth
 						size='small'
 						label='Job Name'
 						name='jobName'
+						variant='filled'
 						value={filters.jobName}
 						onChange={handleChange}
 					/>
@@ -112,6 +117,7 @@ export default function JobFilterPanel() {
 						size='small'
 						label='Category'
 						name='category'
+						variant='filled'
 						value={filters.category}
 						onChange={handleChange}
 					/>
@@ -137,6 +143,8 @@ export default function JobFilterPanel() {
 								size='small'
 								label='Location'
 								name='location'
+								variant='filled'
+								
 							/>
 						)}
 					/>
@@ -153,8 +161,32 @@ export default function JobFilterPanel() {
 						size='small'
 						label='Salary'
 						name='salary'
+						variant='filled'
 						value={filters.salary}
 						onChange={handleChange}
+						slotProps={{
+									input: {
+										endAdornment: (
+											<InputAdornment
+												position='start'
+												sx={{
+													alignSelf: "normal",
+													opacity: 0,
+													pointerEvents: "none",
+													[`.${filledInputClasses.root} &`]: {
+														marginBottom: "7.5px",
+													},
+													[`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]:
+														{
+															opacity: 1,
+														},
+												}}
+											>
+												{"<"}
+											</InputAdornment>
+										),
+									},
+								}}
 					/>
 				</Grid>
 
@@ -193,19 +225,20 @@ export default function JobFilterPanel() {
 					<IconButton
 						sx={{
 							ml: 2,
-							bgcolor: "transparent",
-							borderRadius: 0,
+							bgcolor: "rgba(117, 177, 39, 0.46)",
+							borderRadius: 1,
 							":hover": { bgcolor: "#4338ca", borderRadius: 1 },
 						}}
 						onClick={() => setShowMore(!showMore)}
 					>
 						<ExpandMoreIcon
-							sx={{ fontSize: "1.2rem", color: "rgb(194, 176, 138)" }}
+							sx={{ fontSize: "1.5rem", color: "rgb(194, 176, 138)" }}
 						/>
 						<Typography
 							sx={{
 								color: "black",
 								fontSize: "0.8rem",
+								fontWeight: "bold",
 								ml: 1,
 							}}
 							variant='body2'
@@ -225,7 +258,14 @@ export default function JobFilterPanel() {
 						<FormGroup
 							row
 							sx={{
+								border: "1px solid #c7c2ba52",
+								borderRadius: 1,
+								background: "linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+								display: "flex",
+								alignItems: "center",
 								justifyContent: "center",
+								ml:"20%",
+								maxWidth:"60%",
 								gap: 1,
 								px: 1,
 								color: "black",
@@ -243,6 +283,7 @@ export default function JobFilterPanel() {
 										onChange={(e) =>
 											handleCheckboxChange("full", e.target.checked)
 										}
+										
 									/>
 								}
 								label='Plný úvazek'

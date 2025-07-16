@@ -12,11 +12,15 @@ import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation";
 
 const HeaderMainPage = () => {
-	const isAdmin = useAppStore((state) => state.LogIn?.role === "ADMIN");
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const LogIn = useAppStore((state) => state.LogIn);
 	const setLogIn = useAppStore((state) => state.setLogIn);
 	const router = useRouter();
+
+	const isAdmin = LogIn?.role === "ADMIN";
+	const isCompany = LogIn?.role === "COMPANY";
+	const isUser = LogIn?.role === "USER";
+	const isLoggedIn = Boolean(LogIn);
 
 	const handleLogout = () => {
 		setLogIn(null);
@@ -31,6 +35,10 @@ const HeaderMainPage = () => {
 			router.push("/user/admin");
 			return;
 		}
+		if (LogIn?.role === "COMPANY") {
+			router.push("/user/company");
+			return;
+		}
 		setSelectedUserId(null);
 		router.push("/user/users/userAppProfil");
 	};
@@ -40,28 +48,122 @@ const HeaderMainPage = () => {
 			<AppBar sx={{ width: "full-width", flexGrow: 1 }}>
 				<Toolbar>
 					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-						<Link href='/' underline='none' color='inherit'>
+						<Link
+							href='/'
+							underline='none'
+							color='inherit'
+							sx={{
+								fontWeight: "bold",
+								fontSize: { xs: 18, md: 28 },
+								fontFamily: "Arial",
+								letterSpacing: 2,
+							}}
+						>
 							JobBoard
 						</Link>
 					</Typography>
-					<Button color='inherit' onClick={() => router.push("/jobs")}>
-						Brigády
-					</Button>
-					{LogIn === null || LogIn?.role === "COMPANY" || "ADMIN" ? (
-						<Button color='inherit' onClick={() => router.push("/user")}>
+					{/* --- ADMIN --- */}
+					{isAdmin && (
+						<>
+							<Button
+								color='inherit'
+								onClick={() => router.push("/user")}
+								sx={{
+									fontWeight: "bold",
+									fontSize: 16,
+									fontFamily: "serif",
+									"&:hover": {
+										backgroundColor: "#e3fcec",
+										color: "#1976d2",
+									},
+								}}
+							>
+								Firmy
+							</Button>
+							<Button
+								color='inherit'
+								onClick={handleProfil}
+								sx={{
+									fontWeight: "bold",
+									fontSize: 16,
+									fontFamily: "serif",
+									"&:hover": {
+										backgroundColor: "#e3fcec",
+										color: "#1976d2",
+									},
+								}}
+							>
+								Profil
+							</Button>
+						</>
+					)}
+					{/* --- USER nebo COMPANY --- */}
+					{(isUser || isCompany) && (
+						<Button
+							color='inherit'
+							onClick={handleProfil}
+							sx={{
+								fontWeight: "bold",
+								fontSize: 16,
+								fontFamily: "serif",
+								"&:hover": {
+									backgroundColor: "#e3fcec",
+									color: "#1976d2",
+								},
+							}}
+						>
+							Profil
+						</Button>
+					)}
+					{/* --- NIKDO NEPŘIHLÁŠEN --- */}
+					{!isLoggedIn && (
+						<Button
+							color='inherit'
+							onClick={() => router.push("/user")}
+							sx={{
+								fontWeight: "bold",
+								fontSize: 16,
+								fontFamily: "serif",
+								"&:hover": {
+									backgroundColor: "#e3fcec",
+									color: "#1976d2",
+								},
+							}}
+						>
 							Firmy
 						</Button>
-					) : null}
-
-					<Button color='inherit' onClick={handleProfil}>
-						Profil
-					</Button>
-					{LogIn ? (
-						<Button onClick={handleLogout} color='inherit'>
+					)}
+					{/* --- LOGOUT/LOGIN --- */}
+					{isLoggedIn ? (
+						<Button
+							onClick={handleLogout}
+							color='inherit'
+							sx={{
+								fontWeight: "bold",
+								fontSize: 16,
+								fontFamily: "serif",
+								"&:hover": {
+									backgroundColor: "#e3fcec",
+									color: "#1976d2",
+								},
+							}}
+						>
 							Logout
 						</Button>
 					) : (
-						<Button onClick={handleLogin} color='inherit'>
+						<Button
+							onClick={handleLogin}
+							color='inherit'
+							sx={{
+								fontWeight: "bold",
+								fontSize: 16,
+								fontFamily: "serif",
+								"&:hover": {
+									backgroundColor: "#e3fcec",
+									color: "#1976d2",
+								},
+							}}
+						>
 							Login
 						</Button>
 					)}

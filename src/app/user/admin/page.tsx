@@ -150,108 +150,197 @@ const AdminMainPage = () => {
 	return (
 		<>
 			<HeaderMainPage />
-			<Box sx={{ padding: 2, border: 1, boxShadow: 3, bgcolor: "#f9f9f9" }}>
-				<Box pt={4}>
-					<Heading>Admin Page</Heading>
-				</Box>
-				<Box py={2}>
-					<Typography>Welcome to the Admin Dashboard</Typography>
-				</Box>
-				<Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-					<Button variant='contained' onClick={() => setIsCreateEnable(true)}>
-						Vytvoř Uživatele
-					</Button>
-				</Box>
-				{isCreateEnable ? (
-					<Box
-						sx={{
-							zIndex: 1,
-							position: "absolute",
-							right: "50%",
-							top: "50",
-							background: "white",
-							border: "2px solid",
-						}}
-					>
-						<AdminCreateUser />
-						<Button onClick={() => setIsCreateEnable(false)}>Close</Button>
+			<Box
+				sx={{
+					minHeight: "100vh",
+					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
+					py: 4,
+					px: { xs: 1, md: 4 },
+					display: "flex",
+					flexDirection: "column",
+					alignItems: "center",
+				}}
+			>
+				<Box
+					sx={{
+						width: "100%",
+						maxWidth: 950,
+						bgcolor: "white",
+						borderRadius: 3,
+						boxShadow: 6,
+						p: { xs: 2, md: 4 },
+						mb: 4,
+						fontFamily: "Montserrat, Arial, sans-serif",
+					}}
+				>
+					<Box pt={2} pb={1}>
+						<Typography
+							variant='h3'
+							sx={{
+								fontWeight: "bold",
+								color: "#1976d2",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								letterSpacing: 1,
+								mb: 1,
+							}}
+						>
+							Admin Page
+						</Typography>
+						<Typography sx={{ color: "#388e3c", fontWeight: 500, mb: 2 }}>
+							Welcome to the Admin Dashboard
+						</Typography>
 					</Box>
-				) : null}
-
-				<AdminSearchPanel />
-
-				<Box>
-					<Typography>Výsledky hledání:</Typography>
-					{selectedUserData ? (
-						<Box>
-							<UserDetailBox user={selectedUserData} aboutHtml={aboutHtml} />
-							<ApplicationJobList
-								selectedUserData={selectedUserData}
-								jobsFromApplications={jobsFromApplications}
-								applicationsArray={applicationsArray}
-								applicationJob={applicationJob}
-								jobsArray={jobsArray}
-								getUserById={getUserById}
-							/>
-							
-
-							<UserActionsPanel
-								selectedUserData={selectedUserData}
-								onEdit={() => setEditUserOpen(true)}
-								handleDelete={() => handleDelete(selectedUserData.id)}
-								deleteStatus={deleteStatus}
-								setDeleteStatus={setDeleteStatus}
-								editUserOpen={editUserOpen}
-								setEditUserOpen={setEditUserOpen}
-							/>
-							{editJobsOpen && (
-								<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
-							)}
-							{editJobError === true && (
-								<Dialog
-									open={editDialogJobOpen}
-									onClick={() => setEditDialogJobOpen(false)}
+					<Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+						<Button
+							variant='contained'
+							sx={{
+								bgcolor: "#1976d2",
+								color: "#fff",
+								fontWeight: "bold",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								"&:hover": { bgcolor: "#1565c0" },
+							}}
+							onClick={() => setIsCreateEnable(true)}
+						>
+							Vytvoř Uživatele
+						</Button>
+					</Box>
+					{isCreateEnable && (
+						<Box
+							sx={{
+								zIndex: 10,
+								position: "fixed",
+								left: 0,
+								top: 0,
+								width: "100vw",
+								height: "100vh",
+								bgcolor: "rgba(0,0,0,0.15)",
+								display: "flex",
+								alignItems: "center",
+								justifyContent: "center",
+							}}
+						>
+							<Box
+								sx={{
+									bgcolor: "white",
+									border: "2px solid #1976d2",
+									borderRadius: 3,
+									boxShadow: 10,
+									p: 4,
+									minWidth: 320,
+									maxWidth: "95vw",
+									fontFamily: "Montserrat, Arial, sans-serif",
+									display: "flex",
+									flexDirection: "column",
+									alignItems: "center",
+									gap: 2,
+								}}
+							>
+								<AdminCreateUser />
+								<Button
+									variant='outlined'
+									color='error'
+									sx={{ mt: 2, fontWeight: "bold" }}
+									onClick={() => setIsCreateEnable(false)}
 								>
-									<DialogTitle>Chyba</DialogTitle>
-									<DialogActions>
-										<Typography sx={{ p: 2 }}>
-											Vyberte právě jeden job pro úpravu!
-										</Typography>
-										<Button
-											onClick={() => {
-												setEditDialogJobOpen(false);
-												setEditJobError(false);
-											}}
-										>
-											Zrušit
-										</Button>
-									</DialogActions>
-								</Dialog>
-							) }
-							{selectedUserData?.role === "COMPANY" && (
-
-								<Box p={2}>
-									<CompanyJobsPanel
-										selectedUserData={selectedUserData}
-										companyJobs={companyJobs}
-										selectedJobId={selectedJobId}
-										toggleAllJobs={toggleAllJobs}
-										handleCheckboxChange={handleCheckboxChange}
-										setCreateJob={setCreateJob}
-										createJob={createJob}
-										handleDeleteJob={handleDeleteJob}
-										handleCreateOpenJob={handleCreateOpenJob}
-										handleEditJobs={handleEditJobs}
-									/>
-								</Box>
-							)}
+									Zavřít
+								</Button>
+							</Box>
 						</Box>
-					) : (
-						<Typography>No user found with this email.</Typography>
 					)}
-					<Button variant='contained' onClick={() => handleEnd()}>
-						Konec
-					</Button>
+
+					<AdminSearchPanel />
+
+					<Box sx={{ mt: 3 }}>
+						<Typography
+							variant='h6'
+							sx={{ color: "#1976d2", fontWeight: "bold", mb: 2 }}
+						>
+							Výsledky hledání:
+						</Typography>
+						{selectedUserData ? (
+							<Box>
+								<UserDetailBox user={selectedUserData} aboutHtml={aboutHtml} />
+								<ApplicationJobList
+									selectedUserData={selectedUserData}
+									jobsFromApplications={jobsFromApplications}
+									applicationsArray={applicationsArray}
+									applicationJob={applicationJob}
+									jobsArray={jobsArray}
+									getUserById={getUserById}
+								/>
+								<UserActionsPanel
+									selectedUserData={selectedUserData}
+									onEdit={() => setEditUserOpen(true)}
+									handleDelete={() => handleDelete(selectedUserData.id)}
+									deleteStatus={deleteStatus}
+									setDeleteStatus={setDeleteStatus}
+									editUserOpen={editUserOpen}
+									setEditUserOpen={setEditUserOpen}
+								/>
+								{editJobsOpen && (
+									<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
+								)}
+								{editJobError && (
+									<Dialog
+										open={editDialogJobOpen}
+										onClose={() => setEditDialogJobOpen(false)}
+									>
+										<DialogTitle sx={{ color: "#d32f2f", fontWeight: "bold" }}>
+											Chyba
+										</DialogTitle>
+										<DialogActions>
+											<Typography sx={{ p: 2 }}>
+												Vyberte právě jeden job pro úpravu!
+											</Typography>
+											<Button
+												onClick={() => {
+													setEditDialogJobOpen(false);
+													setEditJobError(false);
+												}}
+											>
+												Zrušit
+											</Button>
+										</DialogActions>
+									</Dialog>
+								)}
+								{selectedUserData?.role === "COMPANY" && (
+									<Box p={2}>
+										<CompanyJobsPanel
+											selectedUserData={selectedUserData}
+											companyJobs={companyJobs}
+											selectedJobId={selectedJobId}
+											toggleAllJobs={toggleAllJobs}
+											handleCheckboxChange={handleCheckboxChange}
+											setCreateJob={setCreateJob}
+											createJob={createJob}
+											handleDeleteJob={handleDeleteJob}
+											handleCreateOpenJob={handleCreateOpenJob}
+											handleEditJobs={handleEditJobs}
+										/>
+									</Box>
+								)}
+							</Box>
+						) : (
+							<Typography sx={{ color: "#d32f2f" }}>
+								No user found with this email.
+							</Typography>
+						)}
+						<Button
+							variant='contained'
+							sx={{
+								mt: 3,
+								bgcolor: "#43a047",
+								color: "#fff",
+								fontWeight: "bold",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								"&:hover": { bgcolor: "#2e7031" },
+							}}
+							onClick={handleEnd}
+						>
+							Konec
+						</Button>
+					</Box>
 				</Box>
 			</Box>
 		</>
