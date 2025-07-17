@@ -1,5 +1,5 @@
 // store/useAppStore.ts
-import { fetchUserByEmail, fetchUsers } from "@/lib/api";
+import { fetchUserByEmail, fetchUsers, fetchjobs } from "@/lib/api";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -54,6 +54,7 @@ type AppState = {
 	getApplicationById: (id: string) => Application | undefined;
 	setLogIn: (user: User | null) => void;
 	fetchAndSetUsers: (email: string) => Promise<void>;
+	reloadJobs: () => Promise<void>;
 };
 
 export const useAppStore = create<AppState>()(
@@ -71,6 +72,11 @@ export const useAppStore = create<AppState>()(
 			setSelectedUserId: (id) => set({ selectedUserId: id }), // Přidáno pro setter ID vybraného uživatele
 			setSelectedJobId: (id) => set({ selectedJobId: id }), // ← přidat setter
 			setSelectedUserData: (user) => set({ selectedUserData: user }), // Přidáno pro setter dat vybraného uživatele
+
+			reloadJobs: async () => {
+				const freshJobs = await fetchjobs();
+				set({ jobs: freshJobs, filteredJobs: [] });
+			},
 
 			setApplications: (applications) => {
 				const applicationMap = applications.reduce(

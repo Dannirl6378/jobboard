@@ -21,10 +21,12 @@ const Firm = () => {
 	const setSelectedJobId = useAppStore((state) => state.setSelectedJobId);
 	const logIn = useAppStore((state) => state.LogIn);
 	const usersArray = Object.values(useAppStore((state) => state.users));
-	const jobsArray = Object.values(useAppStore((state) => state.jobs));
+	//const jobsArray = Object.values(useAppStore((state) => state.jobs));
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
+	const jobs = useAppStore((state) => state.jobs);
+	const jobsArray = useMemo(() => Object.values(jobs), [jobs]);
 
 	// Ověření že users je pole
 	const getCompany = () =>
@@ -48,15 +50,30 @@ const Firm = () => {
 
 	const companyApplications = getCompanyApplications(companyJobs);
 
-	const getApplicantsForJob = (jobId: string) => {
-		return applicationsArray
-			.filter((app) => app.jobid === jobId)
-			.map((application) => {
-				const user = usersArray.find((user) => user.id === application.userid);
-				return user ? { ...user, applicationId: application.id } : null;
-			})
-			.filter(Boolean); // Odstraní `null` hodnoty
-	};
+	const applicantsByJobId = useMemo(() => {
+		const result: Record<string, any[]> = {};
+
+		for (const job of companyJobs) {
+			const applicants = applicationsArray
+				.filter((app) => {
+					const match = app.jobid === job.id;
+
+					return match;
+				})
+				.map((application) => {
+					const user = usersArray.find(
+						(user) => user.id === application.userid
+					);
+					if (user) {
+					}
+					return user ? { ...user, applicationId: application.id } : null;
+				})
+				.filter(Boolean);
+
+			result[job.id] = applicants;
+		}
+		return result;
+	}, [companyJobs, applicationsArray, usersArray]);
 
 	const handleEditWorkOffer = (jobId: string) => {
 		setSelectedJobId(jobId);
@@ -110,12 +127,13 @@ const Firm = () => {
 				bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 				display: "flex",
 				flexDirection: "column",
+				width: "75%",
 			}}
 		>
 			<HeaderMainPage />
 			<Box
 				sx={{
-					maxWidth: 900,
+					maxWidth: "70vw",
 					width: "100%",
 					mx: "auto",
 					mt: { xs: 2, md: 6 },
@@ -206,7 +224,7 @@ const Firm = () => {
 						</Typography>
 					) : (
 						companyJobs.map((job) => {
-							const applicants = getApplicantsForJob(job.id);
+							const applicants = applicantsByJobId[job.id] || [];
 							const isOpen = openApplicantsJobId === job.id;
 							return (
 								<Box

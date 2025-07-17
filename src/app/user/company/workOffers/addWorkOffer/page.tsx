@@ -78,121 +78,187 @@ export default function AddWorkOffer() {
 	return (
 		<>
 			<HeaderMainPage />
-			<form
-				noValidate
-				autoComplete='off'
-				style={{
-					border: "1px solid gray",
-					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
-					padding: "16px",
-					backgroundColor: "#F5F5F5",
-					opacity: 0.8,
-					borderRadius: "8px",
-					maxHeight: "100vh",
-					overflowY: "auto",
-					width: "80%",
-					marginTop: "10%",
-					marginLeft: "10%",
+			<Box
+				sx={{
+					minHeight: "100vh",
+					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					display: "flex",
-					flexDirection: "column",
-					gap: "24px",
 					justifyContent: "center",
-					paddingTop: "10%",
+					alignItems: "flex-start",
+					py: 4,
 				}}
 			>
-				<Heading>Nová nabídka práce</Heading>
-				<Box>
-					<SubHeading>Title:</SubHeading>
-					<TextField
-						value={title}
-						onChange={(e) => setTitle(e.target.value)}
-						required
-					/>
-				</Box>
 				<Box
+					component='form'
+					noValidate
+					autoComplete='off'
+					onSubmit={handleSubmit}
 					sx={{
+						border: "2px solid #1976d2",
+						boxShadow: 6,
+						padding: { xs: 2, sm: 4 },
+						background: "white",
+						borderRadius: 3,
+						maxHeight: "95vh",
+						overflowY: "auto",
+						width: { xs: "98vw", sm: 500 },
+						maxWidth: 600,
+						mx: "auto",
+						mt: 4,
 						display: "flex",
-						flexDirection: "row",
-						flexWrap: "wrap",
-						gap: "2%",
+						flexDirection: "column",
+						gap: 3,
+						justifyContent: "center",
+						fontFamily: "Montserrat, Arial, sans-serif",
 					}}
 				>
+					<Heading
+						sx={{
+							color: "#1976d2",
+							fontFamily: "Montserrat, Arial, sans-serif",
+							fontWeight: "bold",
+							textAlign: "center",
+							mb: 2,
+						}}
+					>
+						Nová nabídka práce
+					</Heading>
 					<Box>
-						<Text>Location:</Text>
+						<SubHeading sx={{ color: "#388e3c" }}>Název pozice:</SubHeading>
 						<TextField
-							type='text'
-							value={location}
-							onChange={(e) => setLocation(e.target.value)}
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
 							required
+							fullWidth
+							sx={{ bgcolor: "white", borderRadius: 1 }}
 						/>
 					</Box>
-					<Box>
-						<Text>Salary:</Text>
-						<TextField
-							type='number'
-							value={salary}
-							onChange={(e) => setSalary(e.target.value)}
-							required
-						/>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: { xs: "column", sm: "row" },
+							flexWrap: "wrap",
+							gap: 2,
+						}}
+					>
+						<Box sx={{ flex: 1 }}>
+							<Text sx={{ color: "#1976d2" }}>Lokalita:</Text>
+							<TextField
+								type='text'
+								value={location}
+								onChange={(e) => setLocation(e.target.value)}
+								required
+								fullWidth
+								sx={{ bgcolor: "white", borderRadius: 1 }}
+							/>
+						</Box>
+						<Box sx={{ flex: 1 }}>
+							<Text sx={{ color: "#1976d2" }}>Mzda:</Text>
+							<TextField
+								type='number'
+								value={salary}
+								onChange={(e) => setSalary(e.target.value)}
+								required
+								fullWidth
+								sx={{ bgcolor: "white", borderRadius: 1 }}
+							/>
+						</Box>
+					</Box>
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: { xs: "column", sm: "row" },
+							flexWrap: "wrap",
+							gap: 2,
+						}}
+					>
+						<Box sx={{ flex: 1 }}>
+							<Text sx={{ color: "#1976d2" }}>Kategorie:</Text>
+							<TextField
+								id='select-Type-Job'
+								select
+								type='list'
+								value={category}
+								onChange={(e) => setCategory(e.target.value)}
+								required
+								fullWidth
+								sx={{ bgcolor: "white", borderRadius: 1 }}
+							>
+								{Jobtype.map((option) => (
+									<MenuItem key={option.value} value={option.value}>
+										{option.label}
+									</MenuItem>
+								))}
+							</TextField>
+						</Box>
+						<Box sx={{ flex: 1 }}>
+							<Text sx={{ color: "#1976d2" }}>Úvazek:</Text>
+							<TextField
+								id='select-Attend-Job'
+								select
+								type='list'
+								value={attending}
+								onChange={(e) => setAttending(e.target.value)}
+								required
+								fullWidth
+								sx={{ bgcolor: "white", borderRadius: 1 }}
+							>
+								{JobAtending.map((option) => (
+									<MenuItem key={option.value} value={option.value}>
+										{option.label}
+									</MenuItem>
+								))}
+							</TextField>
+						</Box>
 					</Box>
 					<Box>
-						<Text>Category:</Text>
-						<TextField
-							id='select-Type-Job'
-							select
-							type='list'
-							value={category}
-							onChange={(e) => setCategory(e.target.value)}
-							required
-							sx={{ width: "26ch" }}
-						>
-							{Jobtype.map((option) => (
-								<MenuItem key={option.value} value={option.value}>
-									{option.label}
-								</MenuItem>
-							))}
-						</TextField>
-					</Box>
-					<Box>
-						<Text>Úvazek:</Text>
-						<TextField
-							id='select-Attend-Job'
-							select
-							type='list'
-							value={attending}
-							onChange={(e) => setAttending(e.target.value)}
-							required
-							sx={{ width: "26ch" }}
-						>
-							{JobAtending.map((option) => (
-								<MenuItem key={option.value} value={option.value}>
-									{option.label}
-								</MenuItem>
-							))}
-						</TextField>
-					</Box>
-				</Box>
-				<Box>
-					<Text>Description:</Text>
-					<>
+						<Text sx={{ color: "#1976d2" }}>Popis pozice:</Text>
 						<QuillEditor
 							value={description}
 							onChange={setDescription}
 							edit={true}
 						/>
-					</>
+					</Box>
+					{error && (
+						<Typography sx={{ color: "#d32f2f", fontWeight: "bold" }}>
+							{error}
+						</Typography>
+					)}
+					{success && (
+						<Typography sx={{ color: "#43a047", fontWeight: "bold" }}>
+							Job created successfully!
+						</Typography>
+					)}
+					<Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+						<Button
+							variant='contained'
+							type='submit'
+							sx={{
+								bgcolor: "#1976d2",
+								color: "#fff",
+								fontWeight: "bold",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								"&:hover": { bgcolor: "#1565c0" },
+							}}
+						>
+							Přidat nabídku
+						</Button>
+						<Button
+							variant='contained'
+							onClick={handleBack}
+							sx={{
+								bgcolor: "#43a047",
+								color: "#fff",
+								fontWeight: "bold",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								"&:hover": { bgcolor: "#2e7031" },
+							}}
+						>
+							Zpět
+						</Button>
+					</Box>
 				</Box>
-
-				{error && <p style={{ color: "red" }}>{error}</p>}
-				{success && <p style={{ color: "green" }}>Job created successfully!</p>}
-				<Button variant='contained' type='submit' onClick={handleSubmit}>
-					Add Work Offer
-				</Button>
-				<Button variant='contained' onClick={handleBack}>
-					zpět
-				</Button>
-			</form>
+			</Box>
 		</>
 	);
 }
-// 				<TextField

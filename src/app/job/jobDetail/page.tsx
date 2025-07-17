@@ -4,13 +4,12 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import { useAppStore } from "@/store/useAppStore";
 import { Heading } from "@/styles/editTypoghraphy";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const JobDetail = () => {
 	const router = useRouter();
-	//tady pak načitam job a přihlašeneho uživatele
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 	const jobs = useAppStore((state) => state.jobs);
 	const job = selectedJobId ? jobs[selectedJobId] : null;
@@ -26,10 +25,6 @@ const JobDetail = () => {
 		}
 	}, [job?.description]);
 
-	if (!job) return <div>Žádná nabídka nevybrána</div>;
-
-	console.log("jobdescrip", job.description);
-	console.log("purify", purifyDescr);
 	const handleApply = () => {
 		if (usersArray === null) {
 			router.push("/application/noLogUser");
@@ -42,99 +37,193 @@ const JobDetail = () => {
 	return (
 		<>
 			<HeaderMainPage />
-			<form
-				noValidate
-				autoComplete='off'
-				style={{
-					border: "1px solid gray",
-					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
-					padding: "16px",
-					backgroundColor: "#F5F5F5",
-					opacity: 0.8,
-					borderRadius: "8px",
-					maxHeight: "100vh",
-					overflowY: "auto",
-					width: "80%",
-					marginTop: "10%",
-					marginLeft: "10%",
+			<Box
+				sx={{
+					minHeight: "100vh",
+					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					display: "flex",
-					flexDirection: "column",
-					gap: "24px",
 					justifyContent: "center",
+					alignItems: "flex-start",
+					py: 6,
 				}}
 			>
 				<Box
 					sx={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
-					}}
-				>
-					<Heading>Práce</Heading>
-					{isLogin?.role === "COMPANY" ? null : (
-						<Button variant='contained' color='primary' onClick={handleApply}>
-							Apply
-						</Button>
-					)}
-				</Box>
-
-				<Box
-					sx={{
-						display: "flex",
-						gap: "2%",
-						flexDirection: "row",
-						justifyContent: "space-between",
-					}}
-				>
-					<Box>
-						<Typography sx={{ color: "black" }}>Job Name:</Typography>
-						<TextField
-							id='title'
-							variant='outlined'
-							defaultValue={job?.title}
-							disabled={false}
-						/>
-					</Box>
-					<Box>
-						<Typography sx={{ color: "black" }}>Job Salary:</Typography>
-						<TextField
-							id='salary'
-							variant='outlined'
-							defaultValue={job?.salary}
-							disabled={false}
-						/>
-					</Box>
-					<Box>
-						<Typography sx={{ color: "black" }}>Job Location:</Typography>
-						<TextField
-							id='location'
-							variant='outlined'
-							defaultValue={job?.location}
-							disabled={false}
-						/>
-					</Box>
-				</Box>
-				<Box
-					sx={{
-						display: "flex",
+						bgcolor: "white",
+						borderRadius: 4,
+						boxShadow: 8,
+						maxWidth: 700,
 						width: "100%",
-						height: "45vh",
-						overflow: "auto",
-						border: "1px solid black",
-						borderRadius: "5px",
-						color: "black",
-						boxShadow: 5,
-						padding: 2,
+						mx: "auto",
+						p: { xs: 2, sm: 5 },
+						display: "flex",
+						flexDirection: "column",
+						gap: 3,
+						fontFamily: "Montserrat, Arial, sans-serif",
 					}}
 				>
-					{/*toto pak se zobrazi jako profil při navšteve jineho uživatele */}
-					<div
-						className='rich-content'
-						dangerouslySetInnerHTML={{ __html: purifyDescr ?? "" }}
-					/>
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							mb: 2,
+						}}
+					>
+						<Heading
+							sx={{
+								color: "#1976d2",
+								fontWeight: "bold",
+								letterSpacing: 1,
+							}}
+						>
+							{job?.title || "Pracovní pozice"}
+						</Heading>
+						{isLogin?.role !== "COMPANY" && (
+							<Button
+								variant='contained'
+								onClick={handleApply}
+								sx={{
+									bgcolor: "#1976d2",
+									color: "#fff",
+									fontWeight: "bold",
+									fontFamily: "Montserrat, Arial, sans-serif",
+									"&:hover": { bgcolor: "#1565c0" },
+									px: 4,
+									py: 1.5,
+									borderRadius: 2,
+									boxShadow: 2,
+								}}
+							>
+								Odpovědět na nabídku
+							</Button>
+						)}
+					</Box>
+
+					<Box
+						sx={{
+							display: "flex",
+							flexWrap: "wrap",
+							gap: 4,
+							mb: 2,
+						}}
+					>
+						<Box>
+							<Typography
+								sx={{
+									color: "#388e3c",
+									fontWeight: 600,
+									fontSize: 18,
+								}}
+							>
+								Mzda:
+							</Typography>
+							<Typography
+								sx={{
+									color: "#222",
+									fontWeight: "bold",
+									fontSize: 20,
+								}}
+							>
+								{job?.salary ? `${job.salary} Kč` : "Neuvedeno"}
+							</Typography>
+						</Box>
+						<Box>
+							<Typography
+								sx={{
+									color: "#388e3c",
+									fontWeight: 600,
+									fontSize: 18,
+								}}
+							>
+								Lokalita:
+							</Typography>
+							<Typography
+								sx={{
+									color: "#222",
+									fontWeight: "bold",
+									fontSize: 20,
+								}}
+							>
+								{job?.location || "Neuvedeno"}
+							</Typography>
+						</Box>
+						<Box>
+							<Typography
+								sx={{
+									color: "#388e3c",
+									fontWeight: 600,
+									fontSize: 18,
+								}}
+							>
+								Kategorie:
+							</Typography>
+							<Typography
+								sx={{
+									color: "#222",
+									fontWeight: "bold",
+									fontSize: 20,
+								}}
+							>
+								{job?.category || "Neuvedeno"}
+							</Typography>
+						</Box>
+						<Box>
+							<Typography
+								sx={{
+									color: "#388e3c",
+									fontWeight: 600,
+									fontSize: 18,
+								}}
+							>
+								Typ úvazku:
+							</Typography>
+							<Typography
+								sx={{
+									color: "#222",
+									fontWeight: "bold",
+									fontSize: 20,
+								}}
+							>
+								{job?.Attendance|| "Neuvedeno"}
+							</Typography>
+						</Box>
+					</Box>
+
+					<Box
+						sx={{
+							width: "100%",
+							minHeight: 120,
+							maxHeight: 350,
+							overflow: "auto",
+							border: "1.5px solid #cee5fd",
+							borderRadius: 3,
+							bgcolor: "#f5f7fa",
+							color: "#222",
+							p: 3,
+							boxShadow: 2,
+						}}
+					>
+						<Typography
+							variant='h6'
+							sx={{
+								color: "#1976d2",
+								fontWeight: "bold",
+								mb: 2,
+								fontFamily: "Montserrat, Arial, sans-serif",
+							}}
+						>
+							Popis pracovní pozice
+						</Typography>
+						<div
+							className='rich-content'
+							dangerouslySetInnerHTML={{ __html: purifyDescr ?? "" }}
+						/>
+					</Box>
 				</Box>
-			</form>
+			</Box>
 		</>
 	);
 };
+
 export default JobDetail;

@@ -1,6 +1,5 @@
 "use client";
 import { fetchjobs } from "@/lib/api";
-import { useQuery } from "@tanstack/react-query";
 import { useAppStore } from "@/store/useAppStore";
 import { useEffect, useState } from "react";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
@@ -14,30 +13,40 @@ const JobList = () => {
 	const jobsPerPage = 15;
 	const router = useRouter();
 	const setSelectedJobId = useAppStore((state) => state.setSelectedJobId);
+	const setJobs = useAppStore((state) => state.setJobs);
+	const filteredJobs = useAppStore((state) => state.filteredJobs);
+	const jobs = useAppStore((state) => state.jobs);
 	const [joby, setJoby] = useState<Job[]>([]);
 	const [sanitizedDescriptions, setSanitizedDescriptions] = useState<
 		Record<string, string>
 	>({});
-	const { data, error, isLoading } = useQuery<Job[]>({
-		queryKey: ["jobs"],
-		queryFn: fetchjobs,
-	});
-	const filteredJobs = useAppStore((state) => state.filteredJobs);
-	const paginatedJobs = joby.slice(
-		(page - 1) * jobsPerPage,
-		page * jobsPerPage
-	);
-	const totalPages = Math.ceil(joby.length / jobsPerPage);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const reloadJobs = useAppStore((state) => state.reloadJobs);
+
 	useEffect(() => {
-		if (data) {
-			useAppStore.getState().setJobs(data); // předpokládám, že chceš uložit všechny joby
-			if (filteredJobs && filteredJobs.length > 0) {
-				setJoby(filteredJobs);
-			} else {
-				setJoby(data);
-			}
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        await reloadJobs();  // Zde voláš store metodu, která aktualizuje jobs a filteredJobs v store
+      } catch (e) {
+        setError("Nepodařilo se načíst nabídky práce.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [reloadJobs]);
+
+	useEffect(() => {
+		if (filteredJobs.length > 0) {
+			setJoby(filteredJobs);
+		} else {
+			setJoby(Object.values(jobs));
 		}
-	}, [data, filteredJobs]);
+	}, [filteredJobs, jobs]);
+	console.log("joby", joby);
 
 	useEffect(() => {
 		const fetchSanitizedDescriptions = async () => {
@@ -53,180 +62,188 @@ const JobList = () => {
 		};
 		fetchSanitizedDescriptions();
 	}, [joby]);
-	if (isLoading) {
+
+	const paginatedJobs = joby.slice(
+		(page - 1) * jobsPerPage,
+		page * jobsPerPage
+	);
+	const totalPages = Math.ceil(joby.length / jobsPerPage);
+
+	if (loading) {
 		return (
-			<Typography
-				sx={{
-					color: "black",
-					fontSize: "0.8rem",
-					ml: 1,
-				}}
-			>
-				Loading...
+			<Typography sx={{ color: "black", fontSize: "0.8rem", ml: 1 }}>
+				Načítání...
 			</Typography>
 		);
 	}
-	if (error instanceof Error)
+
+	if (error) {
 		return (
-			<Typography
-				sx={{
-					color: "black",
-					fontSize: "0.8rem",
-					ml: 1,
-				}}
-			>
-				Error: ...{error.message}
+			<Typography sx={{ color: "black", fontSize: "0.8rem", ml: 1 }}>
+				{error}
 			</Typography>
 		);
+	}
 
-	if (!data) {
+	if (joby.length === 0) {
 		return (
-			<Typography
-				sx={{
-					color: "black",
-					fontSize: "0.8rem",
-					ml: 1,
-				}}
-			>
-				No Job found
+			<Typography sx={{ color: "black", fontSize: "0.8rem", ml: 1 }}>
+				Žádné nabídky práce nenalezeny
 			</Typography>
 		);
 	}
 
 	const handleJobClick = (id: string) => {
-		// např. router.push(`/job/${id}`)
 		setSelectedJobId(id);
 		router.push(`/job/jobDetail`);
 	};
 
 	return (
 		<>
-			<List>
-				{paginatedJobs?.map((job: Job) => (
+			<List sx={{ width: "100%", maxWidth: 900, mx: "auto", mt: 3 }}>
+				{paginatedJobs.map((job: Job) => (
 					<ListItem
 						key={job.id}
 						onClick={() => handleJobClick(job.id)}
 						sx={{
-							color: "#222222",
-							backgroundColor: "#f5f7fa",
-							flexDirection: "column", // důležité pro vertikální rozložení
-							alignItems: "flex-start",
-							gap: 1,
-							boxShadow: 3,
-							borderRadius: 2,
-							p: { xs: 1, md: 2 },
-							mb: 2,
-							maxHeight: "17vh",
-							transition: "all 0.2s cubic-bezier(.4,0,.2,1)",
+							width: "100%",
+							bgcolor: "#f5f7fa",
+							borderRadius: 3,
+							boxShadow: 4,
+							p: { xs: 2, md: 3 },
+							mb: 3,
+							display: "flex",
+							flexDirection: { xs: "column", sm: "row" },
+							alignItems: { xs: "flex-start", sm: "center" },
+							justifyContent: "space-between",
+							gap: 2,
 							cursor: "pointer",
+							transition: "all 0.2s cubic-bezier(.4,0,.2,1)",
+							border: "1.5px solid #cee5fd",
 							"&:hover": {
-								backgroundColor: "#8ffdb79a",
+								bgcolor: "#e3fcec",
 								color: "#1976d2",
 								boxShadow: 8,
 								transform: "scale(1.01)",
+								borderColor: "#43a047",
 							},
+							fontFamily: "Montserrat, Arial, sans-serif",
 						}}
 					>
-						<Typography
-							variant='h6'
-							sx={{
-								color: "black",
-								fontSize: "1.4rem",
-								textDecoration: "underline",
-							}}
-						>
-							{job.title}
-						</Typography>
-
-						<Typography
-							variant='body2'
-							sx={{
-								color: "black",
-								opacity: 0.9,
-								fontSize: "0.8rem",
-								ml: 2,
-							}}
-							component='div'
-							dangerouslySetInnerHTML={{
-								__html: sanitizedDescriptions[job.id] || "",
-							}}
-						/>
-
-						<Typography
-							variant='body2'
-							sx={{
-								color: "black",
-								opacity: 0.9,
-								fontSize: "0.8rem",
-								ml: 4,
-							}}
-						>
-							{job.salary}/měsíc
-						</Typography>
-
-						<Typography
-							variant='body2'
-							sx={{
-								color: "black",
-								opacity: 0.7,
-								fontSize: "0.8rem",
-								ml: 6,
-							}}
-						>
-							{job.location}
-						</Typography>
-
+						<Box sx={{ flex: 2, minWidth: 0 }}>
+							<Typography
+								variant='h6'
+								sx={{
+									color: "#1976d2",
+									fontWeight: "bold",
+									fontSize: "1.3rem",
+									mb: 0.5,
+									letterSpacing: 0.5,
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									whiteSpace: "nowrap",
+								}}
+							>
+								{job.title}
+							</Typography>
+							<Typography
+								variant='body2'
+								sx={{
+									color: "#222",
+									opacity: 0.95,
+									fontSize: "1rem",
+									mb: 1,
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									whiteSpace: "nowrap",
+								}}
+								component='div'
+								dangerouslySetInnerHTML={{
+									__html: sanitizedDescriptions[job.id] || "",
+								}}
+							/>
+							<Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+								<Typography
+									variant='body2'
+									sx={{ color: "#388e3c", fontWeight: 600 }}
+								>
+									{job.salary ? `${job.salary} Kč/měsíc` : "Mzda neuvedena"}
+								</Typography>
+								<Typography
+									variant='body2'
+									sx={{ color: "#1976d2", fontWeight: 600 }}
+								>
+									{job.location}
+								</Typography>
+								<Typography
+									variant='body2'
+									sx={{ color: "#43a047", fontWeight: 600 }}
+								>
+									{job.category}
+								</Typography>
+							</Box>
+						</Box>
 						<Box
 							sx={{
-								width: "100%",
-								display: "flex",
-								justifyContent: "flex-end",
-								pr: "5%",
+								flex: 1,
+								minWidth: 120,
+								textAlign: { xs: "left", sm: "right" },
 							}}
 						>
 							<Typography
 								variant='body2'
-								component='div'
 								sx={{
-									color: "black",
-									opacity: 0.9,
-									fontSize: "0.8rem",
-									mt: -5,
+									color: "#888",
+									fontSize: "0.95rem",
+									fontWeight: 500,
 								}}
 							>
-								{job.createdat instanceof Date
-									? job.createdat.toLocaleDateString()
-									: new Date(job.createdat).toLocaleDateString()}
+								{new Date(job.createdat).toLocaleDateString()}
 							</Typography>
 						</Box>
 					</ListItem>
 				))}
 			</List>
+
 			<Box
-				sx={{
-					border: "0px solid",
-					display: "flex",
-					justifyContent: "center",
-					mt: 1,
-					mb: 1,
-					pb: 5,
-				}}
+				sx={{ display: "flex", justifyContent: "center", mt: 1, mb: 1, pb: 5 }}
 			>
 				<Button
 					variant='contained'
 					disabled={page === 1}
 					onClick={() => setPage(page - 1)}
-					sx={{ mr: 2 }}
+					sx={{
+						bgcolor: "#1976d2",
+						color: "#fff",
+						fontWeight: "bold",
+						fontFamily: "Montserrat, Arial, sans-serif",
+						"&:hover": { bgcolor: "#1565c0" },
+						mr: 2,
+					}}
 				>
 					Předchozí
 				</Button>
-				<Typography sx={{ mx: 2, fontWeight: "bold", color: "black" }}>
+				<Typography
+					sx={{
+						mx: 2,
+						fontWeight: "bold",
+						color: "#1976d2",
+						fontFamily: "Montserrat, Arial, sans-serif",
+					}}
+				>
 					Stránka {page} / {totalPages}
 				</Typography>
 				<Button
 					variant='contained'
 					disabled={page * jobsPerPage >= joby.length}
 					onClick={() => setPage(page + 1)}
+					sx={{
+						bgcolor: "#1976d2",
+						color: "#fff",
+						fontWeight: "bold",
+						fontFamily: "Montserrat, Arial, sans-serif",
+						"&:hover": { bgcolor: "#1565c0" },
+					}}
 				>
 					Další
 				</Button>
@@ -234,4 +251,5 @@ const JobList = () => {
 		</>
 	);
 };
+
 export default JobList;

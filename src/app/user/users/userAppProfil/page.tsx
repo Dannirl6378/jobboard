@@ -149,12 +149,14 @@ export default function UserProfil() {
 					}}
 				>
 					<Box sx={{ width: "100%", textAlign: "center", mb: 2 }}>
-						<Heading sx={{ color: "#1976d2", fontWeight: "bold" }}>
+						<Heading
+							sx={{ color: "#1976d2", fontWeight: "bold", letterSpacing: 1 }}
+						>
 							Profil uživatele
 						</Heading>
 					</Box>
 					<Box sx={{ width: "100%" }}>
-						<Text sx={{ color: "#1976d2" }}>Email:</Text>
+						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Email:</Text>
 						<Input
 							id='email'
 							value={email}
@@ -163,14 +165,18 @@ export default function UserProfil() {
 							fullWidth
 							sx={{
 								bgcolor: "#f5f7fa",
-								borderRadius: 1,
+								borderRadius: 2,
 								mb: 1,
 								fontFamily: "Montserrat, Arial, sans-serif",
+								color: "#222",
+								fontWeight: 500,
 							}}
 						/>
 					</Box>
 					<Box sx={{ width: "100%" }}>
-						<Text sx={{ color: "#1976d2" }}>Uživatelské jméno:</Text>
+						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>
+							Uživatelské jméno:
+						</Text>
 						<Input
 							id='userName'
 							value={name}
@@ -179,14 +185,16 @@ export default function UserProfil() {
 							fullWidth
 							sx={{
 								bgcolor: "#f5f7fa",
-								borderRadius: 1,
+								borderRadius: 2,
 								mb: 1,
 								fontFamily: "Montserrat, Arial, sans-serif",
+								color: "#222",
+								fontWeight: 500,
 							}}
 						/>
 					</Box>
 					<Box sx={{ width: "100%" }}>
-						<Text sx={{ color: "#1976d2" }}>Telefon:</Text>
+						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Telefon:</Text>
 						<Input
 							id='Telefon'
 							value={phone}
@@ -195,16 +203,18 @@ export default function UserProfil() {
 							fullWidth
 							sx={{
 								bgcolor: "#f5f7fa",
-								borderRadius: 1,
+								borderRadius: 2,
 								mb: 1,
 								fontFamily: "Montserrat, Arial, sans-serif",
+								color: "#222",
+								fontWeight: 500,
 							}}
 						/>
 					</Box>
 					{isEnable && (
 						<>
 							<Box sx={{ width: "100%" }}>
-								<Text sx={{ color: "#1976d2" }}>Heslo:</Text>
+								<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Heslo:</Text>
 								<Input
 									id='password'
 									type='password'
@@ -214,14 +224,18 @@ export default function UserProfil() {
 									fullWidth
 									sx={{
 										bgcolor: "#f5f7fa",
-										borderRadius: 1,
+										borderRadius: 2,
 										mb: 1,
 										fontFamily: "Montserrat, Arial, sans-serif",
+										color: "#222",
+										fontWeight: 500,
 									}}
 								/>
 							</Box>
 							<Box sx={{ width: "100%" }}>
-								<Text sx={{ color: "#1976d2" }}>Opakovat heslo:</Text>
+								<Text sx={{ color: "#1976d2", fontWeight: 600 }}>
+									Opakovat heslo:
+								</Text>
 								<Input
 									id='rePassword'
 									type='password'
@@ -231,9 +245,11 @@ export default function UserProfil() {
 									fullWidth
 									sx={{
 										bgcolor: "#f5f7fa",
-										borderRadius: 1,
+										borderRadius: 2,
 										mb: 1,
 										fontFamily: "Montserrat, Arial, sans-serif",
+										color: "#222",
+										fontWeight: 500,
 									}}
 								/>
 							</Box>
