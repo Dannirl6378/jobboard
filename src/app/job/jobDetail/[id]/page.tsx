@@ -8,22 +8,71 @@ import { Box, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useParams } from "next/navigation";
+import { Job } from "@/types/job";
+
 const JobDetail = () => {
+	 const params = useParams();
+	 const jobId = Array.isArray(params.id) ? params.id[0] : params.id;
+
 	const router = useRouter();
-	const selectedJobId = useAppStore((state) => state.selectedJobId);
+	const reloadJobs = useAppStore((state) => state.reloadJobs);
 	const jobs = useAppStore((state) => state.jobs);
-	const job = selectedJobId ? jobs[selectedJobId] : null;
 	const isLogin = useAppStore((state) => state.LogIn);
 	const usersArray = useAppStore((state) => state.LogIn);
+
+	const [job, setJob] = useState<Job | null>(null);
+	const [loading, setLoading] = useState(!job);
+	const [error, setError] = useState<string | null>(null);
 	const [purifyDescr, setPurifyDescr] = useState("");
 
+	if(!jobId || typeof jobId !== "string") {
+		console.log("ID nebylo zadáno");
+		return <Typography>Chybí ID pozice</Typography>;
+	}
+	
+	
 	useEffect(() => {
-		if (job?.description) {
-			sanitizeHtml(job.description).then(setPurifyDescr);
-		} else {
-			setPurifyDescr("");
+	const fetchData = async () => {
+		if (!jobId) {
+			setError("Chybí ID pozice.");
+			return;
 		}
-	}, [job?.description]);
+
+		const currentJob: Job | null = Object.values(jobs).find(j => j.id === jobId) ?? null;
+
+		if (!currentJob) {
+			setLoading(true);
+			try {
+				await reloadJobs();
+				const updatedJob = useAppStore.getState().jobs[jobId];
+				if (updatedJob) {
+					setJob(updatedJob);
+					if (updatedJob.description) {
+						const clean = await sanitizeHtml(updatedJob.description);
+						setPurifyDescr(clean);
+					}
+				} else {
+					setError("Pozice nenalezena.");
+				}
+			} catch {
+				setError("Chyba při načítání dat.");
+			} finally {
+				setLoading(false);
+			}
+		} else {
+			setJob(currentJob);
+			if (currentJob.description) {
+				sanitizeHtml(currentJob.description).then(setPurifyDescr);
+			}
+			setLoading(false);
+		}
+	};
+
+	fetchData();
+}, [jobId]);
+
+
 
 	const handleApply = () => {
 		if (usersArray === null) {

@@ -8,11 +8,13 @@ type User = {
 	name: string;
 	email: string;
 	role: "ADMIN" | "USER" | "TEMPORAL" | "COMPANY";
+	password:string;
 	passwordHash: string;
 	about: string;
 	Phone: string;
 	CoverLetter: string;
 	CV: string;
+	isDemo: boolean;
 	created_at: Date;
 };
 type Job = {
@@ -24,6 +26,7 @@ type Job = {
 	companyid: string;
 	Attendance: string;
 	category: string;
+	isDemo: boolean;
 	createdat: Date;
 };
 type Application = {

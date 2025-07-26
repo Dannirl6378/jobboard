@@ -8,6 +8,8 @@ import {
 	Dialog,
 	DialogActions,
 	DialogTitle,
+	FormControlLabel,
+	Switch,
 	Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -44,6 +46,8 @@ const AdminMainPage = () => {
 	const [editJobsOpen, setEditJobsOpen] = useState<boolean>(false);
 	const [editJobError, setEditJobError] = useState<boolean>(false);
 	const [editDialogJobOpen, setEditDialogJobOpen] = useState<boolean>(false);
+	const [showSwitch, setShowSwitch] = useState<boolean>(false);
+	const [deleteDemoChecked, setDeleteDemoChecked] = useState(false);
 	const [deleteStatus, setDeleteStatus] = useState<null | {
 		success: boolean;
 		message: string;
@@ -55,6 +59,14 @@ const AdminMainPage = () => {
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
+	const usersArray = Object.values(useAppStore((state) => state.users));
+	const LoginUser = useAppStore((state) => state.LogIn);
+
+	useEffect(() => {
+		if (LoginUser?.name === "Master Admin") {
+			setShowSwitch(true);
+		}
+	}, [LoginUser]);
 
 	const toggleAllJobs = () => {
 		if (selectedJobId.length === companyJobs.length) {
@@ -147,202 +159,281 @@ const AdminMainPage = () => {
 		).values(),
 	];
 
+	const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setDeleteDemoChecked(event.target.checked);
+	};
+
+	const handleConfirmDeleteDemo = async() => {
+		if (!deleteDemoChecked) {
+			alert("Musíš nejdřív zapnout přepínač");
+			return;
+		}
+		for (const job of jobsArray) {
+			if (job.isDemo) {
+				await AdminDeleteJob(job.id);
+			}
+		}
+		for (const user of usersArray) {
+	if (user.isDemo) {
+		await AdminDeleteUser(user.id);
+	}
+}
+		console.log("Mazání demo dat...");
+	};
+
 	return (
 		<>
-			<HeaderMainPage />
-			<Box
-				sx={{
-					minHeight: "100vh",
-					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
-					py: 4,
-					px: { xs: 1, md: 4 },
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-				}}
-			>
-				<Box
-					sx={{
-						width: "100%",
-						maxWidth: 950,
-						bgcolor: "white",
-						borderRadius: 3,
-						boxShadow: 6,
-						p: { xs: 2, md: 4 },
-						mb: 4,
-						fontFamily: "Montserrat, Arial, sans-serif",
-					}}
-				>
-					<Box pt={2} pb={1}>
-						<Typography
-							variant='h3'
-							sx={{
-								fontWeight: "bold",
-								color: "#1976d2",
-								fontFamily: "Montserrat, Arial, sans-serif",
-								letterSpacing: 1,
-								mb: 1,
-							}}
-						>
-							Admin Page
-						</Typography>
-						<Typography sx={{ color: "#388e3c", fontWeight: 500, mb: 2 }}>
-							Welcome to the Admin Dashboard
-						</Typography>
-					</Box>
-					<Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-						<Button
-							variant='contained'
-							sx={{
-								bgcolor: "#1976d2",
-								color: "#fff",
-								fontWeight: "bold",
-								fontFamily: "Montserrat, Arial, sans-serif",
-								"&:hover": { bgcolor: "#1565c0" },
-							}}
-							onClick={() => setIsCreateEnable(true)}
-						>
-							Vytvoř Uživatele
-						</Button>
-					</Box>
-					{isCreateEnable && (
+			{LoginUser?.role === "ADMIN" && (
+				<>
+					<HeaderMainPage />
+					<Box
+						sx={{
+							minHeight: "100vh",
+							bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
+							py: 4,
+							px: { xs: 1, md: 4 },
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+						}}
+					>
 						<Box
 							sx={{
-								zIndex: 10,
-								position: "fixed",
-								left: 0,
-								top: 0,
-								width: "100vw",
-								height: "100vh",
-								bgcolor: "rgba(0,0,0,0.15)",
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "center",
+								width: "100%",
+								maxWidth: 950,
+								bgcolor: "white",
+								borderRadius: 3,
+								boxShadow: 6,
+								p: { xs: 2, md: 4 },
+								mb: 4,
+								fontFamily: "Montserrat, Arial, sans-serif",
 							}}
 						>
-							<Box
-								sx={{
-									bgcolor: "white",
-									border: "2px solid #1976d2",
-									borderRadius: 3,
-									boxShadow: 10,
-									p: 4,
-									minWidth: 320,
-									maxWidth: "95vw",
-									fontFamily: "Montserrat, Arial, sans-serif",
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-									gap: 2,
-								}}
-							>
-								<AdminCreateUser />
-								<Button
-									variant='outlined'
-									color='error'
-									sx={{ mt: 2, fontWeight: "bold" }}
-									onClick={() => setIsCreateEnable(false)}
+							<Box pt={2} pb={1}>
+								<Typography
+									variant='h3'
+									sx={{
+										fontWeight: "bold",
+										color: "#1976d2",
+										fontFamily: "Montserrat, Arial, sans-serif",
+										letterSpacing: 1,
+										mb: 1,
+									}}
 								>
-									Zavřít
+									Admin Page
+								</Typography>
+								{showSwitch && (
+									<Box
+										sx={{
+											display: "flex",
+											flexDirection: "column",
+											gap: 1,
+											mb: 2,
+											border: "1px solid #ccc",
+											p: 2,
+											borderRadius: 2,
+											bgcolor: "#f5f7fa",
+										}}
+									>
+										<FormControlLabel
+											control={
+												<Switch
+													checked={deleteDemoChecked}
+													onChange={handleSwitchChange}
+													color='warning'
+												/>
+											}
+											label='Smazat Demo Data'
+										/>
+										<Button
+											variant='contained'
+											color='error'
+											disabled={!deleteDemoChecked}
+											onClick={handleConfirmDeleteDemo}
+										>
+											Potvrdit smazání
+										</Button>
+									</Box>
+								)}
+								<Typography sx={{ color: "#388e3c", fontWeight: 500, mb: 2 }}>
+									Welcome to the Admin Dashboard
+								</Typography>
+							</Box>
+							<Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+								<Button
+									variant='contained'
+									sx={{
+										bgcolor: "#1976d2",
+										color: "#fff",
+										fontWeight: "bold",
+										fontFamily: "Montserrat, Arial, sans-serif",
+										"&:hover": { bgcolor: "#1565c0" },
+									}}
+									onClick={() => setIsCreateEnable(true)}
+								>
+									Vytvoř Uživatele
+								</Button>
+							</Box>
+							{isCreateEnable && (
+								<Box
+									sx={{
+										zIndex: 10,
+										position: "fixed",
+										left: 0,
+										top: 0,
+										width: "100vw",
+										height: "100vh",
+										bgcolor: "rgba(0,0,0,0.15)",
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "center",
+									}}
+								>
+									<Box
+										sx={{
+											bgcolor: "white",
+											border: "2px solid #1976d2",
+											borderRadius: 3,
+											boxShadow: 10,
+											p: 4,
+											minWidth: 320,
+											maxWidth: "95vw",
+											fontFamily: "Montserrat, Arial, sans-serif",
+											display: "flex",
+											flexDirection: "column",
+											alignItems: "center",
+											gap: 2,
+										}}
+									>
+										<AdminCreateUser />
+										<Button
+											variant='outlined'
+											color='error'
+											sx={{ mt: 2, fontWeight: "bold" }}
+											onClick={() => setIsCreateEnable(false)}
+										>
+											Zavřít
+										</Button>
+									</Box>
+								</Box>
+							)}
+
+							<AdminSearchPanel />
+
+							<Box sx={{ mt: 3 }}>
+								<Typography
+									variant='h6'
+									sx={{ color: "#1976d2", fontWeight: "bold", mb: 2 }}
+								>
+									Výsledky hledání:
+								</Typography>
+								{selectedUserData ? (
+									<Box>
+										<Box sx={{ mb: 2, ml: 25 }}>
+											<UserActionsPanel
+												selectedUserData={selectedUserData}
+												onEdit={() => setEditUserOpen(true)}
+												handleDelete={() => handleDelete(selectedUserData.id)}
+												deleteStatus={deleteStatus}
+												setDeleteStatus={setDeleteStatus}
+												editUserOpen={editUserOpen}
+												setEditUserOpen={setEditUserOpen}
+											/>
+										</Box>
+										<Box
+											sx={{
+												p: 2,
+												bgcolor: "#f5f7fa",
+												borderRadius: 2,
+												display: "flex",
+												alignItems: "center",
+												flexDirection: "row",
+												gap: 2,
+											}}
+										>
+											<UserDetailBox
+												user={selectedUserData}
+												aboutHtml={aboutHtml}
+											/>
+											<ApplicationJobList
+												selectedUserData={selectedUserData}
+												jobsFromApplications={jobsFromApplications}
+												applicationsArray={applicationsArray}
+												applicationJob={applicationJob}
+												jobsArray={jobsArray}
+												getUserById={getUserById}
+											/>
+										</Box>
+
+										{editJobsOpen && (
+											<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
+										)}
+										{editJobError && (
+											<Dialog
+												open={editDialogJobOpen}
+												onClose={() => setEditDialogJobOpen(false)}
+											>
+												<DialogTitle
+													sx={{ color: "#d32f2f", fontWeight: "bold" }}
+												>
+													Chyba
+												</DialogTitle>
+												<DialogActions>
+													<Typography sx={{ p: 2 }}>
+														Vyberte právě jeden job pro úpravu!
+													</Typography>
+													<Button
+														onClick={() => {
+															setEditDialogJobOpen(false);
+															setEditJobError(false);
+														}}
+													>
+														Zrušit
+													</Button>
+												</DialogActions>
+											</Dialog>
+										)}
+										{selectedUserData?.role === "COMPANY" && (
+											<Box p={2}>
+												<CompanyJobsPanel
+													selectedUserData={selectedUserData}
+													companyJobs={companyJobs}
+													selectedJobId={selectedJobId}
+													toggleAllJobs={toggleAllJobs}
+													handleCheckboxChange={handleCheckboxChange}
+													setCreateJob={setCreateJob}
+													createJob={createJob}
+													handleDeleteJob={handleDeleteJob}
+													handleCreateOpenJob={handleCreateOpenJob}
+													handleEditJobs={handleEditJobs}
+												/>
+											</Box>
+										)}
+									</Box>
+								) : (
+									<Typography sx={{ color: "#d32f2f" }}>
+										No user found with this email.
+									</Typography>
+								)}
+								<Button
+									variant='contained'
+									sx={{
+										mt: 3,
+										bgcolor: "#43a047",
+										color: "#fff",
+										fontWeight: "bold",
+										fontFamily: "Montserrat, Arial, sans-serif",
+										"&:hover": { bgcolor: "#2e7031" },
+									}}
+									onClick={handleEnd}
+								>
+									Konec
 								</Button>
 							</Box>
 						</Box>
-					)}
-
-					<AdminSearchPanel />
-
-					<Box sx={{ mt: 3 }}>
-						<Typography
-							variant='h6'
-							sx={{ color: "#1976d2", fontWeight: "bold", mb: 2 }}
-						>
-							Výsledky hledání:
-						</Typography>
-						{selectedUserData ? (
-							<Box>
-								<UserDetailBox user={selectedUserData} aboutHtml={aboutHtml} />
-								<ApplicationJobList
-									selectedUserData={selectedUserData}
-									jobsFromApplications={jobsFromApplications}
-									applicationsArray={applicationsArray}
-									applicationJob={applicationJob}
-									jobsArray={jobsArray}
-									getUserById={getUserById}
-								/>
-								<UserActionsPanel
-									selectedUserData={selectedUserData}
-									onEdit={() => setEditUserOpen(true)}
-									handleDelete={() => handleDelete(selectedUserData.id)}
-									deleteStatus={deleteStatus}
-									setDeleteStatus={setDeleteStatus}
-									editUserOpen={editUserOpen}
-									setEditUserOpen={setEditUserOpen}
-								/>
-								{editJobsOpen && (
-									<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
-								)}
-								{editJobError && (
-									<Dialog
-										open={editDialogJobOpen}
-										onClose={() => setEditDialogJobOpen(false)}
-									>
-										<DialogTitle sx={{ color: "#d32f2f", fontWeight: "bold" }}>
-											Chyba
-										</DialogTitle>
-										<DialogActions>
-											<Typography sx={{ p: 2 }}>
-												Vyberte právě jeden job pro úpravu!
-											</Typography>
-											<Button
-												onClick={() => {
-													setEditDialogJobOpen(false);
-													setEditJobError(false);
-												}}
-											>
-												Zrušit
-											</Button>
-										</DialogActions>
-									</Dialog>
-								)}
-								{selectedUserData?.role === "COMPANY" && (
-									<Box p={2}>
-										<CompanyJobsPanel
-											selectedUserData={selectedUserData}
-											companyJobs={companyJobs}
-											selectedJobId={selectedJobId}
-											toggleAllJobs={toggleAllJobs}
-											handleCheckboxChange={handleCheckboxChange}
-											setCreateJob={setCreateJob}
-											createJob={createJob}
-											handleDeleteJob={handleDeleteJob}
-											handleCreateOpenJob={handleCreateOpenJob}
-											handleEditJobs={handleEditJobs}
-										/>
-									</Box>
-								)}
-							</Box>
-						) : (
-							<Typography sx={{ color: "#d32f2f" }}>
-								No user found with this email.
-							</Typography>
-						)}
-						<Button
-							variant='contained'
-							sx={{
-								mt: 3,
-								bgcolor: "#43a047",
-								color: "#fff",
-								fontWeight: "bold",
-								fontFamily: "Montserrat, Arial, sans-serif",
-								"&:hover": { bgcolor: "#2e7031" },
-							}}
-							onClick={handleEnd}
-						>
-							Konec
-						</Button>
 					</Box>
-				</Box>
-			</Box>
+				</>
+			)}
 		</>
 	);
 };

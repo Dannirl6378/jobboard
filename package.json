@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-     "test:e2e": "playwright test",
+    "test:e2e": "playwright test",
     "prisma:generate": "prisma generate --schema=./packages/db/schema.prisma"
   },
   "dependencies": {
@@ -26,6 +26,8 @@
     "@tiptap/react": "^2.12.0",
     "@tiptap/starter-kit": "^2.12.0",
     "@toolpad/core": "^0.14.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
     "dompurify": "^3.2.5",
     "next": "15.3.0",
     "quill": "^2.0.3",
@@ -44,6 +46,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/bcrypt": "^6.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^19",

@@ -46,7 +46,7 @@ const JobList = () => {
 			setJoby(Object.values(jobs));
 		}
 	}, [filteredJobs, jobs]);
-	console.log("joby", joby);
+	
 
 	useEffect(() => {
 		const fetchSanitizedDescriptions = async () => {
@@ -95,7 +95,7 @@ const JobList = () => {
 
 	const handleJobClick = (id: string) => {
 		setSelectedJobId(id);
-		router.push(`/job/jobDetail`);
+		router.push(`/job/jobDetail/${id}`);
 	};
 
 	return (

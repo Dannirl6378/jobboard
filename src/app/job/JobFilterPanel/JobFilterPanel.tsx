@@ -98,7 +98,7 @@ export default function JobFilterPanel() {
 						}}
 						fullWidth
 						size='small'
-						label='Job Name'
+						label='Název práce'
 						name='jobName'
 						variant='filled'
 						value={filters.jobName}
@@ -115,7 +115,7 @@ export default function JobFilterPanel() {
 						}}
 						fullWidth
 						size='small'
-						label='Category'
+						label='Kategorie'
 						name='category'
 						variant='filled'
 						value={filters.category}
@@ -141,7 +141,7 @@ export default function JobFilterPanel() {
 								}}
 								fullWidth
 								size='small'
-								label='Location'
+								label='Místo Práce'
 								name='location'
 								variant='filled'
 								
@@ -159,7 +159,7 @@ export default function JobFilterPanel() {
 						}}
 						fullWidth
 						size='small'
-						label='Salary'
+						label='Plat'
 						name='salary'
 						variant='filled'
 						value={filters.salary}
@@ -205,7 +205,7 @@ export default function JobFilterPanel() {
 						}}
 						onClick={handleSearch}
 					>
-						Search
+						Vyhledat
 					</Button>
 					<Button
 						onClick={handleClear}

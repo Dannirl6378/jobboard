@@ -130,7 +130,8 @@ exports.Prisma.UserScalarFieldEnum = {
   about: 'about',
   Phone: 'Phone',
   CoverLetter: 'CoverLetter',
-  CV: 'CV'
+  CV: 'CV',
+  isDemo: 'isDemo'
 };
 
 exports.Prisma.JobScalarFieldEnum = {
@@ -142,7 +143,8 @@ exports.Prisma.JobScalarFieldEnum = {
   category: 'category',
   companyid: 'companyid',
   createdat: 'createdat',
-  Attendance: 'Attendance'
+  Attendance: 'Attendance',
+  isDemo: 'isDemo'
 };
 
 exports.Prisma.ApplicationScalarFieldEnum = {
@@ -150,7 +152,8 @@ exports.Prisma.ApplicationScalarFieldEnum = {
   jobid: 'jobid',
   userid: 'userid',
   covertletter: 'covertletter',
-  application_date: 'application_date'
+  application_date: 'application_date',
+  isDemo: 'isDemo'
 };
 
 exports.Prisma.SortOrder = {

@@ -23,11 +23,8 @@ export default function EditWorkOffer() {
 
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 	const jobs = useAppStore((state) => state.jobs);
-	const job = selectedJobId ? jobs[selectedJobId] : null;
+	const job = selectedJobId ? Object.values(jobs).find((j)=>j.id === selectedJobId) : null;
 
-	//const job = selectJob(jobid);
-	console.log("job", job);
-	console.log("jobid", job?.id);
 
 	useEffect(() => {
 		if (job) {
