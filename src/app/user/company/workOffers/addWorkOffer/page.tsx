@@ -22,12 +22,20 @@ export default function AddWorkOffer() {
 	const [success, setSuccess] = useState(false);
 	const [attending, setAttending] = useState("");
 
+	const LogInFirm = useAppStore((state) => state.LogIn);
 	const usersArray = Object.values(useAppStore((state) => state.users));
-	const foundUser = usersArray.find((user) => user.id === LogInFirm.id);
+	const foundUser = usersArray.find((user) => typeof LogInFirm === "string" ? user.id === LogInFirm : user.id === LogInFirm?.id);
 	const router = useRouter();
 	console.log("usersArray", usersArray);
 	console.log("foundUser", foundUser);
-	console.log("LogInFirm", LogInFirm.id);
+
+
+	console.log("usersArray (ids):", usersArray.map(u => u.id));
+console.log("LogInFirm:", LogInFirm);
+console.log("LogInFirm.id:", LogInFirm?.id);
+
+	
+
 
 	useEffect(() => {
 		if (foundUser) {

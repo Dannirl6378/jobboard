@@ -11,8 +11,10 @@ export const getUserJob = async () => {
 		// Zavolání API pro získání dat
 		const applications = await fetchApplication();
     const LogIn = useAppStore.getState().LogIn; // Získání přihlášeného uživatele z globálního stavu
-    console.log("applications", applications);
-    console.log("LogInUser", LogIn);
+	const job = useAppStore.getState().jobs; 
+    console.log("applicationsUserJob", applications);
+    console.log("LogInUserUserJob", LogIn);
+	console.log("JobsUserJob", job);
 
 		const userApplications = applications.filter(
 			(app: { userid: string }) => app.userid === LogIn?.id
@@ -21,7 +23,7 @@ export const getUserJob = async () => {
 
 		if (!userApplications) throw new Error("No application found for user");
 		// Získání uživatele podle ID
-		const job = useAppStore.getState().jobs; // Získání jobu podle ID aplikace
+		// Získání jobu podle ID aplikace
 
 		return userApplications.map((app: any) => ({
 			application: app,

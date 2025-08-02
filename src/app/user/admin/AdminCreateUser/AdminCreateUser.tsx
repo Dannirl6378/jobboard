@@ -52,7 +52,7 @@ const AdminCreateUser = () => {
 			about: "",
 			CoverLetter: "",
 			CV: "",
-			role: role  ? undefined : role,
+			role: role  ? role : undefined,
 		};
 		try {
 			const user = await fetchCreateUser(updateData);

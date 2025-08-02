@@ -148,7 +148,7 @@ const HeaderMainPage = () => {
 								},
 							}}
 						>
-							Logout
+							Odhlášení
 						</Button>
 					) : (
 						<Button
@@ -164,7 +164,7 @@ const HeaderMainPage = () => {
 								},
 							}}
 						>
-							Login
+							Přihášení
 						</Button>
 					)}
 				</Toolbar>

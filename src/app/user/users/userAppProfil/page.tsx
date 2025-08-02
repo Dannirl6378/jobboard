@@ -23,6 +23,7 @@ export default function UserProfil() {
 	const [about, setAbout] = useState("");
 	const [purifyAbout, setPurifyAbout] = useState(about);
 	const [purifyCoverLetter, setPurifyCoverLetter] = useState<string>("");
+
 	const [appliedJobs, setAppliedJobs] = useState<
 		{ application: { id: string }; job?: { title?: string; jobId?: string } }[]
 	>([]);
@@ -33,9 +34,12 @@ export default function UserProfil() {
 	//const { id: userid } = use(params);
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const LogIn = useAppStore((state) => state.LogIn);
+	const jobs = useAppStore((state) => state.jobs);
 	console.log("LogIn", LogIn);
 	console.log("LogIn", LogIn?.role);
+	console.log("Jobs", jobs);
 
+	const applications = useAppStore((state) => state.applications);
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const selectedUserId = useAppStore((state) => state.selectedUserId);
 	const users = useAppStore((state) => state.users);
@@ -75,10 +79,29 @@ export default function UserProfil() {
 		}
 	}, [profileUser]);
 
-	useEffect(() => {
-		getUserJob().then(setAppliedJobs);
-	}, []);
-	const jobIds = appliedJobs.map(({ job }) => job?.jobId);
+useEffect(() => {
+   if (
+    !LogIn?.id ||
+    Object.keys(jobs).length === 0 ||
+    Object.keys(applications).length === 0
+  ) {
+    return; // čekej, dokud nebude vše připravené
+  }
+
+  const userApplications = Object.values(applications).filter(app => app.userid === LogIn.id);
+	console.log("userApplications", userApplications);
+  const applied = userApplications.map(app => ({
+    application: app,
+    job: jobs[app.jobid],
+  })).filter((item) => item.job !== undefined);
+  console.log("appliedJobs", applied);
+  setAppliedJobs(applied);
+}, [LogIn?.id, jobs, applications]);
+
+
+
+	//const jobIds = appliedJobs.map(({ job }) => job?.jobId);
+	console.log("jobsIds", appliedJobs.map(({ job }) => job?.jobId));
 	console.log(
 		"appliedJobsMap",
 		appliedJobs.map((job) => job.job?.jobId)
