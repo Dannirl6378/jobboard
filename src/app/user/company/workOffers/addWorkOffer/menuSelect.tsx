@@ -1,5 +1,9 @@
 const Jobtype = [
 	{
+		value: "",
+		label: "Všechny",
+	},
+	{
 		value: "IT",
 		label: "IT",
 	},

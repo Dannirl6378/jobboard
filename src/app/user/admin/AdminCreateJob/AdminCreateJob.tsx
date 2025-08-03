@@ -41,6 +41,9 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 	}, [foundUser]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
+		console.log("Submitting form...");
+
+		e.preventDefault();
 		if (
 			!title ||
 			!description ||
@@ -53,7 +56,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 			setError("All fields are required");
 			return;
 		}
-		e.preventDefault();
+		
 		setError("");
 		setSuccess(false);
 		//nezpomen pracovat s companID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!§
@@ -67,7 +70,6 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 				companyid,
 				Attendance: attending,
 			});
-			console.log("Job created:", data);
 			setSuccess(true);
 		} catch (error) {
 			console.error("Error creating job:", error);
@@ -91,11 +93,12 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					background: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					opacity: 0.98,
 					borderRadius: "18px",
-					maxHeight: "90vh",
+					maxHeight: "70vh",
 					overflowY: "auto",
 					width: "100%",
 					maxWidth: 600,
-					margin: "40px auto",
+					marginTop: "5%",
+					marginRight: "25%",
 					display: "flex",
 					flexDirection: "column",
 					gap: "24px",
@@ -110,12 +113,13 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 						fontWeight: "bold",
 						textAlign: "center",
 						mb: 2,
+						mt: "10%",
 					}}
 				>
 					Nová nabídka práce
 				</Heading>
 				<Box>
-					<SubHeading sx={{ color: "#388e3c" }}>Title:</SubHeading>
+					<SubHeading sx={{ color: "#388e3c" }}>Název Pozice:</SubHeading>
 					<TextField
 						value={title}
 						onChange={(e) => setTitle(e.target.value)}
@@ -133,7 +137,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					}}
 				>
 					<Box sx={{ flex: 1 }}>
-						<Text sx={{ color: "#1976d2" }}>Location:</Text>
+						<Text sx={{ color: "#1976d2" }}>Místo Práce:</Text>
 						<TextField
 							type='text'
 							value={location}
@@ -144,7 +148,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 						/>
 					</Box>
 					<Box sx={{ flex: 1 }}>
-						<Text sx={{ color: "#1976d2" }}>Salary:</Text>
+						<Text sx={{ color: "#1976d2" }}>Plat:</Text>
 						<TextField
 							type='number'
 							value={salary}
@@ -164,7 +168,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					}}
 				>
 					<Box sx={{ flex: 1 }}>
-						<Text sx={{ color: "#1976d2" }}>Category:</Text>
+						<Text sx={{ color: "#1976d2" }}>Kategorie:</Text>
 						<TextField
 							id='select-Type-Job'
 							select
@@ -203,7 +207,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					</Box>
 				</Box>
 				<Box>
-					<Text sx={{ color: "#1976d2" }}>Description:</Text>
+					<Text sx={{ color: "#1976d2" }}>Popis Pozice:</Text>
 					<QuillEditor
 						value={description}
 						onChange={setDescription}
@@ -223,7 +227,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 				<Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
 					<Button
 						variant='contained'
-						type='submit'
+						type='button'
 						onClick={handleSubmit}
 						sx={{
 							bgcolor: "#1976d2",

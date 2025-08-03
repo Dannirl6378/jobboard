@@ -12,7 +12,12 @@ import { useState } from "react";
 import { useAppStore } from "@/store/useAppStore";
 import { fetchUserByEmail } from "@/lib/api";
 
-const AdminSearchPanel = () => {
+interface AdminSearchPanelProps {
+	setShowEnd: (value: boolean) => void,
+	setHasSearched: (value: boolean) => void
+}
+
+const AdminSearchPanel = ( {setShowEnd,setHasSearched}:AdminSearchPanelProps) => {
 	const [email, setEmail] = useState("");
 	const [popUp, setPopUp] = useState(false);
 	const [error, setErorr] = useState("");
@@ -31,6 +36,7 @@ const AdminSearchPanel = () => {
 	};
 
 	const handleFindUser = async (email: string) => {
+		setHasSearched(true);
 		if (email === "") {
 			setPopUp(true);
 			return;
@@ -40,6 +46,7 @@ const AdminSearchPanel = () => {
 				setUserId(user.id);
 				setSelectedUserData(user);
 				setEmail(user.email);
+				setShowEnd(true);
 			} catch (error) {
 				setErorr("Uživatel s tímto emailem nebyl nalezen.");
 				setSelectedUserData(null);

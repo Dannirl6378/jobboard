@@ -171,19 +171,6 @@ const Firm = () => {
 					<Button
 						variant='contained'
 						sx={{
-							bgcolor: "#1976d2",
-							color: "#fff",
-							fontWeight: "bold",
-							fontFamily: "Montserrat, Arial, sans-serif",
-							"&:hover": { bgcolor: "#1565c0" },
-						}}
-						onClick={handleEditUser}
-					>
-						Upravit profil
-					</Button>
-					<Button
-						variant='contained'
-						sx={{
 							bgcolor: "#43a047",
 							color: "#fff",
 							fontWeight: "bold",
@@ -193,6 +180,19 @@ const Firm = () => {
 						onClick={handleAddWorkOffer}
 					>
 						Přidat pracovní nabídku
+					</Button>
+					<Button
+						variant='contained'
+						sx={{
+							bgcolor: "#1976d2",
+							color: "#fff",
+							fontWeight: "bold",
+							fontFamily: "Montserrat, Arial, sans-serif",
+							"&:hover": { bgcolor: "#1565c0" },
+						}}
+						onClick={handleEditUser}
+					>
+						Upravit profil
 					</Button>
 				</Box>
 				<Box

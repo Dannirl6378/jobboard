@@ -11,13 +11,15 @@ import {
 	IconButton,
 	Autocomplete,
 } from "@mui/material";
-import InputAdornment from '@mui/material/InputAdornment';
-import { filledInputClasses } from '@mui/material/FilledInput';
-import { inputBaseClasses } from '@mui/material/InputBase';
+import InputAdornment from "@mui/material/InputAdornment";
+import { filledInputClasses } from "@mui/material/FilledInput";
+import { inputBaseClasses } from "@mui/material/InputBase";
 import { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useAppStore } from "@/store/useAppStore";
 import JobsFilter from "./JobsFilter";
+import MenuItem from "@mui/material/MenuItem";
+import { Jobtype } from "@/app/user/company/workOffers/addWorkOffer/menuSelect";
 import { Job } from "@/types/job";
 
 export default function JobFilterPanel() {
@@ -107,20 +109,29 @@ export default function JobFilterPanel() {
 				</Grid>
 				<Grid size={{ xs: 12, md: 3 }}>
 					<TextField
+						select
+						fullWidth
+						size='small'
+						variant='filled'
+						label='Kategorie'
+						name='category'
+						value={filters.category}
+						onChange={(e) =>
+							setFilters({ ...filters, category: e.target.value })
+						}
 						sx={{
 							background:
 								"linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
 							borderRadius: 1,
 							boxShadow: 2,
 						}}
-						fullWidth
-						size='small'
-						label='Kategorie'
-						name='category'
-						variant='filled'
-						value={filters.category}
-						onChange={handleChange}
-					/>
+					>
+						{Jobtype.map((option) => (
+							<MenuItem key={option.value} value={option.value}>
+								{option.label}
+							</MenuItem>
+						))}
+					</TextField>
 				</Grid>
 				<Grid size={{ xs: 12, md: 3 }}>
 					<Autocomplete
@@ -144,7 +155,6 @@ export default function JobFilterPanel() {
 								label='Místo Práce'
 								name='location'
 								variant='filled'
-								
 							/>
 						)}
 					/>
@@ -165,28 +175,27 @@ export default function JobFilterPanel() {
 						value={filters.salary}
 						onChange={handleChange}
 						slotProps={{
-									input: {
-										endAdornment: (
-											<InputAdornment
-												position='start'
-												sx={{
-													alignSelf: "normal",
-													opacity: 0,
-													pointerEvents: "none",
-													[`.${filledInputClasses.root} &`]: {
-														marginBottom: "7.5px",
-													},
-													[`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]:
-														{
-															opacity: 1,
-														},
-												}}
-											>
-												{"<"}
-											</InputAdornment>
-										),
-									},
-								}}
+							input: {
+								endAdornment: (
+									<InputAdornment
+										position='start'
+										sx={{
+											alignSelf: "normal",
+											opacity: 0,
+											pointerEvents: "none",
+											[`.${filledInputClasses.root} &`]: {
+												marginBottom: "7.5px",
+											},
+											[`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]: {
+												opacity: 1,
+											},
+										}}
+									>
+										{"<"}
+									</InputAdornment>
+								),
+							},
+						}}
 					/>
 				</Grid>
 
@@ -260,12 +269,13 @@ export default function JobFilterPanel() {
 							sx={{
 								border: "1px solid #c7c2ba52",
 								borderRadius: 1,
-								background: "linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+								background:
+									"linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
 								display: "flex",
 								alignItems: "center",
 								justifyContent: "center",
-								ml:"20%",
-								maxWidth:"60%",
+								ml: "20%",
+								maxWidth: "60%",
 								gap: 1,
 								px: 1,
 								color: "black",
@@ -283,7 +293,6 @@ export default function JobFilterPanel() {
 										onChange={(e) =>
 											handleCheckboxChange("full", e.target.checked)
 										}
-										
 									/>
 								}
 								label='Plný úvazek'

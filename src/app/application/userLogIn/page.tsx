@@ -1,187 +1,181 @@
 "use client";
+
 import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import { Box, Button, TextField, Typography } from "@mui/material";
 import QuillEditor from "@/components/textEditor/textEditQuill";
+import {
+	Box,
+	Button,
+	Snackbar,
+	TextField,
+	Typography,
+	Alert,
+} from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchCreateApplication } from "@/lib/api";
-import { fetchUpdateUser } from "@/lib/api";
+import { fetchUpdateUser, fetchCreateApplication } from "@/lib/api";
 
 const UserLogInPage = () => {
-	const [isEnable, setIsEnable] = useState<boolean>(false);
+	const [isEnable, setIsEnable] = useState(false);
+	const [openSnackbar, setOpenSnackbar] = useState(false);
 
 	const user = useAppStore((state) => state.LogIn);
-	const setUsers = useAppStore((state) => state.setUsers);
-	const selectedUserId = useAppStore((state) => state.selectedUserId);
 	const users = useAppStore((state) => state.users);
+	const selectedUserId = useAppStore((state) => state.selectedUserId);
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
-	const logIn = useAppStore((state) => state.LogIn);
 
 	const dataUser = selectedUserId ? users[selectedUserId] : user;
-	console.log("application userLogin",logIn)
 
-	const [name, setName] = useState(logIn?.name || "");
-	const [email, setEmail] = useState(logIn?.email || "");
-	const [phone, setPhone] = useState(logIn?.Phone || "");
-	const [about, setAbout] = useState(logIn?.CoverLetter || "");
+	const [name, setName] = useState(dataUser?.name || "");
+	const [email, setEmail] = useState(dataUser?.email || "");
+	const [phone, setPhone] = useState(dataUser?.Phone || "");
+	const [about, setAbout] = useState(dataUser?.CoverLetter || "");
 
 	useEffect(() => {
-		setName(logIn?.name || "");
-		setEmail(logIn?.email || "");
-		setPhone(logIn?.Phone || "");
-		setAbout(logIn?.CoverLetter || "");
-	}, [logIn]);
+		setName(dataUser?.name || "");
+		setEmail(dataUser?.email || "");
+		setPhone(dataUser?.Phone || "");
+		setAbout(dataUser?.CoverLetter || "");
+	}, [dataUser]);
 
-	console.log("jobId", selectedJobId);
-	/*const handleEdit = () => {
-		setIsEnable(true);
-	};
-	const handleApply = () => {
-		if (!dataUser) return;
-		const updatedUser = {
-			...dataUser,
-			name: name,
-			email: email,
-			Phone: phone,
-			CoverLetter: about,
-		};
-	};*/
 	const handleEdit = () => setIsEnable(true);
+
 	const handleSave = async () => {
 		setIsEnable(false);
-		if (!logIn) return;
-		const updateData = {
-			name,
-			email,
-			Phone: phone,
-			CoverLetter: about,
-		};
+		if (!dataUser?.id) return;
+
 		try {
-			const updatedUser = await fetchUpdateUser(logIn?.id, updateData);
-			console.log("Updated job:", updatedUser);
-			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
+			await fetchUpdateUser(dataUser.id, {
+				name,
+				email,
+				Phone: phone,
+				CoverLetter: about,
+			});
+			setOpenSnackbar(true);
 		} catch (error) {
-			console.error("Error updating job:", error);
-			// Zde můžete přidat další logiku pro zpracování chyby
+			console.error("Chyba při ukládání:", error);
 		}
 	};
+
 	const handleApply = async () => {
-	if (!logIn?.id || selectedJobId === null) return;
-	try {
-		const response = await fetchCreateApplication(logIn.id, selectedJobId);
-		console.log("Application created:", response);
-		// případně další logika (např. přesměrování, notifikace)
-	} catch (error) {
-		console.error("Error creating application:", error);
-	}
-};
+		if (!dataUser?.id || !selectedJobId) return;
+		try {
+			await fetchCreateApplication(dataUser.id, selectedJobId);
+			setOpenSnackbar(true);
+		} catch (error) {
+			console.error("Chyba při přihlášení na pozici:", error);
+		}
+	};
+
 	return (
 		<>
 			<HeaderMainPage />
-			<form
-				noValidate
-				autoComplete='off'
-				style={{
-					border: "1px solid gray",
-					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
-					padding: "16px",
-					backgroundColor: "#F5F5F5",
-					opacity: 0.8,
-					borderRadius: "8px",
-					maxHeight: "100vh",
-					overflowY: "auto",
-					width: "80%",
-					marginTop: "10%",
-					marginLeft: "10%",
+			<Box
+				sx={{
 					display: "flex",
-					flexDirection: "column",
-					gap: "24px",
 					justifyContent: "center",
-					color: "black",
+					mt: 8,
+					px: 2,
 				}}
 			>
-				<Box>
-					<Typography variant='h4' sx={{ textAlign: "center", mb: 2 }}>
-						Kontola udaju
-					</Typography>
-				</Box>
 				<Box
+					component='form'
+					noValidate
+					autoComplete='off'
 					sx={{
+						width: "100%",
+						maxWidth: 600,
+						p: 4,
+						bgcolor: "white",
+						borderRadius: 3,
+						boxShadow: 3,
 						display: "flex",
 						flexDirection: "column",
-						gap: 2,
-						border: 1,
-						p: 2,
-						boxShadow: 5,
-						bgcolor: "#D5DEFF",
-						opacity: 0.8,
-						borderRadius: 2,
+						gap: 3,
 					}}
 				>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='Jméno a příjmení'
-							variant='standard'
-							value={name}
-							disabled={!isEnable}
-							onChange={(e) => setName(e.target.value)}
-							fullWidth
-						/>
-					</Box>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='Email'
-							variant='standard'
-							value={email}
-							disabled={!isEnable}
-							onChange={(e) => setEmail(e.target.value)}
-							fullWidth
-						/>
-					</Box>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='Telefon'
-							variant='standard'
-							value={phone}
-							disabled={!isEnable}
-							onChange={(e) => setPhone(e.target.value)}
-							fullWidth
-						/>
-					</Box>
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							gap: 1,
-							width: "50%",
-						}}
-					>
-						<Typography>Pruvodni text :</Typography>
-						<QuillEditor
-							value={dataUser?.CoverLetter || ""}
-							onChange={setAbout}
-							edit={true}
-						/>
+					<Typography variant='h5' textAlign='center' fontWeight='bold'>
+						Kontrola údajů
+					</Typography>
+
+					<TextField
+						label='Jméno a příjmení'
+						variant='outlined'
+						value={name}
+						onChange={(e) => setName(e.target.value)}
+						disabled={!isEnable}
+						fullWidth
+					/>
+
+					<TextField
+						label='Email'
+						variant='outlined'
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						disabled={!isEnable}
+						fullWidth
+					/>
+
+					<TextField
+						label='Telefon'
+						variant='outlined'
+						value={phone}
+						onChange={(e) => setPhone(e.target.value)}
+						disabled={!isEnable}
+						fullWidth
+					/>
+
+					<Box>
+						<Typography fontWeight='medium' mb={1}>
+							Průvodní text
+						</Typography>
+						<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 					</Box>
 
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='CV'
-							variant='standard'
-							value={dataUser?.CV || ""}
-							disabled={true}
-							fullWidth
-						/>
+					<TextField
+						label='CV'
+						variant='outlined'
+						value={dataUser?.CV || ""}
+						disabled
+						fullWidth
+					/>
+
+					<Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
+						{isEnable ? (
+							<Button variant='contained' color='primary' onClick={handleSave}>
+								Uložit
+							</Button>
+						) : (
+							<Button variant='outlined' onClick={handleEdit}>
+								Upravit
+							</Button>
+						)}
+						<Button
+							variant='contained'
+							color='success'
+							onClick={handleApply}
+						>
+							Přihlásit se
+						</Button>
 					</Box>
-					{isEnable ? (
-						<Button onClick={handleSave}>Save</Button>
-					) : (
-						<Button onClick={handleEdit}>Edit</Button>
-					)}
-					<Button onClick={handleApply}>Apply</Button>
 				</Box>
-			</form>
+			</Box>
+
+			<Snackbar
+				open={openSnackbar}
+				autoHideDuration={3000}
+				onClose={() => setOpenSnackbar(false)}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={() => setOpenSnackbar(false)}
+					severity='success'
+					sx={{ width: "100%" }}
+				>
+					Data byla úspěšně uložena.
+				</Alert>
+			</Snackbar>
 		</>
 	);
 };
+
 export default UserLogInPage;

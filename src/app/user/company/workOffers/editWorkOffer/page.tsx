@@ -20,11 +20,14 @@ export default function EditWorkOffer() {
 	const [about, setAbout] = useState<string>("");
 	const [isEnable, setIsEnable] = useState<boolean>(true); // Set default as needed
 	const [purifyAbout, setPurifyAbout] = useState<string>(""); //tady se zamyslet jestli budu toto potřebovat
+	const [successMessage, setSuccessMessage] = useState<string | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 	const jobs = useAppStore((state) => state.jobs);
-	const job = selectedJobId ? Object.values(jobs).find((j)=>j.id === selectedJobId) : null;
-
+	const job = selectedJobId
+		? Object.values(jobs).find((j) => j.id === selectedJobId)
+		: null;
 
 	useEffect(() => {
 		if (job) {
@@ -40,12 +43,16 @@ export default function EditWorkOffer() {
 	};
 
 	const handleUpdateJob = async (jobid: string, updateData: Partial<Job>) => {
+		setSuccessMessage(null);
+		setErrorMessage(null);
 		try {
 			const updatedJob = await fetchUpdateJob(jobid, updateData);
 			console.log("Updated job:", updatedJob);
+			setSuccessMessage("Změny byly úspěšně uloženy do databáze.");
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
 			console.error("Error updating job:", error);
+			setErrorMessage("Nepodařilo se uložit změny.");
 			// Zde můžete přidat další logiku pro zpracování chyby
 		}
 	};
@@ -53,7 +60,7 @@ export default function EditWorkOffer() {
 		if (!selectedJobId) return;
 		const updateData = {
 			title,
-			description,
+			description: about,
 			salary,
 			location,
 		};
@@ -83,7 +90,7 @@ export default function EditWorkOffer() {
 			<HeaderMainPage />
 			<Box
 				sx={{
-					minHeight: "100vh",
+					minHeight: "70vh",
 					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					display: "flex",
 					justifyContent: "center",
@@ -101,12 +108,11 @@ export default function EditWorkOffer() {
 						padding: { xs: 2, sm: 4 },
 						background: "white",
 						borderRadius: 3,
-						maxHeight: "95vh",
+						maxHeight: "80vh",
 						overflowY: "auto",
 						width: { xs: "98vw", sm: 500 },
 						maxWidth: 600,
-						mx: "auto",
-						mt: 4,
+						mt: "5%",
 						display: "flex",
 						flexDirection: "column",
 						gap: 3,
@@ -121,6 +127,7 @@ export default function EditWorkOffer() {
 							fontWeight: "bold",
 							textAlign: "center",
 							mb: 2,
+							mt:30,
 						}}
 					>
 						Upravit pracovní nabídku
@@ -161,6 +168,31 @@ export default function EditWorkOffer() {
 					<Box>
 						<SubHeading sx={{ color: "#388e3c" }}>Popis pozice:</SubHeading>
 						<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
+						{successMessage && (
+							<Typography
+								sx={{
+									color: "#388e3c",
+									textAlign: "center",
+									mt: 2,
+									fontWeight: "bold",
+								}}
+							>
+								{successMessage}
+							</Typography>
+						)}
+
+						{errorMessage && (
+							<Typography
+								sx={{
+									color: "#d32f2f",
+									textAlign: "center",
+									mt: 2,
+									fontWeight: "bold",
+								}}
+							>
+								{errorMessage}
+							</Typography>
+						)}
 					</Box>
 					<Box
 						sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 2 }}

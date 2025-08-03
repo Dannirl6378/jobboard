@@ -47,7 +47,9 @@ const AdminMainPage = () => {
 	const [editJobError, setEditJobError] = useState<boolean>(false);
 	const [editDialogJobOpen, setEditDialogJobOpen] = useState<boolean>(false);
 	const [showSwitch, setShowSwitch] = useState<boolean>(false);
+	const [showEnd, setShowEnd] = useState<boolean>(false);
 	const [deleteDemoChecked, setDeleteDemoChecked] = useState(false);
+	const [hasSearched, setHasSearched] = useState<boolean>(false);
 	const [deleteStatus, setDeleteStatus] = useState<null | {
 		success: boolean;
 		message: string;
@@ -116,6 +118,7 @@ const AdminMainPage = () => {
 		setIsCreateEnable(false);
 		setDeleteStatus(null);
 		setAboutHtml("");
+		setShowEnd(false);
 	};
 
 	useEffect(() => {
@@ -132,6 +135,9 @@ const AdminMainPage = () => {
 				(job) => job.companyid === selectedUserData?.id
 			);
 			setCompanyJobs(Jobs);
+		}
+		if (selectedUserData !== null) {
+			setShowEnd(true);
 		}
 	}, [selectedUserData]);
 
@@ -163,7 +169,7 @@ const AdminMainPage = () => {
 		setDeleteDemoChecked(event.target.checked);
 	};
 
-	const handleConfirmDeleteDemo = async() => {
+	const handleConfirmDeleteDemo = async () => {
 		if (!deleteDemoChecked) {
 			alert("Musíš nejdřív zapnout přepínač");
 			return;
@@ -174,10 +180,10 @@ const AdminMainPage = () => {
 			}
 		}
 		for (const user of usersArray) {
-	if (user.isDemo) {
-		await AdminDeleteUser(user.id);
-	}
-}
+			if (user.isDemo) {
+				await AdminDeleteUser(user.id);
+			}
+		}
 		console.log("Mazání demo dat...");
 	};
 
@@ -318,15 +324,21 @@ const AdminMainPage = () => {
 								</Box>
 							)}
 
-							<AdminSearchPanel />
-
-							<Box sx={{ mt: 3 }}>
+							<AdminSearchPanel
+								setShowEnd={setShowEnd}
+								setHasSearched={setHasSearched}
+							/>
+							{showEnd &&(
+								<Box sx={{mt:3}}>
 								<Typography
 									variant='h6'
 									sx={{ color: "#1976d2", fontWeight: "bold", mb: 2 }}
 								>
 									Výsledky hledání:
 								</Typography>
+								</Box>
+							)}
+							<Box sx={{ mt: 3 }}>
 								{selectedUserData ? (
 									<Box>
 										<Box sx={{ mb: 2, ml: 25 }}>
@@ -410,25 +422,27 @@ const AdminMainPage = () => {
 											</Box>
 										)}
 									</Box>
-								) : (
+								) : hasSearched ? (
 									<Typography sx={{ color: "#d32f2f" }}>
 										No user found with this email.
 									</Typography>
+								) : null}
+								{showEnd && (
+									<Button
+										variant='contained'
+										sx={{
+											mt: 3,
+											bgcolor: "#43a047",
+											color: "#fff",
+											fontWeight: "bold",
+											fontFamily: "Montserrat, Arial, sans-serif",
+											"&:hover": { bgcolor: "#2e7031" },
+										}}
+										onClick={handleEnd}
+									>
+										Konec
+									</Button>
 								)}
-								<Button
-									variant='contained'
-									sx={{
-										mt: 3,
-										bgcolor: "#43a047",
-										color: "#fff",
-										fontWeight: "bold",
-										fontFamily: "Montserrat, Arial, sans-serif",
-										"&:hover": { bgcolor: "#2e7031" },
-									}}
-									onClick={handleEnd}
-								>
-									Konec
-								</Button>
 							</Box>
 						</Box>
 					</Box>

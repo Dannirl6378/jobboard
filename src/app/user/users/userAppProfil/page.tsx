@@ -47,6 +47,7 @@ export default function UserProfil() {
 	const hasMounted = useRef(false);
 
 	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
+	console.log("profileUser", profileUser?.role);
 
 	useEffect(() => {
 		prevPath.current = pathname;
@@ -79,29 +80,34 @@ export default function UserProfil() {
 		}
 	}, [profileUser]);
 
-useEffect(() => {
-   if (
-    !LogIn?.id ||
-    Object.keys(jobs).length === 0 ||
-    Object.keys(applications).length === 0
-  ) {
-    return; // čekej, dokud nebude vše připravené
-  }
+	useEffect(() => {
+		if (
+			!LogIn?.id ||
+			Object.keys(jobs).length === 0 ||
+			Object.keys(applications).length === 0
+		) {
+			return; // čekej, dokud nebude vše připravené
+		}
 
-  const userApplications = Object.values(applications).filter(app => app.userid === LogIn.id);
-	console.log("userApplications", userApplications);
-  const applied = userApplications.map(app => ({
-    application: app,
-    job: jobs[app.jobid],
-  })).filter((item) => item.job !== undefined);
-  console.log("appliedJobs", applied);
-  setAppliedJobs(applied);
-}, [LogIn?.id, jobs, applications]);
-
-
+		const userApplications = Object.values(applications).filter(
+			(app) => app.userid === LogIn.id
+		);
+		console.log("userApplications", userApplications);
+		const applied = userApplications
+			.map((app) => ({
+				application: app,
+				job: jobs[app.jobid],
+			}))
+			.filter((item) => item.job !== undefined);
+		console.log("appliedJobs", applied);
+		setAppliedJobs(applied);
+	}, [LogIn?.id, jobs, applications]);
 
 	//const jobIds = appliedJobs.map(({ job }) => job?.jobId);
-	console.log("jobsIds", appliedJobs.map(({ job }) => job?.jobId));
+	console.log(
+		"jobsIds",
+		appliedJobs.map(({ job }) => job?.jobId)
+	);
 	console.log(
 		"appliedJobsMap",
 		appliedJobs.map((job) => job.job?.jobId)
@@ -130,7 +136,7 @@ useEffect(() => {
 			name,
 			email,
 			password,
-			about,
+			about: about,
 			Phone: phone,
 		};
 		if (LogIn?.id) {
@@ -302,36 +308,47 @@ useEffect(() => {
 							</Box>
 						</>
 					)}
-					<Typography
-						color='#1976d2'
-						variant='h5'
-						sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
-					>
-						O mě
-					</Typography>
-					{isEnable ? (
-						<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
-					) : (
-						<Box
-							sx={{
-								width: "100%",
-								minHeight: 120,
-								maxHeight: 250,
-								overflow: "auto",
-								border: "1px solid #cee5fd",
-								borderRadius: 2,
-								bgcolor: "#e3fcec",
-								color: "#222",
-								p: 2,
-								mb: 2,
-							}}
-						>
-							<div
-								className='rich-content'
-								dangerouslySetInnerHTML={{ __html: purifyAbout }}
-							/>
+					{isEnable && profileUser ? (
+						<Box>
+							<Typography
+								color='#1976d2'
+								variant='h5'
+								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
+							>
+								O mě
+							</Typography>
+							<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 						</Box>
-					)}
+					) : profileUser?.role !== "TEMPORAL" ? (
+						<>
+							<Typography
+								color='#1976d2'
+								variant='h5'
+								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
+							>
+								O mě
+							</Typography>
+							<Box
+								sx={{
+									width: "100%",
+									minHeight: 120,
+									maxHeight: 250,
+									overflow: "auto",
+									border: "1px solid #cee5fd",
+									borderRadius: 2,
+									bgcolor: "#e3fcec",
+									color: "#222",
+									p: 2,
+									mb: 2,
+								}}
+							>
+								<div
+									className='rich-content'
+									dangerouslySetInnerHTML={{ __html: purifyAbout }}
+								/>
+							</Box>
+						</>
+					) : null}
 					{LogIn?.role === "COMPANY" ? null : (
 						<>
 							<Typography sx={{ color: "#388e3c", fontWeight: 600, mt: 2 }}>

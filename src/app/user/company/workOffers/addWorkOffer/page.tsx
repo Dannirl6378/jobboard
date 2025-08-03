@@ -24,45 +24,47 @@ export default function AddWorkOffer() {
 
 	const LogInFirm = useAppStore((state) => state.LogIn);
 	const usersArray = Object.values(useAppStore((state) => state.users));
-	const foundUser = usersArray.find((user) => typeof LogInFirm === "string" ? user.id === LogInFirm : user.id === LogInFirm?.id);
+	const foundUser = usersArray.find((user) =>
+		typeof LogInFirm === "string"
+			? user.id === LogInFirm
+			: user.id === LogInFirm?.id
+	);
 	const router = useRouter();
-	console.log("usersArray", usersArray);
-	console.log("foundUser", foundUser);
-
-
-	console.log("usersArray (ids):", usersArray.map(u => u.id));
-console.log("LogInFirm:", LogInFirm);
-console.log("LogInFirm.id:", LogInFirm?.id);
-
-	
-
 
 	useEffect(() => {
 		if (foundUser) {
 			setCompanyid(foundUser.id);
+			setError("");
 		} else {
 			setError("nic sem nenašel");
 		}
 	}, [foundUser]);
 	console.log("companyid", companyid);
-	const handleSubmit = async (e: React.FormEvent) => {
+	console.log("foundUser", foundUser);
+
+	const validateForm = () => {
 		if (
-			!title ||
-			!description ||
-			!location ||
-			!salary ||
-			!category ||
-			!companyid ||
-			!attending
+			!title.trim() ||
+			!description.trim() ||
+			!location.trim() ||
+			!salary.trim() ||
+			!category.trim() ||
+			!companyid.trim() ||
+			!attending.trim()
 		) {
-			setError("All fields are required");
-			return;
+			setError("Všechna pole musí být vyplněna.");
+			return false;
 		}
+		return true;
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setError("");
-		setSuccess(false);
+		if (!validateForm()) return;
+
 		//nezpomen pracovat s companID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!§
 		try {
+			setError("");
 			const data = await fetchCreateJob({
 				title,
 				description,
@@ -126,6 +128,7 @@ console.log("LogInFirm.id:", LogInFirm?.id);
 							fontFamily: "Montserrat, Arial, sans-serif",
 							fontWeight: "bold",
 							textAlign: "center",
+							mt:5,
 							mb: 2,
 						}}
 					>
@@ -227,16 +230,20 @@ console.log("LogInFirm.id:", LogInFirm?.id);
 							edit={true}
 						/>
 					</Box>
-					{error && (
-						<Typography sx={{ color: "#d32f2f", fontWeight: "bold" }}>
-							{error}
-						</Typography>
-					)}
-					{success && (
-						<Typography sx={{ color: "#43a047", fontWeight: "bold" }}>
-							Job created successfully!
-						</Typography>
-					)}
+					<Box>
+						{(error || success) && (
+							<Box>
+							<Typography
+								sx={{
+									color: error ? "#d32f2f" : "#43a047",
+									fontWeight: "bold",
+								}}
+							>
+								{error || "Práce byla vytvořena úspěšně!"}
+							</Typography>
+							</Box>
+						)}
+					</Box>
 					<Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
 						<Button
 							variant='contained'

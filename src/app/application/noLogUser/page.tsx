@@ -3,164 +3,233 @@ import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import QuillEditor from "@/components/textEditor/textEditQuill";
-import { useEffect, useState } from "react";
-import { fetchCreateApplication } from "@/lib/api";
-import { fetchCreateUser } from "@/lib/api";
-import { fetchUserByEmail } from "@/lib/api";
-
+import { useState } from "react";
+import {
+	fetchCreateApplication,
+	fetchCreateUser,
+	fetchUserByEmail,
+} from "@/lib/api";
 
 const UserLogInPage = () => {
-	const [isEnable, setIsEnable] = useState<boolean>(true);
-
-	const users = useAppStore((state) => state.users);
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 
+	const [isEnable, setIsEnable] = useState(true);
+	const [loading, setLoading] = useState(false);
 
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [phone, setPhone] = useState("");
 	const [about, setAbout] = useState("");
 
-	console.log("jobId", selectedJobId);
-    
+	const [error, setError] = useState("");
+	const [success, setSuccess] = useState("");
 
-	const handleEdit = () => setIsEnable(true);
 	const handleSave = async () => {
-		setIsEnable(false);
-		const updateData = {
-			name,
-			email,
-			password: "",
-			Phone: phone,
-            about:"",
-			CoverLetter: about,
-			CV:"",
-			role: "TEMPORAL" as const, // Předpokládám, že role by měla zůstat stejná
-		};
+		if (!name.trim() || !email.trim()) {
+			setError("Jméno a email jsou povinné.");
+			setSuccess("");
+			return;
+		}
+		setLoading(true);
+		setError("");
+		setSuccess("");
 		try {
+			const updateData = {
+				name,
+				email,
+				password: "",
+				Phone: phone,
+				about: about,
+				CoverLetter: about,
+				CV: "",
+				role: "TEMPORAL" as const,
+			};
 			const temporaryUser = await fetchCreateUser(updateData);
 			console.log("createTempUser:", temporaryUser);
-			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
+			setSuccess("Uživatel byl úspěšně uložen.");
+			setIsEnable(false);
 		} catch (error) {
-			console.error("nepovedlo se vytvoři tempUser:", error);
-			// Zde můžete přidat další logiku pro zpracování chyby
+			console.error("Nepovedlo se vytvořit tempUser:", error);
+			setError("Chyba při ukládání uživatele.");
+			setSuccess("");
+		} finally {
+			setLoading(false);
 		}
 	};
+
 	const handleApply = async () => {
-		if (selectedJobId === null) return;
+		if (!email.trim()) {
+			setError("Email je nutný pro podání přihlášky.");
+			setSuccess("");
+			return;
+		}
+		if (selectedJobId === null) {
+			setError("Není vybrána žádná pracovní pozice.");
+			setSuccess("");
+			return;
+		}
+		setLoading(true);
+		setError("");
+		setSuccess("");
 		try {
-            const user = await fetchUserByEmail(email);
-            const userId = user.id;
-			const response = await fetchCreateApplication(userId, selectedJobId);
+			const user = await fetchUserByEmail(email);
+			if (!user?.id) {
+				setError(
+					"Uživatel s tímto emailem neexistuje, prosím nejdříve uložte profil."
+				);
+				setLoading(false);
+				return;
+			}
+			const response = await fetchCreateApplication(user.id, selectedJobId);
 			console.log("Application created:", response);
-			// případně další logika (např. přesměrování, notifikace)
+			setSuccess("Přihláška byla úspěšně odeslána.");
 		} catch (error) {
-			console.error("Error creating application:", error);
+			console.error("Chyba při vytváření přihlášky:", error);
+			setError("Nepodařilo se odeslat přihlášku.");
+		} finally {
+			setLoading(false);
 		}
 	};
+
 	return (
 		<>
 			<HeaderMainPage />
-			<form
+			<Box
+				component='form'
 				noValidate
 				autoComplete='off'
-				style={{
-					border: "1px solid gray",
-					boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.2)",
-					padding: "16px",
-					backgroundColor: "#F5F5F5",
-					opacity: 0.8,
-					borderRadius: "8px",
-					maxHeight: "100vh",
-					overflowY: "auto",
-					width: "80%",
-					marginTop: "10%",
-					marginLeft: "10%",
+				sx={{
+					maxWidth: 600,
+					mx: "auto",
+					mt: 8,
+					px: { xs: 2, sm: 4 },
+					pb: 6,
+					bgcolor: "white",
+					borderRadius: 3,
+					boxShadow: 6,
+					fontFamily: "'Montserrat', Arial, sans-serif",
 					display: "flex",
 					flexDirection: "column",
-					gap: "24px",
-					justifyContent: "center",
-					color: "black",
+					gap: 4,
 				}}
 			>
-				<Box>
-					<Typography variant='h4' sx={{ textAlign: "center", mb: 2 }}>
-						Vyplňte zakladni udaje 
-					</Typography>
-				</Box>
-				<Box
+				<Typography
+					variant='h4'
 					sx={{
-						display: "flex",
-						flexDirection: "column",
-						gap: 2,
-						border: 1,
-						p: 2,
-						boxShadow: 5,
-						bgcolor: "#D5DEFF",
-						opacity: 0.8,
-						borderRadius: 2,
+						color: "#1976d2",
+						fontWeight: "700",
+						textAlign: "center",
+						mb: 1,
 					}}
 				>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='Jméno a příjmení'
-							variant='standard'
-							value={name}
-							disabled={!isEnable}
-							onChange={(e) => setName(e.target.value)}
-							fullWidth
-						/>
-					</Box>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='Email'
-							variant='standard'
-							value={email}
-							disabled={!isEnable}
-							onChange={(e) => setEmail(e.target.value)}
-							fullWidth
-						/>
-					</Box>
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='Telefon'
-							variant='standard'
-							value={phone}
-							disabled={!isEnable}
-							onChange={(e) => setPhone(e.target.value)}
-							fullWidth
-						/>
-					</Box>
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							gap: 1,
-							width: "50%",
-						}}
-					>
-						<Typography>Pruvodni text :</Typography>
+					Vyplňte základní údaje
+				</Typography>
+
+				<Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+					<TextField
+						label='Jméno a příjmení'
+						variant='outlined'
+						value={name}
+						disabled={!isEnable || loading}
+						onChange={(e) => setName(e.target.value)}
+						fullWidth
+						required
+						sx={{ bgcolor: "#f9fafb", borderRadius: 1 }}
+					/>
+					<TextField
+						label='Email'
+						variant='outlined'
+						type='email'
+						value={email}
+						disabled={!isEnable || loading}
+						onChange={(e) => setEmail(e.target.value)}
+						fullWidth
+						required
+						sx={{ bgcolor: "#f9fafb", borderRadius: 1 }}
+					/>
+					<TextField
+						label='Telefon'
+						variant='outlined'
+						value={phone}
+						disabled={!isEnable || loading}
+						onChange={(e) => setPhone(e.target.value)}
+						fullWidth
+						sx={{ bgcolor: "#f9fafb", borderRadius: 1 }}
+					/>
+					<Box>
+						<Typography sx={{ mb: 1, color: "#1976d2", fontWeight: "600" }}>
+							Průvodní text
+						</Typography>
 						<QuillEditor value={about} onChange={setAbout} edit={true} />
 					</Box>
-
-					<Box sx={{ display: "flex", alignItems: "center" }}>
-						<TextField
-							label='CV'
-							variant='standard'
-							value={ ""}
-							disabled={true}
-							fullWidth
-						/>
-					</Box>
-					{isEnable ? (
-						<Button onClick={handleSave}>Save</Button>
-					) : (
-						<Button onClick={handleEdit}>Edit</Button>
-					)}
-					<Button onClick={handleApply}>Apply</Button>
+					<TextField
+						label='CV (zatím nepodporováno)'
+						variant='outlined'
+						value={""}
+						disabled
+						fullWidth
+						sx={{ bgcolor: "#f0f0f0", borderRadius: 1 }}
+					/>
 				</Box>
-			</form>
+
+				<Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+					{isEnable ? (
+						<Button
+							variant='contained'
+							onClick={handleSave}
+							disabled={loading}
+							sx={{
+								bgcolor: "#1976d2",
+								fontWeight: "700",
+								px: 4,
+								"&:hover": { bgcolor: "#1565c0" },
+							}}
+						>
+							{loading ? "Ukládám..." : "Uložit"}
+						</Button>
+					) : (
+						<Button
+							variant='outlined'
+							onClick={() => setIsEnable(true)}
+							disabled={loading}
+							sx={{
+								color: "#1976d2",
+								borderColor: "#1976d2",
+								fontWeight: "700",
+								px: 4,
+								"&:hover": { borderColor: "#1565c0", color: "#1565c0" },
+							}}
+						>
+							Upravit
+						</Button>
+					)}
+					<Button
+						variant='contained'
+						color='success'
+						onClick={handleApply}
+						disabled={loading || isEnable}
+						sx={{ fontWeight: "700", px: 4 }}
+					>
+						{loading ? "Odesílám..." : "Přihlásit se"}
+					</Button>
+				</Box>
+
+				{(error || success) && (
+					<Typography
+						sx={{
+							textAlign: "center",
+							fontWeight: "700",
+							color: error ? "#d32f2f" : "#43a047",
+							mt: 2,
+							mb: 1,
+						}}
+					>
+						{error || success}
+					</Typography>
+				)}
+			</Box>
 		</>
 	);
 };
+
 export default UserLogInPage;
