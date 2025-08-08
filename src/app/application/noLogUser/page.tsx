@@ -1,20 +1,23 @@
 "use client";
 import { useAppStore } from "@/store/useAppStore";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Typography } from "@mui/material";
 import QuillEditor from "@/components/textEditor/textEditQuill";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	fetchCreateApplication,
 	fetchCreateUser,
 	fetchUserByEmail,
 } from "@/lib/api";
+import { useRouter} from "next/navigation";
 
-const UserLogInPage = () => {
+const UserNoLogInPage = () => {
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 
-	const [isEnable, setIsEnable] = useState(true);
+	const [isEnable, setIsEnable] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const  [isCreated, setIsCreated] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
 
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -23,6 +26,7 @@ const UserLogInPage = () => {
 
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
+	const router = useRouter();
 
 	const handleSave = async () => {
 		if (!name.trim() || !email.trim()) {
@@ -47,6 +51,7 @@ const UserLogInPage = () => {
 			const temporaryUser = await fetchCreateUser(updateData);
 			console.log("createTempUser:", temporaryUser);
 			setSuccess("Uživatel byl úspěšně uložen.");
+			setIsCreated(true);
 			setIsEnable(false);
 		} catch (error) {
 			console.error("Nepovedlo se vytvořit tempUser:", error);
@@ -56,6 +61,11 @@ const UserLogInPage = () => {
 			setLoading(false);
 		}
 	};
+	useEffect(() => {
+		if (isCreated) {
+			handleApply();
+		}
+	}, [isCreated]);
 
 	const handleApply = async () => {
 		if (!email.trim()) {
@@ -68,6 +78,7 @@ const UserLogInPage = () => {
 			setSuccess("");
 			return;
 		}
+		
 		setLoading(true);
 		setError("");
 		setSuccess("");
@@ -83,6 +94,7 @@ const UserLogInPage = () => {
 			const response = await fetchCreateApplication(user.id, selectedJobId);
 			console.log("Application created:", response);
 			setSuccess("Přihláška byla úspěšně odeslána.");
+			setOpenDialog(true);
 		} catch (error) {
 			console.error("Chyba při vytváření přihlášky:", error);
 			setError("Nepodařilo se odeslat přihlášku.");
@@ -100,8 +112,10 @@ const UserLogInPage = () => {
 				autoComplete='off'
 				sx={{
 					maxWidth: 600,
+					maxHeight: "95%",
+					border: "2px solid #1976d2",
 					mx: "auto",
-					mt: 8,
+					mt: 10,
 					px: { xs: 2, sm: 4 },
 					pb: 6,
 					bgcolor: "white",
@@ -120,6 +134,7 @@ const UserLogInPage = () => {
 						fontWeight: "700",
 						textAlign: "center",
 						mb: 1,
+						mt:2,
 					}}
 				>
 					Vyplňte základní údaje
@@ -151,6 +166,7 @@ const UserLogInPage = () => {
 						label='Telefon'
 						variant='outlined'
 						value={phone}
+						type='tel'
 						disabled={!isEnable || loading}
 						onChange={(e) => setPhone(e.target.value)}
 						fullWidth
@@ -173,21 +189,7 @@ const UserLogInPage = () => {
 				</Box>
 
 				<Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-					{isEnable ? (
-						<Button
-							variant='contained'
-							onClick={handleSave}
-							disabled={loading}
-							sx={{
-								bgcolor: "#1976d2",
-								fontWeight: "700",
-								px: 4,
-								"&:hover": { bgcolor: "#1565c0" },
-							}}
-						>
-							{loading ? "Ukládám..." : "Uložit"}
-						</Button>
-					) : (
+					{!isEnable && (
 						<Button
 							variant='outlined'
 							onClick={() => setIsEnable(true)}
@@ -206,8 +208,8 @@ const UserLogInPage = () => {
 					<Button
 						variant='contained'
 						color='success'
-						onClick={handleApply}
-						disabled={loading || isEnable}
+						onClick={handleSave}
+						disabled={loading || !isEnable}
 						sx={{ fontWeight: "700", px: 4 }}
 					>
 						{loading ? "Odesílám..." : "Přihlásit se"}
@@ -228,8 +230,25 @@ const UserLogInPage = () => {
 					</Typography>
 				)}
 			</Box>
+			 <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Úspěch</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Vaše žádost byla úspěšně odeslána.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => router.push("/")}
+            color="primary"
+            variant="contained"
+          >
+            Hlavní stránka
+          </Button>
+        </DialogActions>
+      </Dialog>
 		</>
 	);
 };
 
-export default UserLogInPage;
+export default UserNoLogInPage;

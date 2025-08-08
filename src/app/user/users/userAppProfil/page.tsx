@@ -285,8 +285,13 @@ export default function UserProfil() {
 						</>
 					)}
 					{userVsFirm && purifyCoverLetter !== null && (
-						<>
-							<Text sx={{ color: "#388e3c" }}>Cover Letter</Text>
+						<><Typography
+								color='#1976d2'
+								variant='h5'
+								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
+							>
+								Průvodní dopis
+							</Typography>
 							<Box
 								sx={{
 									width: "100%",

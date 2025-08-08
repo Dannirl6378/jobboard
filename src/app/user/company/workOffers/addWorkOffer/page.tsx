@@ -8,7 +8,7 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { useRouter } from "next/navigation";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import MenuItem from "@mui/material/MenuItem";
-import { JobAtending, Jobtype } from "./menuSelect";
+import { JobAtending, Jobtype } from "../../../../job/menuSelect";
 import { fetchCreateJob } from "@/lib/api";
 
 export default function AddWorkOffer() {
@@ -128,7 +128,7 @@ export default function AddWorkOffer() {
 							fontFamily: "Montserrat, Arial, sans-serif",
 							fontWeight: "bold",
 							textAlign: "center",
-							mt:5,
+							mt: 5,
 							mb: 2,
 						}}
 					>
@@ -233,14 +233,14 @@ export default function AddWorkOffer() {
 					<Box>
 						{(error || success) && (
 							<Box>
-							<Typography
-								sx={{
-									color: error ? "#d32f2f" : "#43a047",
-									fontWeight: "bold",
-								}}
-							>
-								{error || "Práce byla vytvořena úspěšně!"}
-							</Typography>
+								<Typography
+									sx={{
+										color: error ? "#d32f2f" : "#43a047",
+										fontWeight: "bold",
+									}}
+								>
+									{error || "Práce byla vytvořena úspěšně!"}
+								</Typography>
 							</Box>
 						)}
 					</Box>

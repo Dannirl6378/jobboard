@@ -19,7 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useAppStore } from "@/store/useAppStore";
 import JobsFilter from "./JobsFilter";
 import MenuItem from "@mui/material/MenuItem";
-import { Jobtype } from "@/app/user/company/workOffers/addWorkOffer/menuSelect";
+import { Jobtype } from "@/app/job/menuSelect";
 import { Job } from "@/types/job";
 
 export default function JobFilterPanel() {
@@ -37,6 +37,7 @@ export default function JobFilterPanel() {
 	const [isSearch, setIsSearch] = useState(false);
 	const [filteredJobs, setFilteredJobs] = useState<Job[] | null>(null);
 	const jobsArray = useAppStore((state) => state.jobs);
+	const filteredJobsStore = useAppStore((state) => state.filteredJobs);
 
 	const locations = Array.from(
 		new Set(
@@ -48,7 +49,7 @@ export default function JobFilterPanel() {
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFilters({ ...filters, [e.target.name]: e.target.value });
-		setIsSearch(false); // volitelně - zruší vyhledávání, pokud uživatel změní filtr
+		setIsSearch(false);
 	};
 
 	const handleCheckboxChange = (name: string, value: boolean) => {
@@ -70,7 +71,8 @@ export default function JobFilterPanel() {
 			remote: false,
 			hybrid: false,
 		});
-		setFilteredJobs(null); // nebo Object.values(jobsArray) pokud chceš zobrazit všechny
+		setIsSearch(false);
+		setFilteredJobs(null);
 	};
 
 	return (
@@ -337,6 +339,19 @@ export default function JobFilterPanel() {
 					</Grid>
 				</Collapse>
 			</Grid>
+			{isSearch && filteredJobsStore && filteredJobsStore.length === 0 && (
+				<Typography
+					sx={{
+						mt: 2,
+						color: "red",
+						backgroundColor: "#f8d7da",
+						padding: 2,
+						borderRadius: 1,
+					}}
+				>
+					Nic nenalezeno pro zadané parametry.
+				</Typography>
+			)}
 
 			{/* TADY komponentu JobsFilter vykreslíme **pouze pokud isSearch === true** */}
 			{isSearch && (

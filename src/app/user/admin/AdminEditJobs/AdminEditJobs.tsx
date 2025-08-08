@@ -6,6 +6,7 @@ import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import { fetchUpdateJob } from "@/lib/api";
 import { useAppStore } from "@/store/useAppStore";
 import QuillEditor from "@/components/textEditor/textEditQuill";
+import HeaderMainPage from "@/components/HeaderMainPage";
 
 type AdminEditJobsProps = {
 	setEditJobsOpen: Dispatch<SetStateAction<boolean>>;
@@ -27,6 +28,8 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 	//const job = selectJob(jobid);
 	console.log("job", job);
 	console.log("jobid", job?.id);
+
+
 
 	useEffect(() => {
 		if (job) {
@@ -71,22 +74,28 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 
 	return (
 		<>
-			<Box
-				sx={{
+			<HeaderMainPage />
+			<form
+				noValidate
+				autoComplete='off'
+				style={{
+					border: "2px solid #1976d2",
+					boxShadow: "0px 4px 24px rgba(25, 118, 210, 0.10)",
+					padding: "32px",
+					background: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
+					opacity: 0.98,
+					borderRadius: "18px",
+					maxHeight: "90vh",
+					overflowY: "auto",
+					width: "100%",
+					maxWidth: 600,
+					marginTop: "5%",
+					marginRight: "25%",
 					display: "flex",
 					flexDirection: "column",
-					width: { xs: "95vw", sm: 500 },
-					maxWidth: 600,
-					mx: "auto",
-					mt: 4,
-					p: { xs: 2, sm: 4 },
-					bgcolor: "#f5f7fa",
-					borderRadius: 3,
-					boxShadow: 6,
-					overflow: "auto",
-					zIndex: 10,
+					gap: "20px",
+					justifyContent: "center",
 					fontFamily: "Montserrat, Arial, sans-serif",
-					gap: 3,
 				}}
 			>
 				<Heading
@@ -96,6 +105,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 						fontWeight: "bold",
 						textAlign: "center",
 						mb: 2,
+						mt: "35%",
 					}}
 				>
 					Upravit pracovní nabídku
@@ -167,7 +177,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 						Zavřít
 					</Button>
 				</Box>
-			</Box>
+			</form>
 		</>
 	);
 }

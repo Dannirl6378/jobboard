@@ -1,5 +1,9 @@
 const Jobtype = [
 	{
+		value:"jiné",
+		 label:"Jiné",
+	},
+	{
 		value: "",
 		label: "Všechny",
 	},
@@ -31,11 +35,11 @@ const JobAtending = [
 	},
 	{
 		value: "partTime",
-		label: "častečny",
+		label: "částečný",
 	},
 	{
 		value: "HomeOffice",
-		label: "Z Domu",
+		label: "Z domu",
 	},
 	{
 		value: "Hybrid",

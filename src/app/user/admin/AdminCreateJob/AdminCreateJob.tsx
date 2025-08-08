@@ -6,10 +6,7 @@ import HeaderMainPage from "@/components/HeaderMainPage";
 import { useRouter } from "next/navigation";
 import QuillEditor from "@/components/textEditor/textEditQuill";
 import MenuItem from "@mui/material/MenuItem";
-import {
-	JobAtending,
-	Jobtype,
-} from "../../company/workOffers/addWorkOffer/menuSelect";
+import { JobAtending, Jobtype } from "../../../job/menuSelect";
 import { fetchCreateJob } from "@/lib/api";
 
 type AdminCreateJobProps = {
@@ -56,7 +53,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 			setError("All fields are required");
 			return;
 		}
-		
+
 		setError("");
 		setSuccess(false);
 		//nezpomen pracovat s companID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!§
@@ -93,7 +90,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					background: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					opacity: 0.98,
 					borderRadius: "18px",
-					maxHeight: "70vh",
+					maxHeight: "90vh",
 					overflowY: "auto",
 					width: "100%",
 					maxWidth: 600,
@@ -101,7 +98,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					marginRight: "25%",
 					display: "flex",
 					flexDirection: "column",
-					gap: "24px",
+					gap: "20px",
 					justifyContent: "center",
 					fontFamily: "Montserrat, Arial, sans-serif",
 				}}
@@ -113,7 +110,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 						fontWeight: "bold",
 						textAlign: "center",
 						mb: 2,
-						mt: "10%",
+						mt: "20%",
 					}}
 				>
 					Nová nabídka práce

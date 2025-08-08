@@ -41,6 +41,7 @@ const AdminMainPage = () => {
 	const [aboutHtml, setAboutHtml] = useState<string>("");
 	const [isCreateEnable, setIsCreateEnable] = useState<boolean>(false);
 	const [createJob, setCreateJob] = useState<boolean>(false);
+	const [editJob, setEditJob] = useState<boolean>(false);
 	const [selectedJobId, setSelectedJobId] = useState<string[]>([]);
 	const [editUserOpen, setEditUserOpen] = useState<boolean>(false);
 	const [editJobsOpen, setEditJobsOpen] = useState<boolean>(false);
@@ -106,7 +107,8 @@ const AdminMainPage = () => {
 	const handleEditJobs = () => {
 		if (selectedJobId.length !== 1) {
 			setEditJobError(true);
-			setEditDialogJobOpen(true);
+			setEditJobsOpen(true);
+			setEditJob(true);
 			return;
 		}
 		setSelectedJobsId(selectedJobId[0]);
@@ -341,17 +343,7 @@ const AdminMainPage = () => {
 							<Box sx={{ mt: 3 }}>
 								{selectedUserData ? (
 									<Box>
-										<Box sx={{ mb: 2, ml: 25 }}>
-											<UserActionsPanel
-												selectedUserData={selectedUserData}
-												onEdit={() => setEditUserOpen(true)}
-												handleDelete={() => handleDelete(selectedUserData.id)}
-												deleteStatus={deleteStatus}
-												setDeleteStatus={setDeleteStatus}
-												editUserOpen={editUserOpen}
-												setEditUserOpen={setEditUserOpen}
-											/>
-										</Box>
+										
 										<Box
 											sx={{
 												p: 2,
@@ -375,11 +367,8 @@ const AdminMainPage = () => {
 												jobsArray={jobsArray}
 												getUserById={getUserById}
 											/>
+											
 										</Box>
-
-										{editJobsOpen && (
-											<AdminEditJobs setEditJobsOpen={setEditJobsOpen} />
-										)}
 										{editJobError && (
 											<Dialog
 												open={editDialogJobOpen}
@@ -415,12 +404,25 @@ const AdminMainPage = () => {
 													handleCheckboxChange={handleCheckboxChange}
 													setCreateJob={setCreateJob}
 													createJob={createJob}
+													editJobsOpen={editJobsOpen}
+													setEditJobsOpen={setEditJobsOpen}
 													handleDeleteJob={handleDeleteJob}
 													handleCreateOpenJob={handleCreateOpenJob}
 													handleEditJobs={handleEditJobs}
 												/>
 											</Box>
 										)}
+										<Box sx={{ mb: 2, ml: 25 }}>
+											<UserActionsPanel
+												selectedUserData={selectedUserData}
+												onEdit={() => setEditUserOpen(true)}
+												handleDelete={() => handleDelete(selectedUserData.id)}
+												deleteStatus={deleteStatus}
+												setDeleteStatus={setDeleteStatus}
+												editUserOpen={editUserOpen}
+												setEditUserOpen={setEditUserOpen}
+											/>
+										</Box>
 									</Box>
 								) : hasSearched ? (
 									<Typography sx={{ color: "#d32f2f" }}>

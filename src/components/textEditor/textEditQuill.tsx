@@ -20,12 +20,15 @@ const QuillEditor = ({ value, onChange, edit }: Props) => {
 				[{ header: [1, 2, 3, false] }],
 				["bold", "italic", "underline", "strike"],
 				[{ color: [] }, { background: [] }],
-				[{ list: "ordered" }, { list: "bullet" }],
+				[{ list: "ordered" }],
 				[{ align: [] }],
 				["blockquote", "code-block"],
 				["link", "image"],
 				["clean"],
 			],
+			clipboard: {
+				matchVisual: false,
+			},
 		}),
 		[]
 	);
@@ -50,7 +53,12 @@ const QuillEditor = ({ value, onChange, edit }: Props) => {
 					modules={modules}
 					theme='snow'
 					readOnly={!edit}
-					style={{ color: "black",backgroundColor: "#D5DEFF", height: "25vh", overflow: "auto" }}
+					style={{
+						color: "black",
+						backgroundColor: "#D5DEFF",
+						height: "25vh",
+						overflow: "auto",
+					}}
 				/>
 			</Box>
 		</>

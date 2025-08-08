@@ -135,7 +135,7 @@ const Firm = () => {
 				sx={{
 					maxWidth: "70vw",
 					width: "100%",
-					mx: "auto",
+					mx: "20%",
 					mt: { xs: 2, md: 6 },
 					p: { xs: 2, md: 4 },
 					bgcolor: "white",

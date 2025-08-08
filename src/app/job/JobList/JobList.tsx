@@ -25,19 +25,19 @@ const JobList = () => {
 	const reloadJobs = useAppStore((state) => state.reloadJobs);
 
 	useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        await reloadJobs();  // Zde voláš store metodu, která aktualizuje jobs a filteredJobs v store
-      } catch (e) {
-        setError("Nepodařilo se načíst nabídky práce.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, [reloadJobs]);
+		const load = async () => {
+			setLoading(true);
+			setError(null);
+			try {
+				await reloadJobs(); // Zde voláš store metodu, která aktualizuje jobs a filteredJobs v store
+			} catch (e) {
+				setError("Nepodařilo se načíst nabídky práce.");
+			} finally {
+				setLoading(false);
+			}
+		};
+		load();
+	}, [reloadJobs]);
 
 	useEffect(() => {
 		if (filteredJobs.length > 0) {
@@ -46,7 +46,6 @@ const JobList = () => {
 			setJoby(Object.values(jobs));
 		}
 	}, [filteredJobs, jobs]);
-	
 
 	useEffect(() => {
 		const fetchSanitizedDescriptions = async () => {
@@ -63,7 +62,11 @@ const JobList = () => {
 		fetchSanitizedDescriptions();
 	}, [joby]);
 
-	const paginatedJobs = joby.slice(
+	const sortedJobs = [...joby].sort((a, b) => {
+		return new Date(b.createdat).getTime() - new Date(a.createdat).getTime();
+	});
+
+	const paginatedJobs = sortedJobs.slice(
 		(page - 1) * jobsPerPage,
 		page * jobsPerPage
 	);

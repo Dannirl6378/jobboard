@@ -22,7 +22,9 @@ import {
 	List,
 } from "@mui/material";
 import AdminCreateJob from "../AdminCreateJob/AdminCreateJob";
+import AdminEditJob from "../AdminEditJobs/AdminEditJobs";
 import { Job } from "@/types/job";
+import { Dispatch, SetStateAction } from "react";
 
 interface CompanyJobsPanelProps {
 	selectedUserData: any;
@@ -34,6 +36,8 @@ interface CompanyJobsPanelProps {
 	handleCreateOpenJob: () => void;
 	handleEditJobs: () => void;
 	createJob: boolean;
+	editJobsOpen: boolean;
+	setEditJobsOpen: Dispatch<SetStateAction<boolean>>;
 	setCreateJob: (value: boolean) => void;
 }
 
@@ -47,6 +51,8 @@ export default function CompanyJobsPanel({
 	handleCreateOpenJob,
 	handleEditJobs,
 	createJob,
+	editJobsOpen,
+	setEditJobsOpen,
 	setCreateJob,
 }: CompanyJobsPanelProps) {
 	return (
@@ -202,6 +208,26 @@ export default function CompanyJobsPanel({
 					<AdminCreateJob
 						email={selectedUserData.email || ""}
 						setCreateJob={setCreateJob}
+					/>
+				</Box>
+			)}
+			{editJobsOpen && (
+				<Box
+					sx={{
+						zIndex: 10,
+						background: "rgba(255, 255, 255, 0.7)",
+						position: "fixed",
+						width: "100vw",
+						height: "100vh",
+						left: 0,
+						top: 0,
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+					}}
+				>
+					<AdminEditJob
+						setEditJobsOpen={setEditJobsOpen}
 					/>
 				</Box>
 			)}
