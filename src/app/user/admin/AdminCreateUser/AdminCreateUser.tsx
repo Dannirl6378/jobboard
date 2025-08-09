@@ -65,6 +65,18 @@ const AdminCreateUser = () => {
 		}
 	};
 
+	const phoneRegex = /^\+?[0-9]{9,15}$/; // + a 9-15 číslic bez mezer
+
+const isValidPhone = phoneRegex.test(phone);
+
+	const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const input = e.target.value;
+  // povolit pouze čísla a +
+  if (/^[0-9+]*$/.test(input)) {
+    setPhone(input);
+  }
+};
+
 	return (
 		<Box
 			sx={{
@@ -140,9 +152,9 @@ const AdminCreateUser = () => {
 			</Box>
 			<TextField
 				variant='outlined'
-				label='Telefon'
+				label={isValidPhone?'Telefon': 'Telefon (povolené pouze číslice a +)'}
 				value={phone}
-				onChange={(e) => setPhone(e.target.value)}
+				onChange={handlePhoneChange}
 				fullWidth
 				sx={{ bgcolor: "white", borderRadius: 1 }}
 			/>

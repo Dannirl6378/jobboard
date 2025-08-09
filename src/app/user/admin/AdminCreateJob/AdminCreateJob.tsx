@@ -38,7 +38,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 	}, [foundUser]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
-		console.log("Submitting form...");
+		console.log("Zapisuji formulář");
 
 		e.preventDefault();
 		if (
@@ -50,7 +50,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 			!companyid ||
 			!attending
 		) {
-			setError("All fields are required");
+			setError("Všehcny pole jsou povinná");
 			return;
 		}
 
@@ -218,7 +218,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 				)}
 				{success && (
 					<Typography sx={{ color: "#43a047", fontWeight: "bold" }}>
-						Job created successfully!
+						Prácovní nabídka byla úspěšně přidána!
 					</Typography>
 				)}
 				<Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>

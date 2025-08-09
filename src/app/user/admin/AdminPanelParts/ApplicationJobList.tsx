@@ -68,13 +68,13 @@ export default function ApplicationJobList({
                                 title={(() => {
                                     const users = getUsersForJob(job?.id ?? "", applicationsArray, getUserById);
                                     return users.length > 0 ? (
-                                        <Box>
+                                        <Box sx={{ bgcolor: "#ffffffa1", p: 2, borderRadius: 1 }}>
                                             {users.map((user) => (
                                                 <Box key={user?.id}>
                                                     <Typography sx={{ color: "#1976d2", fontWeight: "bold" }}>
                                                         Jméno: <span style={{ color: "#222" }}>{user?.name ?? ""}</span>
                                                     </Typography>
-                                                    <Typography sx={{ color: "#388e3c" }}>
+                                                    <Typography sx={{ color: "#19611cff" }}>
                                                         Email: <span style={{ color: "#222" }}>{user?.email ?? ""}</span>
                                                     </Typography>
                                                 </Box>
@@ -115,7 +115,7 @@ export default function ApplicationJobList({
                                         const company = getCopanyNameJobFormApplication(app.jobid, jobsArray, getUserById);
                                         if (company && typeof company === "object") {
                                             return (
-                                                <Box>
+                                                <Box sx={{ bgcolor: "#ffffffa1", p: 2, borderRadius: 1 }}>
                                                     <Typography sx={{ color: "#1976d2", fontWeight: "bold" }}>
                                                         Jméno: <span style={{ color: "#222" }}>{company.name ?? ""}</span>
                                                     </Typography>

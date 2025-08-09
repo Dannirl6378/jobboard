@@ -1,5 +1,13 @@
 "use client";
-import { Box, Button, Input, Typography } from "@mui/material";
+import {
+	Box,
+	Button,
+	FormControl,
+	FormHelperText,
+	Input,
+	InputLabel,
+	Typography,
+} from "@mui/material";
 import { usePathname } from "next/navigation";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
@@ -14,6 +22,10 @@ import { useRouter } from "next/navigation";
 
 export default function UserProfil() {
 	const router = useRouter();
+	const pathname = usePathname();
+	const prevPath = useRef(pathname);
+	const hasMounted = useRef(false);
+
 	const [isEnable, setIsEnable] = useState<boolean>(false);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -24,31 +36,30 @@ export default function UserProfil() {
 	const [purifyAbout, setPurifyAbout] = useState(about);
 	const [purifyCoverLetter, setPurifyCoverLetter] = useState<string>("");
 
+	const [userApplications, setUserApplications] = useState<any[]>([]);
 	const [appliedJobs, setAppliedJobs] = useState<
-		{ application: { id: string }; job?: { title?: string; jobId?: string } }[]
+		{
+			application: { id: string; jobid: string };
+			job?: { title?: string; id?: string };
+		}[]
 	>([]);
-
-	const pathname = usePathname();
-	const prevPath = useRef(pathname);
+	const [mappedApplications, setMappedApplications] = useState<
+		{ application: any; job: any | undefined }[]
+	>([]);
 
 	//const { id: userid } = use(params);
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const LogIn = useAppStore((state) => state.LogIn);
 	const jobs = useAppStore((state) => state.jobs);
-	console.log("LogIn", LogIn);
-	console.log("LogIn", LogIn?.role);
-	console.log("Jobs", jobs);
-
 	const applications = useAppStore((state) => state.applications);
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
 	const selectedUserId = useAppStore((state) => state.selectedUserId);
 	const users = useAppStore((state) => state.users);
 	const userVsFirm = selectedUserId ? users[selectedUserId] : null;
-	const hasMounted = useRef(false);
 
 	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
-	console.log("profileUser", profileUser?.role);
-
+	console.log("Jobs:", jobs);
+	console.log("Applications:", applications);
 	useEffect(() => {
 		prevPath.current = pathname;
 	}, [pathname]);
@@ -89,30 +100,50 @@ export default function UserProfil() {
 			return; // čekej, dokud nebude vše připravené
 		}
 
-		const userApplications = Object.values(applications).filter(
+		const filteredApps = Object.values(applications).filter(
 			(app) => app.userid === LogIn.id
 		);
-		console.log("userApplications", userApplications);
-		const applied = userApplications
-			.map((app) => ({
-				application: app,
-				job: jobs[app.jobid],
-			}))
-			.filter((item) => item.job !== undefined);
-		console.log("appliedJobs", applied);
-		setAppliedJobs(applied);
-	}, [LogIn?.id, jobs, applications]);
+		console.log("Test0", filteredApps);
+		setUserApplications(filteredApps);
+	}, [LogIn?.id, applications]);
 
-	//const jobIds = appliedJobs.map(({ job }) => job?.jobId);
-	console.log(
-		"jobsIds",
-		appliedJobs.map(({ job }) => job?.jobId)
-	);
-	console.log(
-		"appliedJobsMap",
-		appliedJobs.map((job) => job.job?.jobId)
-	);
+	const isJobsReady = Object.keys(jobs).length > 0;
+	const isUserApplicationsReady = userApplications.length > 0;
 
+	useEffect(() => {
+		if (!isJobsReady || !isUserApplicationsReady) {
+			setMappedApplications([]);
+			return;
+		}
+		console.log("Test1userApplications", userApplications);
+		const mapped = userApplications.map((app) => ({
+			application: app,
+			job: Object.values(jobs).find(job => job.id === app.jobid), // může být undefined
+		}));
+		console.log("mapped", mapped);
+		setMappedApplications(mapped);
+	}, [userApplications, jobs]);
+
+	useEffect(() => {
+		if (mappedApplications.length === 0) {
+			setAppliedJobs([]);
+			return;
+		}
+		console.log("Test2mappedApplications", mappedApplications);
+		const filtered = mappedApplications.filter(
+			(item) => item.job !== undefined
+		);
+		setAppliedJobs(filtered);
+	}, [mappedApplications]);
+
+	//const jobIds = appliedJobs.map(({ job }) => job?.jobId)
+	console.log("AppjobappliedJobs", appliedJobs);
+	console.log(
+		"POKUSappliedJobs",
+		appliedJobs
+			.map((applications) => applications.application.jobid)
+			.filter((jobId) => jobId !== undefined)
+	);
 	const handleEdit = () => {
 		setIsEnable((prev) => !prev);
 	};
@@ -144,6 +175,18 @@ export default function UserProfil() {
 			setIsEnable(false);
 		} else {
 			console.error("User ID is undefined. Cannot update user.");
+		}
+	};
+
+	const phoneRegex = /^\+?[0-9]{9,15}$/; // + a 9-15 číslic bez mezer
+
+	const isValidPhone = phoneRegex.test(phone);
+
+	const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const input = e.target.value;
+		// povolit pouze čísla a +
+		if (/^[0-9+]*$/.test(input)) {
+			setPhone(input);
 		}
 	};
 
@@ -224,21 +267,28 @@ export default function UserProfil() {
 					</Box>
 					<Box sx={{ width: "100%" }}>
 						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Telefon:</Text>
-						<Input
-							id='Telefon'
-							value={phone}
-							disabled={!isEnable}
-							onChange={(e) => setPhone(e.target.value)}
-							fullWidth
-							sx={{
-								bgcolor: "#f5f7fa",
-								borderRadius: 2,
-								mb: 1,
-								fontFamily: "Montserrat, Arial, sans-serif",
-								color: "#222",
-								fontWeight: 500,
-							}}
-						/>
+						<FormControl fullWidth>
+							<Input
+								id='Telefon'
+								value={phone}
+								disabled={!isEnable}
+								onChange={handlePhoneChange}
+								fullWidth
+								sx={{
+									bgcolor: "#f5f7fa",
+									borderRadius: 2,
+									mb: 1,
+									fontFamily: "Montserrat, Arial, sans-serif",
+									color: "#222",
+									fontWeight: 500,
+								}}
+							/>
+							{!isValidPhone && (
+								<FormHelperText error>
+									Zadejte platné telefonní číslo (číslice a +)
+								</FormHelperText>
+							)}
+						</FormControl>
 					</Box>
 					{isEnable && (
 						<>
@@ -285,7 +335,8 @@ export default function UserProfil() {
 						</>
 					)}
 					{userVsFirm && purifyCoverLetter !== null && (
-						<><Typography
+						<>
+							<Typography
 								color='#1976d2'
 								variant='h5'
 								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
@@ -386,7 +437,7 @@ export default function UserProfil() {
 											}}
 											onClick={() =>
 												router.push(
-													`/job/jobDetail${job?.jobId ? `/${job.jobId}` : ""}`
+													`/job/jobDetail${job?.id ? `/${job.id}` : ""}`
 												)
 											}
 										>

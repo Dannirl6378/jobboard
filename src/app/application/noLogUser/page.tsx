@@ -103,6 +103,17 @@ const UserNoLogInPage = () => {
 		}
 	};
 
+	const phoneRegex = /^\+?[0-9]{9,15}$/; // + a 9-15 číslic bez mezer
+	const isValidPhone = phoneRegex.test(phone);
+
+	const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const input = e.target.value;
+  // povolit pouze čísla a +
+  if (/^[0-9+]*$/.test(input)) {
+    setPhone(input);
+  }
+};
+
 	return (
 		<>
 			<HeaderMainPage />
@@ -163,12 +174,12 @@ const UserNoLogInPage = () => {
 						sx={{ bgcolor: "#f9fafb", borderRadius: 1 }}
 					/>
 					<TextField
-						label='Telefon'
+						label={isValidPhone?'Telefon': 'Telefon (povolené pouze číslice a +)'}
 						variant='outlined'
 						value={phone}
 						type='tel'
 						disabled={!isEnable || loading}
-						onChange={(e) => setPhone(e.target.value)}
+						onChange={handlePhoneChange}
 						fullWidth
 						sx={{ bgcolor: "#f9fafb", borderRadius: 1 }}
 					/>

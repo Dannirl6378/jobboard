@@ -12,9 +12,9 @@ import { useParams } from "next/navigation";
 import { Job } from "@/types/job";
 
 const JobDetail = () => {
-	 const params = useParams();
-	 const jobId = Array.isArray(params.id) ? params.id[0] : params.id;
-
+	const params = useParams();
+	const jobId = Array.isArray(params.id) ? params.id[0] : params.id;
+	console.log("jobId", jobId);
 	const router = useRouter();
 	const reloadJobs = useAppStore((state) => state.reloadJobs);
 	const jobs = useAppStore((state) => state.jobs);
@@ -25,54 +25,59 @@ const JobDetail = () => {
 	const [loading, setLoading] = useState(!job);
 	const [error, setError] = useState<string | null>(null);
 	const [purifyDescr, setPurifyDescr] = useState("");
+	const Application = useAppStore((state) => state.applications);
 
-	if(!jobId || typeof jobId !== "string") {
+	const isRespondet = Object.values(Application).some(
+		(application: any) =>
+			application.jobid === jobId && application.userid === isLogin?.id
+	);
+	console.log("isRespondet", isRespondet);
+
+	if (!jobId || typeof jobId !== "string") {
 		console.log("ID nebylo zadáno");
 		return <Typography>Chybí ID pozice</Typography>;
 	}
-	
-	
+
 	useEffect(() => {
-	const fetchData = async () => {
-		if (!jobId) {
-			setError("Chybí ID pozice.");
-			return;
-		}
+		const fetchData = async () => {
+			if (!jobId) {
+				setError("Chybí ID pozice.");
+				return;
+			}
 
-		const currentJob: Job | null = Object.values(jobs).find(j => j.id === jobId) ?? null;
+			const currentJob: Job | null =
+				Object.values(jobs).find((j) => j.id === jobId) ?? null;
 
-		if (!currentJob) {
-			setLoading(true);
-			try {
-				await reloadJobs();
-				const updatedJob = useAppStore.getState().jobs[jobId];
-				if (updatedJob) {
-					setJob(updatedJob);
-					if (updatedJob.description) {
-						const clean = await sanitizeHtml(updatedJob.description);
-						setPurifyDescr(clean);
+			if (!currentJob) {
+				setLoading(true);
+				try {
+					await reloadJobs();
+					const updatedJob = useAppStore.getState().jobs[jobId];
+					if (updatedJob) {
+						setJob(updatedJob);
+						if (updatedJob.description) {
+							const clean = await sanitizeHtml(updatedJob.description);
+							setPurifyDescr(clean);
+						}
+					} else {
+						setError("Pozice nenalezena.");
 					}
-				} else {
-					setError("Pozice nenalezena.");
+				} catch {
+					setError("Chyba při načítání dat.");
+				} finally {
+					setLoading(false);
 				}
-			} catch {
-				setError("Chyba při načítání dat.");
-			} finally {
+			} else {
+				setJob(currentJob);
+				if (currentJob.description) {
+					sanitizeHtml(currentJob.description).then(setPurifyDescr);
+				}
 				setLoading(false);
 			}
-		} else {
-			setJob(currentJob);
-			if (currentJob.description) {
-				sanitizeHtml(currentJob.description).then(setPurifyDescr);
-			}
-			setLoading(false);
-		}
-	};
+		};
 
-	fetchData();
-}, [jobId]);
-
-
+		fetchData();
+	}, [jobId]);
 
 	const handleApply = () => {
 		if (usersArray === null) {
@@ -109,6 +114,7 @@ const JobDetail = () => {
 						flexDirection: "column",
 						gap: 3,
 						fontFamily: "Montserrat, Arial, sans-serif",
+						mt: 4,
 					}}
 				>
 					<Box
@@ -128,7 +134,7 @@ const JobDetail = () => {
 						>
 							{job?.title || "Pracovní pozice"}
 						</Heading>
-						{isLogin?.role !== "COMPANY" && (
+						{isLogin?.role !== "COMPANY" && !isRespondet ? (
 							<Button
 								variant='contained'
 								onClick={handleApply}
@@ -145,6 +151,23 @@ const JobDetail = () => {
 								}}
 							>
 								Odpovědět na nabídku
+							</Button>
+						) : (
+							<Button
+								variant='outlined'
+								onClick={() => router.back()}
+								sx={{
+									color: "#1976d2",
+									borderColor: "#1976d2",
+									fontWeight: "bold",
+									fontFamily: "Montserrat, Arial, sans-serif",
+									"&:hover": { bgcolor: "#e3f2fd" },
+									px: 4,
+									py: 1.5,
+									borderRadius: 2,
+								}}
+							>
+								Zpět
 							</Button>
 						)}
 					</Box>
@@ -234,7 +257,7 @@ const JobDetail = () => {
 									fontSize: 20,
 								}}
 							>
-								{job?.Attendance|| "Neuvedeno"}
+								{job?.Attendance || "Neuvedeno"}
 							</Typography>
 						</Box>
 					</Box>
