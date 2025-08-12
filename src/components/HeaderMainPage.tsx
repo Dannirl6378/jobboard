@@ -65,21 +65,7 @@ const HeaderMainPage = () => {
 					{/* --- ADMIN --- */}
 					{isAdmin && (
 						<>
-							<Button
-								color='inherit'
-								onClick={() => router.push("/user")}
-								sx={{
-									fontWeight: "bold",
-									fontSize: 16,
-									fontFamily: "serif",
-									"&:hover": {
-										backgroundColor: "#e3fcec",
-										color: "#1976d2",
-									},
-								}}
-							>
-								Firmy
-							</Button>
+							
 							<Button
 								color='inherit'
 								onClick={handleProfil}

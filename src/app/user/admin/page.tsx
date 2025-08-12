@@ -26,15 +26,6 @@ import ApplicationJobList from "./AdminPanelParts/ApplicationJobList";
 import UserActionsPanel from "./AdminPanelParts/UserActionPanel";
 import CompanyJobsPanel from "./AdminPanelParts/CompanyJobsPanel";
 
-//admiin hleda uživatele přes email ---check
-//jak najde uživatele tak má možnosti ---check
-//když je to user:
-//uprav data user vypiš application smaž user vytvoř user ---check
-//když je to Company:
-//uprav data, uprav job, smaž company, smaž job, zobraz všechny joby ---check
-//udělej pro každy job jestě tlačitko application kde bude seznam users a bude onHover kde bude jmeno Email---check
-//tzn nazev job a rozbalovaci okno list user ---check
-//jestě sem musim našroubovat datum vytvořeni uživatele jobu a application --check
 
 const AdminMainPage = () => {
 	const [companyJobs, setCompanyJobs] = useState<Job[]>([]);
@@ -198,7 +189,7 @@ const AdminMainPage = () => {
 						sx={{
 							minHeight: "100vh",
 							bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
-							py: 4,
+							py: { xs: 2, md: 4 },
 							px: { xs: 1, md: 4 },
 							display: "flex",
 							flexDirection: "column",
@@ -264,7 +255,8 @@ const AdminMainPage = () => {
 									</Box>
 								)}
 								<Typography sx={{ color: "#388e3c", fontWeight: 500, mb: 2 }}>
-									Welcome to the Admin Dashboard
+									Toto je admin stránka, kde můžeš spravovat uživatele a jejich
+									data.
 								</Typography>
 							</Box>
 							<Box sx={{ display: "flex", gap: 2, mb: 3 }}>
@@ -330,29 +322,28 @@ const AdminMainPage = () => {
 								setShowEnd={setShowEnd}
 								setHasSearched={setHasSearched}
 							/>
-							{showEnd &&(
-								<Box sx={{mt:3}}>
-								<Typography
-									variant='h6'
-									sx={{ color: "#1976d2", fontWeight: "bold", mb: 2 }}
-								>
-									Výsledky hledání:
-								</Typography>
+							{showEnd && (
+								<Box sx={{ mt: 3 }}>
+									<Typography
+										variant='h6'
+										sx={{ color: "#1976d2", fontWeight: "bold", mb: 2 }}
+									>
+										Výsledky hledání:
+									</Typography>
 								</Box>
 							)}
 							<Box sx={{ mt: 3 }}>
 								{selectedUserData ? (
 									<Box>
-										
 										<Box
 											sx={{
 												p: 2,
 												bgcolor: "#f5f7fa",
 												borderRadius: 2,
 												display: "flex",
-												alignItems: "center",
-												flexDirection: "row",
+												flexDirection: { xs: "column", md: "row" },
 												gap: 2,
+												alignItems: { xs: "stretch", md: "center" },
 											}}
 										>
 											<UserDetailBox
@@ -367,7 +358,6 @@ const AdminMainPage = () => {
 												jobsArray={jobsArray}
 												getUserById={getUserById}
 											/>
-											
 										</Box>
 										{editJobError && (
 											<Dialog
@@ -412,7 +402,14 @@ const AdminMainPage = () => {
 												/>
 											</Box>
 										)}
-										<Box sx={{ mb: 2, ml: 25 }}>
+										<Box
+											sx={{
+												mb: 2,
+												ml: { xs: 0, md: 25 }, 
+												mx: { xs: "auto", md: "unset" }, 
+												width: { xs: "100%", md: "auto" },
+											}}
+										>
 											<UserActionsPanel
 												selectedUserData={selectedUserData}
 												onEdit={() => setEditUserOpen(true)}

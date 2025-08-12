@@ -82,7 +82,7 @@ export default function AddWorkOffer() {
 		}
 	};
 	const handleBack = () => {
-		router.push("/user"); // Použití useNavigate pro přesměrování
+		router.back(); // Použití useNavigate pro přesměrování
 	};
 
 	return (

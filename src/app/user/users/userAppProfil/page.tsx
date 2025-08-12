@@ -58,8 +58,7 @@ export default function UserProfil() {
 	const userVsFirm = selectedUserId ? users[selectedUserId] : null;
 
 	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
-	console.log("Jobs:", jobs);
-	console.log("Applications:", applications);
+	console.log("Login.Role", LogIn?.role);
 	useEffect(() => {
 		prevPath.current = pathname;
 	}, [pathname]);
@@ -115,12 +114,12 @@ export default function UserProfil() {
 			setMappedApplications([]);
 			return;
 		}
-		console.log("Test1userApplications", userApplications);
+		
 		const mapped = userApplications.map((app) => ({
 			application: app,
 			job: Object.values(jobs).find(job => job.id === app.jobid), // může být undefined
 		}));
-		console.log("mapped", mapped);
+		
 		setMappedApplications(mapped);
 	}, [userApplications, jobs]);
 
@@ -136,8 +135,7 @@ export default function UserProfil() {
 		setAppliedJobs(filtered);
 	}, [mappedApplications]);
 
-	//const jobIds = appliedJobs.map(({ job }) => job?.jobId)
-	console.log("AppjobappliedJobs", appliedJobs);
+
 	console.log(
 		"POKUSappliedJobs",
 		appliedJobs
@@ -189,6 +187,9 @@ export default function UserProfil() {
 			setPhone(input);
 		}
 	};
+	const handleBack = () => {
+		router.back(); // Použití useNavigate pro přesměrování
+	};
 
 	return (
 		<>
@@ -214,12 +215,14 @@ export default function UserProfil() {
 						mx: "auto",
 						p: { xs: 2, sm: 4 },
 						display: "flex",
+						mt:"5%",
 						flexDirection: "column",
 						alignItems: "center",
 						gap: 2,
 						fontFamily: "Montserrat, Arial, sans-serif",
 					}}
 				>
+					
 					<Box sx={{ width: "100%", textAlign: "center", mb: 2 }}>
 						<Heading
 							sx={{ color: "#1976d2", fontWeight: "bold", letterSpacing: 1 }}
@@ -362,6 +365,19 @@ export default function UserProfil() {
 									dangerouslySetInnerHTML={{ __html: purifyCoverLetter }}
 								/>
 							</Box>
+							<Button
+							variant='contained'
+							onClick={handleBack}
+							sx={{
+								bgcolor: "#43a047",
+								color: "#fff",
+								fontWeight: "bold",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								"&:hover": { bgcolor: "#2e7031" },
+							}}
+						>
+							Zpět
+						</Button>
 						</>
 					)}
 					{isEnable && profileUser ? (
@@ -490,6 +506,7 @@ export default function UserProfil() {
 							)}
 						</Box>
 					)}
+					
 				</Box>
 			</Box>
 		</>

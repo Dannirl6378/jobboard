@@ -39,7 +39,7 @@ export default function EditWorkOffer() {
 	}, [job]);
 
 	const handleBack = () => {
-		router.push("/user"); // Použití useNavigate pro přesměrování
+		router.back(); // Použití useNavigate pro přesměrování
 	};
 
 	const handleUpdateJob = async (jobid: string, updateData: Partial<Job>) => {

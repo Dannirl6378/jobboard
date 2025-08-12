@@ -157,11 +157,12 @@ const JobDetail = () => {
 								variant='outlined'
 								onClick={() => router.back()}
 								sx={{
-									color: "#1976d2",
-									borderColor: "#1976d2",
-									fontWeight: "bold",
-									fontFamily: "Montserrat, Arial, sans-serif",
-									"&:hover": { bgcolor: "#e3f2fd" },
+									
+								bgcolor: "#43a047",
+								color: "#fff",
+								fontWeight: "bold",
+								fontFamily: "Montserrat, Arial, sans-serif",
+								"&:hover": { bgcolor: "#2e7031" },
 									px: 4,
 									py: 1.5,
 									borderRadius: 2,

@@ -58,7 +58,7 @@ export default function CompanyJobsPanel({
 	return (
 		<Box
 			sx={{
-				p: 3,
+				p: { xs: 2, md: 3 },
 				bgcolor: "#f5f7fa",
 				borderRadius: 3,
 				boxShadow: 3,
@@ -77,7 +77,10 @@ export default function CompanyJobsPanel({
 			>
 				Pracovní pozice firmy
 			</Typography>
-			<Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+			<Box sx={{display: "flex",
+      flexDirection: { xs: "column", sm: "row" },
+      gap: { xs: 1, sm: 2 },
+      mb: 2, }}>
 				<Button
 					variant='outlined'
 					onClick={toggleAllJobs}

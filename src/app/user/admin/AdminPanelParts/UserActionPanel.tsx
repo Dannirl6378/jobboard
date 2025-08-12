@@ -34,17 +34,20 @@ export default function UserActionPanel({
 				display: "flex",
 				flexDirection: "column",
 				alignItems: "flex-start",
+				width: { xs: "90vw", sm: "auto" },
 				gap: 2,
 				maxWidth: 400,
+				 mx: { xs: "auto", sm: 0 },
 			}}
 		>
 			<Typography
 				variant='h6'
 				sx={{
-					fontWeight: "bold",
-					color: "#1976d2",
-					fontFamily: "Montserrat, Arial, sans-serif",
+					display: "flex",
+					flexDirection: { xs: "column", sm: "row" },
+					gap: 2,
 					mb: 1,
+					width: "100%",
 				}}
 			>
 				Možnosti úprav
