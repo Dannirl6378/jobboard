@@ -39,7 +39,8 @@ describe("applyFilters", () => {
         Attendance: "Full",
         description: "",
         companyid: "",
-        createdat: new Date()
+        createdat: new Date(),
+        isDemo: false,
     },
     {
       id: "2",
@@ -50,7 +51,8 @@ describe("applyFilters", () => {
       Attendance: "partTime",
       description: "",
       companyid: "",
-      createdat: new Date()
+      createdat: new Date(),
+      isDemo: false,
     },
   ];
 

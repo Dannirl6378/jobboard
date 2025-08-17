@@ -170,7 +170,7 @@ const JobList = () => {
 									variant='body2'
 									sx={{ color: "#388e3c", fontWeight: 600 }}
 								>
-									{job.salary ? `${job.salary} Kč/měsíc` : "Mzda neuvedena"}
+									{job.salary ? `${job.salary} €/měsíc` : "Mzda neuvedena"}
 								</Typography>
 								<Typography
 									variant='body2'

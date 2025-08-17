@@ -6,45 +6,42 @@ import { useAppStore } from "@/store/useAppStore";
 import { Heading } from "@/styles/editTypoghraphy";
 import { Box, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Job } from "@/types/job";
 
 const JobDetail = () => {
 	const params = useParams();
 	const jobId = Array.isArray(params.id) ? params.id[0] : params.id;
-	console.log("jobId", jobId);
 	const router = useRouter();
 	const reloadJobs = useAppStore((state) => state.reloadJobs);
 	const jobs = useAppStore((state) => state.jobs);
 	const isLogin = useAppStore((state) => state.LogIn);
-	const usersArray = useAppStore((state) => state.LogIn);
+	const Application = useAppStore((state) => state.applications);
 
+console.log("isLogin", isLogin);
 	const [job, setJob] = useState<Job | null>(null);
 	const [loading, setLoading] = useState(!job);
 	const [error, setError] = useState<string | null>(null);
 	const [purifyDescr, setPurifyDescr] = useState("");
-	const Application = useAppStore((state) => state.applications);
 
 	const isRespondet = Object.values(Application).some(
 		(application: any) =>
 			application.jobid === jobId && application.userid === isLogin?.id
 	);
-	console.log("isRespondet", isRespondet);
 
-	if (!jobId || typeof jobId !== "string") {
-		console.log("ID nebylo zadáno");
-		return <Typography>Chybí ID pozice</Typography>;
-	}
+	const CompanyjobId = Object.values(jobs).find((j) => j.id === jobId);
+	const CompanyData = useAppStore((state) =>
+		CompanyjobId?.companyid
+			? state.getUserById(CompanyjobId.companyid)
+			: undefined
+	);
 
 	useEffect(() => {
 		const fetchData = async () => {
-			if (!jobId) {
+			if (!jobId || typeof jobId !== "string") {
 				setError("Chybí ID pozice.");
 				return;
 			}
-
 			const currentJob: Job | null =
 				Object.values(jobs).find((j) => j.id === jobId) ?? null;
 
@@ -75,25 +72,33 @@ const JobDetail = () => {
 				setLoading(false);
 			}
 		};
-
 		fetchData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [jobId]);
 
 	const handleApply = () => {
-		if (usersArray === null) {
+		if (!isLogin) {
 			router.push("/application/noLogUser");
 			return;
-		} else {
-			router.push("/application/userLogIn");
 		}
+		router.push("/application/userLogIn");
 	};
+
+	if (error) {
+		return (
+			<Box sx={{ p: 4, textAlign: "center", color: "#d32f2f" }}>
+				<Typography variant='h6'>{error}</Typography>
+			</Box>
+		);
+	}
 
 	return (
 		<>
 			<HeaderMainPage />
+			<Box sx={{  display: "flex", flexDirection: "column", alignItems: "center", gap:2 }}>
 			<Box
 				sx={{
-					minHeight: "100vh",
+					minHeight: "fit-content",
 					bgcolor: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					display: "flex",
 					justifyContent: "center",
@@ -121,8 +126,10 @@ const JobDetail = () => {
 						sx={{
 							display: "flex",
 							justifyContent: "space-between",
-							alignItems: "center",
+							alignItems: { xs: "flex-start", sm: "center" },
+							flexDirection: { xs: "column", sm: "row" },
 							mb: 2,
+							gap: 2,
 						}}
 					>
 						<Heading
@@ -130,6 +137,7 @@ const JobDetail = () => {
 								color: "#1976d2",
 								fontWeight: "bold",
 								letterSpacing: 1,
+								fontSize: { xs: 22, sm: 28 },
 							}}
 						>
 							{job?.title || "Pracovní pozice"}
@@ -157,12 +165,11 @@ const JobDetail = () => {
 								variant='outlined'
 								onClick={() => router.back()}
 								sx={{
-									
-								bgcolor: "#43a047",
-								color: "#fff",
-								fontWeight: "bold",
-								fontFamily: "Montserrat, Arial, sans-serif",
-								"&:hover": { bgcolor: "#2e7031" },
+									bgcolor: "#43a047",
+									color: "#fff",
+									fontWeight: "bold",
+									fontFamily: "Montserrat, Arial, sans-serif",
+									"&:hover": { bgcolor: "#2e7031" },
 									px: 4,
 									py: 1.5,
 									borderRadius: 2,
@@ -183,80 +190,48 @@ const JobDetail = () => {
 					>
 						<Box>
 							<Typography
-								sx={{
-									color: "#388e3c",
-									fontWeight: 600,
-									fontSize: 18,
-								}}
+								sx={{ color: "#388e3c", fontWeight: 600, fontSize: 18 }}
 							>
 								Mzda:
 							</Typography>
 							<Typography
-								sx={{
-									color: "#222",
-									fontWeight: "bold",
-									fontSize: 20,
-								}}
+								sx={{ color: "#222", fontWeight: "bold", fontSize: 20 }}
 							>
-								{job?.salary ? `${job.salary} Kč` : "Neuvedeno"}
+								{job?.salary ? `${job.salary} €` : "Neuvedeno"}
 							</Typography>
 						</Box>
 						<Box>
 							<Typography
-								sx={{
-									color: "#388e3c",
-									fontWeight: 600,
-									fontSize: 18,
-								}}
+								sx={{ color: "#388e3c", fontWeight: 600, fontSize: 18 }}
 							>
 								Lokalita:
 							</Typography>
 							<Typography
-								sx={{
-									color: "#222",
-									fontWeight: "bold",
-									fontSize: 20,
-								}}
+								sx={{ color: "#222", fontWeight: "bold", fontSize: 20 }}
 							>
 								{job?.location || "Neuvedeno"}
 							</Typography>
 						</Box>
 						<Box>
 							<Typography
-								sx={{
-									color: "#388e3c",
-									fontWeight: 600,
-									fontSize: 18,
-								}}
+								sx={{ color: "#388e3c", fontWeight: 600, fontSize: 18 }}
 							>
 								Kategorie:
 							</Typography>
 							<Typography
-								sx={{
-									color: "#222",
-									fontWeight: "bold",
-									fontSize: 20,
-								}}
+								sx={{ color: "#222", fontWeight: "bold", fontSize: 20 }}
 							>
 								{job?.category || "Neuvedeno"}
 							</Typography>
 						</Box>
 						<Box>
 							<Typography
-								sx={{
-									color: "#388e3c",
-									fontWeight: 600,
-									fontSize: 18,
-								}}
+								sx={{ color: "#388e3c", fontWeight: 600, fontSize: 18 }}
 							>
 								Typ úvazku:
 							</Typography>
 							<Typography
-								sx={{
-									color: "#222",
-									fontWeight: "bold",
-									fontSize: 20,
-								}}
+								sx={{ color: "#222", fontWeight: "bold", fontSize: 20 }}
 							>
 								{job?.Attendance || "Neuvedeno"}
 							</Typography>
@@ -294,6 +269,71 @@ const JobDetail = () => {
 						/>
 					</Box>
 				</Box>
+			</Box>
+			
+			{isLogin?.role !== "COMPANY" && (
+				<Box
+					sx={{
+						bgcolor: "#f5f7fa",
+						borderRadius: 4,
+						boxShadow: 8,
+						maxWidth: 700,
+						width: "100%",
+						mx: "auto",
+						p: { xs: 2, sm: 5 },
+						display: "flex",
+						flexDirection: "column",
+						gap: 2,
+						fontFamily: "Montserrat, Arial, sans-serif",
+						mb: 5,
+						mt: { xs: 3, sm: 5, md: 6, lg: 8 },
+					}}
+				>
+					<Typography
+						sx={{
+							textAlign: "center",
+							color: "#1976d2",
+							fontWeight: "bold",
+							fontSize: 18,
+							mt: 2,
+						}}
+					>
+						{CompanyData?.name
+							? `Profil firmy: ${CompanyData.name}`
+							: "Profil firmy nenalezen"}
+					</Typography>
+					<Typography
+						sx={{
+							textAlign: "center",
+							color: "#388e3c",
+							fontSize: 16,
+							mt: 1,
+						}}
+					>
+						{CompanyData?.about || "Žádný popis firmy k dispozici."}
+					</Typography>
+					<Typography
+						sx={{
+							textAlign: "center",
+							color: "#388e3c",
+							fontSize: 16,
+							mt: 1,
+						}}
+					>
+						{CompanyData?.Phone || "Telefon neuveden."}
+					</Typography>
+					<Typography
+						sx={{
+							textAlign: "center",
+							color: "#388e3c",
+							fontSize: 16,
+							mt: 1,
+						}}
+					>
+						{CompanyData?.email || "Email neuveden."}
+					</Typography>
+				</Box>
+			)}
 			</Box>
 		</>
 	);
