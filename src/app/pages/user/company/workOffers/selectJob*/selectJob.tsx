@@ -14,7 +14,6 @@ const selectJob = (jobid: string) => {
 	const company = getCompany();
 	const companyJobs = company ? getCompanyJobs(company.id) : [];
 	const Job = companyJobs.find((job) => job.id === jobid);
-	console.log("selectedJob", Job);
 	return Job;
 };
 export default selectJob;

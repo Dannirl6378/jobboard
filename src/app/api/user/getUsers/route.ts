@@ -1,9 +1,5 @@
-import { PrismaClient } from "@/generated/prisma";
-const prisma = new PrismaClient();
 
-import { supabase } from "@/lib/supbaseClient";
 import { NextRequest } from "next/server";
-
 import { fetchFromSupabase } from "@/lib/supabaseFetch";
 
 export async function GET() {

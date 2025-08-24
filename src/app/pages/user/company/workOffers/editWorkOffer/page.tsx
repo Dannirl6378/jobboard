@@ -47,7 +47,7 @@ export default function EditWorkOffer() {
 		setErrorMessage(null);
 		try {
 			const updatedJob = await fetchUpdateJob(jobid, updateData);
-			console.log("Updated job:", updatedJob);
+		
 			setSuccessMessage("Změny byly úspěšně uloženy do databáze.");
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {

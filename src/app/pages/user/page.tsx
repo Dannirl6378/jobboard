@@ -9,11 +9,10 @@ import MainPgFirm from "./company/MainPgFirm";
 
 const UserPage = () => {
 	const LogIn = useAppStore((state) => state.LogIn);
-	console.log("LogIn", LogIn);
-	console.log("LoginRole", LogIn?.role);
+	
 
 	const LogInCompany: boolean = LogIn?.role === "COMPANY" ? true : false; //toto se upravi na zjistovani kdo je přihlašeny Firm User
-	console.log("LogInCompany", LogInCompany);
+	
 
 	return (
 		<>

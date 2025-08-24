@@ -30,7 +30,6 @@ const ApplicationPage = () => {
 	}
 	if (error instanceof Error) return <div>Error: {error.message}</div>;
 
-	console.log("applications", applications);
 
 	return (
 		<div>

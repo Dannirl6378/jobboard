@@ -5,7 +5,6 @@ import {
 	FormControl,
 	FormHelperText,
 	Input,
-	InputLabel,
 	Typography,
 } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -17,7 +16,7 @@ import { User } from "@/types/user";
 import { fetchUpdateUser } from "@/app/hook/api";
 import QuillEditor from "@/components/textEditor/TextEditQuill";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
-import { getUserJob } from "@/app/pages/user/users/userJob/userJob";
+//import { getUserJob } from "@/app/pages/user/users/userJob/userJob";
 import { useRouter } from "next/navigation";
 
 export default function UserProfil() {
@@ -48,7 +47,7 @@ export default function UserProfil() {
 	>([]);
 
 	//const { id: userid } = use(params);
-	const usersArray = Object.values(useAppStore((state) => state.users));
+	//const usersArray = Object.values(useAppStore((state) => state.users));
 	const LogIn = useAppStore((state) => state.LogIn);
 	const jobs = useAppStore((state) => state.jobs);
 	const applications = useAppStore((state) => state.applications);
@@ -58,7 +57,7 @@ export default function UserProfil() {
 	const userVsFirm = selectedUserId ? users[selectedUserId] : null;
 
 	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
-	console.log("Login.Role", LogIn?.role);
+	
 	useEffect(() => {
 		prevPath.current = pathname;
 	}, [pathname]);
@@ -66,7 +65,6 @@ export default function UserProfil() {
 	useEffect(() => {
 		if (!hasMounted.current) {
 			hasMounted.current = true;
-			console.log("hasMounted", hasMounted.current);
 			return;
 		}
 		return () => {
@@ -102,7 +100,6 @@ export default function UserProfil() {
 		const filteredApps = Object.values(applications).filter(
 			(app) => app.userid === LogIn.id
 		);
-		console.log("Test0", filteredApps);
 		setUserApplications(filteredApps);
 	}, [LogIn?.id, applications]);
 
@@ -128,19 +125,13 @@ export default function UserProfil() {
 			setAppliedJobs([]);
 			return;
 		}
-		console.log("Test2mappedApplications", mappedApplications);
 		const filtered = mappedApplications.filter(
 			(item) => item.job !== undefined
 		);
 		setAppliedJobs(filtered);
 	}, [mappedApplications]);
 
-	console.log(
-		"POKUSappliedJobs",
-		appliedJobs
-			.map((applications) => applications.application.jobid)
-			.filter((jobId) => jobId !== undefined)
-	);
+	
 	const handleEdit = () => {
 		setIsEnable((prev) => !prev);
 	};
@@ -150,8 +141,8 @@ export default function UserProfil() {
 		updateData: Partial<User>
 	) => {
 		try {
-			const updatedUser = await fetchUpdateUser(userid, updateData);
-			console.log("Updated job:", updatedUser);
+			 await fetchUpdateUser(userid, updateData);
+			
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
 			console.error("Error updating job:", error);

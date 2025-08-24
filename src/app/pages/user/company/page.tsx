@@ -1,5 +1,5 @@
 "use client";
-import { Box, Typography, Divider, Paper, Button, Badge } from "@mui/material";
+import { Box, Typography, Button, Badge } from "@mui/material";
 import React, { useEffect, useState, useMemo } from "react";
 
 import { useAppStore } from "@/app/hook/useAppStore";
@@ -36,10 +36,10 @@ const Firm = () => {
 		jobsArray.filter((job) => job.companyid === companyid);
 
 	// Výběr uchazečů na zákl. jobId
-	const getCompanyApplications = (companyJobs: any[]) =>
+	/*const getCompanyApplications = (companyJobs: any[]) =>
 		applicationsArray.filter((application) =>
 			companyJobs.some((job) => job.id === application.jobid)
-		);
+		);*/
 
 	const company = getCompany();
 
@@ -48,7 +48,7 @@ const Firm = () => {
 		[company, jobsArray]
 	);
 
-	const companyApplications = getCompanyApplications(companyJobs);
+	//const companyApplications = getCompanyApplications(companyJobs);
 
 	const applicantsByJobId = useMemo(() => {
 		const result: Record<string, any[]> = {};
@@ -112,7 +112,7 @@ const Firm = () => {
 		useAppStore.getState().setJobs(updatedJobs);
 		fetchDeleteJob(jobId)
 			.then(() => {
-				console.log("Job deleted successfully");
+				alert("Pracovní nabídka byla úspěšně smazána.");
 			})
 			.catch((error) => {
 				console.error("Error deleting job:", error);

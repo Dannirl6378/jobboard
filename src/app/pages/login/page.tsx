@@ -25,8 +25,7 @@ export default function SignIn() {
 
 	useEffect(() => {
 		if (data) {
-			setUsers(data); // uložíme data do zustand
-			console.log("whichUser", data);
+			setUsers(data); 
 		}
 	}, [data, setUsers]);
 	const usersArray = Object.values(useAppStore((state) => state.users));
@@ -40,13 +39,13 @@ export default function SignIn() {
 		}
 	};
 	const roleUsers = usersArray?.filter((user) => user.role === "USER");
-	console.log("roleUsers", roleUsers);
+	
 
 	const roleCompany = usersArray?.filter((user) => user.role === "COMPANY");
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error instanceof Error) return <div>Error: {error.message}</div>;
-	console.log("users", data);
+	
 
 	return (
 		<>

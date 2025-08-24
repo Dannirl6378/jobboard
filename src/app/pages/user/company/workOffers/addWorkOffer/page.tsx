@@ -39,8 +39,6 @@ export default function AddWorkOffer() {
 			setError("nic sem nenašel");
 		}
 	}, [foundUser]);
-	console.log("companyid", companyid);
-	console.log("foundUser", foundUser);
 
 	const validateForm = () => {
 		if (
@@ -74,7 +72,6 @@ export default function AddWorkOffer() {
 				companyid,
 				Attendance: attending,
 			});
-			console.log("Job created:", data);
 			setSuccess(true);
 		} catch (error) {
 			console.error("Error creating job:", error);

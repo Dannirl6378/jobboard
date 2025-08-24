@@ -1,8 +1,3 @@
-import { PrismaClient } from "@/generated/prisma";
-import { NextResponse } from 'next/server';
-const prisma = new PrismaClient();
-// Make sure the path is correct and the file exists
-
 
 import { fetchFromSupabase } from "../../../../lib/supabaseFetch";
 

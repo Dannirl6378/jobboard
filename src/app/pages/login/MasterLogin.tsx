@@ -16,7 +16,7 @@ const MasterLogin = ({ onClose }: MasterLoginProps) => {
 
 	const router = useRouter();
 
-	const usersArray = Object.values(user);
+	//const usersArray = Object.values(user);
 
 	const handleLoginMaster = async () => {
 		if (email === "" || password === "") {
@@ -27,14 +27,13 @@ const MasterLogin = ({ onClose }: MasterLoginProps) => {
 		const masterUser = Object.values(user).find(
 			(u) => u.email.toLowerCase() === email.toLowerCase()
 		);
-		console.log("masterUser:", masterUser);
+		
 
 		if (!masterUser) {
 			alert("Uživatel nenalezen");
 			return;
 		}
-		console.log("masteruserpassword", masterUser.password);
-		console.log("loginPassword", password);
+		
 		const isMatch = await bcrypt.compare(password, masterUser.password);
 
 		if (isMatch) {

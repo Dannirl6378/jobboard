@@ -58,8 +58,7 @@ const UserNoLogInPage = () => {
 				CV: "",
 				role: "TEMPORAL" as const,
 			};
-			const temporaryUser = await fetchCreateUser(updateData);
-			console.log("createTempUser:", temporaryUser);
+			await fetchCreateUser(updateData);
 			setSuccess("Uživatel byl úspěšně uložen.");
 			setIsCreated(true);
 			setIsEnable(false);
@@ -102,7 +101,6 @@ const UserNoLogInPage = () => {
 				return;
 			}
 			const response = await fetchCreateApplication(user.id, selectedJobId);
-			console.log("Application created:", response);
 			setSuccess("Přihláška byla úspěšně odeslána.");
 			setOpenDialog(true);
 		} catch (error) {

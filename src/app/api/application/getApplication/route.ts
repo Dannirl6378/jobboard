@@ -1,6 +1,3 @@
-import { PrismaClient } from "@/generated/prisma";
-import { Application } from '../../../../generated/prisma/index';
-const prisma = new PrismaClient();
 
 import { fetchFromSupabase } from "@/lib/supabaseFetch";
 

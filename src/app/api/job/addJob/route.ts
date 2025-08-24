@@ -1,7 +1,4 @@
-import { PrismaClient } from "@/generated/prisma"; // nebo jen 'prisma' pokud používáš jiný import
-import { NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
 import { supabase } from "../../../../lib/supbaseClient";
 
 export async function POST(req: Request) {

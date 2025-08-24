@@ -25,9 +25,6 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 	const jobs = useAppStore((state) => state.jobs);
 	const job = selectedJobId ? jobs[selectedJobId] : null;
 
-	//const job = selectJob(jobid);
-	console.log("job", job);
-	console.log("jobid", job?.id);
 
 	useEffect(() => {
 		if (job) {
@@ -39,11 +36,10 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 	}, [job]);
 
 	const handleUpdateJob = async (jobid: string, updateData: Partial<Job>) => {
-		console.log(updateData);
-		console.log(jobid);
+		
 		try {
 			const updatedJob = await fetchUpdateJob(jobid, updateData);
-			console.log("Updated job:", updatedJob);
+			
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
 			console.error("Error updating job:", error);

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/generated/prisma";
+
 import { supabase } from "@/lib/supbaseClient";
 import { NextRequest } from "next/server";
 

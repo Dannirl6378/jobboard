@@ -32,7 +32,6 @@ const AdminEditUser = ({ setEditUserOpen }: AdminEditUserProps) => {
 		try {
 			const updatedUser = await fetchUpdateUser(userid, userData);
 			await fetchAndSetUsers(selectedUserData?.email || "");
-			console.log("Updated job:", updatedUser);
 		} catch (error) {
 			console.error("Error updating job:", error);
 		}

@@ -38,7 +38,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 	}, [foundUser]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
-		console.log("Zapisuji formulář");
+		
 
 		e.preventDefault();
 		if (
@@ -73,10 +73,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 			setError("Failed to create job");
 		}
 	};
-	const handleBack = () => {
-		router.push("/user/admin"); // Použití useNavigate pro přesměrování
-	};
-
+	
 	return (
 		<>
 			<HeaderMainPage />

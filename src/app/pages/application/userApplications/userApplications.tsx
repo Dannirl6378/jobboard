@@ -23,10 +23,8 @@ const userCompanyApplications = () => {
 			companyJobs.some((job) => job.id === application.jobid)
 		);
 	const companyJobs = company ? getCompanyJobs(company.id) : [];
-	console.log("companyJobs", companyJobs);
 
 	const companyApplications = getCompanyApplications(companyJobs);
-	console.log("companyApplications", companyApplications);
 
 	const getUserViaApplication = (applicationId: string) => {
 		const application = companyApplications.find(
@@ -38,16 +36,6 @@ const userCompanyApplications = () => {
 		}
 		return null;
 	};
-	console.log(
-		"companyApplications user IDs",
-		companyApplications.map((application) => application.userid)
-	);
-	console.log(
-		"companyApplications user names",
-		companyApplications.map((application) =>
-			getUserViaApplication(application.id)
-		)
-	);
 
 	const userViaApplication = companyApplications.map((application) =>
 		getUserViaApplication(application.id)

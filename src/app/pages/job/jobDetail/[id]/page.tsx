@@ -17,9 +17,7 @@ const JobDetail = () => {
 	const jobs = useAppStore((state) => state.jobs);
 	const isLogin = useAppStore((state) => state.LogIn);
 	const Application = useAppStore((state) => state.applications);
-	const [companyDescpSanitized, setCompanyDescpSanitized] = useState("");
 
-	console.log("isLogin", isLogin);
 	const [job, setJob] = useState<Job | null>(null);
 	const [loading, setLoading] = useState(!job);
 	const [error, setError] = useState<string | null>(null);

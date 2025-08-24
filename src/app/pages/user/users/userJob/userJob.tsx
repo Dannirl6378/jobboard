@@ -12,14 +12,11 @@ export const getUserJob = async () => {
 		const applications = await fetchApplication();
 		const LogIn = useAppStore.getState().LogIn; // Získání přihlášeného uživatele z globálního stavu
 		const job = useAppStore.getState().jobs;
-		console.log("applicationsUserJob", applications);
-		console.log("LogInUserUserJob", LogIn);
-		console.log("JobsUserJob", job);
-
+		
 		const userApplications = applications.filter(
 			(app: { userid: string }) => app.userid === LogIn?.id
 		);
-		console.log("userApplications", userApplications);
+		
 
 		if (!userApplications) throw new Error("No application found for user");
 		// Získání uživatele podle ID

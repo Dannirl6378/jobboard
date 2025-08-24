@@ -81,7 +81,6 @@ const AdminMainPage = () => {
 	const handleDeleteJob = async () => {
 		for (const jobId of selectedJobId) {
 			const result = await AdminDeleteJob(jobId);
-			console.log(result.message);
 		}
 		setSelectedJobId([]);
 	};
@@ -134,24 +133,17 @@ const AdminMainPage = () => {
 		}
 	}, [selectedUserData]);
 
-	console.log("applicationArrray", applicationsArray);
-	console.log("selectedUserData", selectedUserData);
 	const jobsCompany = jobsArray.filter(
 		(app) => app.companyid === selectedUserData?.id
 	);
 	const jobsIdCompany = jobsCompany.map((job) => job.id);
-	console.log("jobsCompany", jobsCompany);
-	console.log(
-		"AppForCompany",
-		applicationsArray.filter((app) => jobsIdCompany.includes(app.jobid))
-	);
+	
 
 	const getApplicantsForJob = () => {
 		return applicationsArray
 			.filter((app) => app.userid === selectedUserData?.id)
 			.map((application) => {
 				const job = jobsArray.find((job) => job.id === application.jobid);
-				console.log("job", job);
 				return job ? { ...application, JobTitle: job.title } : null;
 			})
 			.filter(Boolean);
@@ -161,13 +153,13 @@ const AdminMainPage = () => {
 	};
 
 	const applicationJob = getApplicantsForJob();
-	console.log("applicationJob", applicationJob);
+
 	useEffect(() => {
 		if (selectedUserData?.role === "COMPANY") {
 			const jobsCompany = jobsArray.filter(
 				(app) => app.companyid === selectedUserData?.id
 			);
-			const jobsIdCompany = jobsCompany.map((job) => job.id);
+			//const jobsIdCompany = jobsCompany.map((job) => job.id);
 			const jobsFromApplications = [
 				...new Map(
 					applicationsArray
@@ -176,7 +168,7 @@ const AdminMainPage = () => {
 						.map((job) => [job?.id, job])
 				).values(),
 			];
-			console.log("jobsFromApplications2", jobsFromApplications);
+		
 			setCompanyDatatApp(jobsFromApplications);
 		}
 	}, [selectedUserData]);
@@ -189,7 +181,7 @@ const AdminMainPage = () => {
 				.map((job) => [job?.id, job])
 		).values(),
 	];
-	console.log("jobsFromApplications", jobsFromApplications);
+	
 
 	const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setDeleteDemoChecked(event.target.checked);

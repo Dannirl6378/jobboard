@@ -14,7 +14,7 @@ import {
 import InputAdornment from "@mui/material/InputAdornment";
 import { filledInputClasses } from "@mui/material/FilledInput";
 import { inputBaseClasses } from "@mui/material/InputBase";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useAppStore } from "@/app/hook/useAppStore";
 import JobsFilter from "./JobsFilter";
@@ -35,7 +35,7 @@ export default function JobFilterPanel() {
 	});
 	const [showMore, setShowMore] = useState(false);
 	const [isSearch, setIsSearch] = useState(false);
-	const [filteredJobs, setFilteredJobs] = useState<Job[] | null>(null);
+	//const [filteredJobs, setFilteredJobs] = useState<Job[] | null>(null);
 	const jobsArray = useAppStore((state) => state.jobs);
 	const filteredJobsStore = useAppStore((state) => state.filteredJobs);
 
@@ -72,7 +72,7 @@ export default function JobFilterPanel() {
 			hybrid: false,
 		});
 		setIsSearch(false);
-		setFilteredJobs(null);
+		//setFilteredJobs(null);
 	};
 
 	return (

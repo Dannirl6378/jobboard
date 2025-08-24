@@ -18,7 +18,7 @@ import { useState } from "react";
 type UserRole = "ADMIN" | "USER" | "TEMPORAL" | "COMPANY";
 
 const AdminCreateUser = () => {
-	const users = useAppStore((state) => state.users);
+	//const users = useAppStore((state) => state.users);
 
 	const [success, setSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
