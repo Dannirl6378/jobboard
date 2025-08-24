@@ -1,11 +1,12 @@
 "use client";
 
 import { Grid, Box } from "@mui/material";
-import JobFilterPanel from "./job/JobFilterPanel/JobFilterPanel";
+import JobFilterPanel from "./pages/job/JobFilterPanel/JobFilterPanel";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { useEffect, useState } from "react";
-import JobsList from "@/app/job/page";
+import JobsList from "@/app/pages/job/page";
 import Head from "next/head";
+
 //V jakékoli komponentě, kde budeš potřebovat např.
 // jméno autora nabídky práce nebo název jobu, jednoduše použiješ:
 //const user = useAppStore((state) => state.getUserById(application.userId));

@@ -2,31 +2,30 @@ import { PrismaClient } from "@/generated/prisma"; // nebo jen 'prisma' pokud po
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
+import { supabase } from "../../../../lib/supbaseClient";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, description, location, salary, category, companyid,Attendance } = body;
+    const { title, description, location, salary, category, companyid, Attendance } = body;
 
     if (!title || !description || !location || !salary || !companyid || !category || !Attendance) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400 });
     }
 
-    const newJob = await prisma.job.create({
-      data: {
-        title,
-        description,
-        location,
-        salary: parseFloat(salary),
-        category,
-        companyid,
-        Attendance,
-      },
-    });
+    const { data, error } = await supabase
+      .from("Job")
+      .insert([
+        { title, description, location, salary: parseFloat(salary), category, companyid, Attendance }
+      ]);
 
-    return NextResponse.json(newJob, { status: 201 });
-  } catch (error) {
+    if (error) {
+      throw error;
+    }
+
+    return new Response(JSON.stringify(data), { status: 201 });
+  } catch (error: any) {
     console.error("Error creating job:", error);
-    return NextResponse.json({ error: "Failed to create job" }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }

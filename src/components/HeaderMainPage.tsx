@@ -8,7 +8,7 @@ import {
 	Link,
 } from "@mui/material";
 import PageContainer from "@/components/PageContainer";
-import { useAppStore } from "@/store/useAppStore";
+import { useAppStore } from "@/app/hook/useAppStore";
 import { useRouter } from "next/navigation";
 
 const HeaderMainPage = () => {
@@ -65,7 +65,6 @@ const HeaderMainPage = () => {
 					{/* --- ADMIN --- */}
 					{isAdmin && (
 						<>
-							
 							<Button
 								color='inherit'
 								onClick={handleProfil}
@@ -122,6 +121,7 @@ const HeaderMainPage = () => {
 					{/* --- LOGOUT/LOGIN --- */}
 					{isLoggedIn ? (
 						<Button
+							role='button'
 							onClick={handleLogout}
 							color='inherit'
 							sx={{
@@ -138,6 +138,7 @@ const HeaderMainPage = () => {
 						</Button>
 					) : (
 						<Button
+							role='button'
 							onClick={handleLogin}
 							color='inherit'
 							sx={{

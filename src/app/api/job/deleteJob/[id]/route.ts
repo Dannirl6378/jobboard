@@ -1,36 +1,49 @@
 import { PrismaClient } from "@/generated/prisma";
 import { NextRequest, NextResponse } from "next/server";
 const prisma = new PrismaClient();
+import { supabase } from "@/lib/supbaseClient";
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
-) {
-  const { id } = await context.params;
+export async function DELETE(req: Request, context: { params: { id: string } }) {
+  const params = await context.params;
+  const { id } = params;
   const companyid = req.headers.get("x-company-id");
 
   try {
-    const job = await prisma.job.findUnique({
-      where: { id },
-    });
+    // nejdřív najdi job
+    const { data: jobData, error: fetchError } = await supabase
+      .from("Job")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-    if (!job || job.companyid !== companyid) {
-      return NextResponse.json({ error: "Not authorized or job not found" }, { status: 403 });
+    if (fetchError || !jobData || jobData.companyid !== companyid) {
+      return new Response(JSON.stringify({ error: "Not authorized or job not found" }), { status: 403 });
     }
 
-    const deletedJob = await prisma.job.delete({
-      where: { id },
-    });
-    await prisma.user.deleteMany({
-  where: {
-    role: "TEMPORAL",
-    Application: { none: {} }
-  }
-});
+    // smaž job
+    const { data: deletedData, error: deleteError } = await supabase
+      .from("Job")
+      .delete()
+      .eq("id", id);
 
-    return NextResponse.json(deletedJob, { status: 200 });
-  } catch (error) {
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    // volitelné: smazat TEMPORAL users bez žádostí
+    const { error: cleanError } = await supabase
+      .from("User")
+      .delete()
+      .eq("role", "TEMPORAL")
+      .is("Application", null); // supabase nemá přesně "none", kontrola podle vztahů
+
+    if (cleanError) {
+      console.warn("Could not clean TEMPORAL users:", cleanError.message);
+    }
+
+    return new Response(JSON.stringify(deletedData), { status: 200 });
+  } catch (error: any) {
     console.error("Delete error:", error);
-    return NextResponse.json({ error: "Failed to delete job" }, { status: 500 });
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 }
