@@ -1,3 +1,4 @@
+"use client"
 import { fetchCreateApplication, fetchCreateUser, fetchUserByEmail } from "@/app/hook/api";
 import { useAppStore } from "@/app/hook/useAppStore";
 import { useRouter } from "next/navigation";

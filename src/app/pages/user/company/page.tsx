@@ -3,8 +3,8 @@ import { Box, Typography } from "@mui/material";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import UserCompanyProfile from "./useCompanyProfil/page";
 import UserCopmanyEdit from "./useCompanyEdit/page";
-import UserCompanyApp from "./useCompanyApp/page";
-import UserCompany from "./useCompany/page";
+import UserCompanyApp from "./useCompanyApplications/page";
+import UserCompany from "./useCompanyApp/page";
 
 const Firm = () => {
 	const {

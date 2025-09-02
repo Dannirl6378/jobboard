@@ -2,7 +2,7 @@
 import { fetchUsers } from "@/app/hook/api";
 import { useAppStore } from "@/app/hook/useAppStore";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 

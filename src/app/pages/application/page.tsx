@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect, use } from "react";
 import { fetchApplication } from "@/app/hook/api";
 import { useQuery } from "@tanstack/react-query";

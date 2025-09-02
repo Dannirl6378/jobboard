@@ -2,13 +2,13 @@
 import { useAppStore } from "@/app/hook/useAppStore";
 import { sanitizeHtml } from "@/lib/sanitizeHTML";
 import { Job } from "@/types/job";
-import { Box, Typography } from "@mui/material";
+
 import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function JobDetailApp() {
-	const params = useParams();
+	const params = useParams<{id:string}>();
 	const jobId = Array.isArray(params.id) ? params.id[0] : params.id;
 	const router = useRouter();
 	const reloadJobs = useAppStore((state) => state.reloadJobs);
