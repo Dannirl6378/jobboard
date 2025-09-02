@@ -1,9 +1,7 @@
+Toto je log pro chyby a vylepšní :
 
-/*
-1. Vyzkoušet všechny api volani postupně 
-1.a opravit v admin přihlšky na prac pozice hotovo bylo to celkem divne ale logicke
-1.b. Admin-
-            1.test vyhledani podle emailu ---funguje
-            2.test uprava user asi to byla chba v const params = await context.params;
-  const { id } = params; to plati pro všechny routerpodle id
-*/
+11. profil firmy - zmazat - jediné funguje, ale pridala by som kontrolné okno s otázkou, či to chceš naozaj vymazať
+
+
+
+22. na dnes hotovo :) 

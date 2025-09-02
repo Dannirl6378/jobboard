@@ -56,13 +56,14 @@ const AdminEditUser = ({ setEditUserOpen }: AdminEditUserProps) => {
 		<Box
 			sx={{
 				width: { xs: "95vw", sm: 400 },
-				maxWidth: 500,
+				maxWidth: 350,
 				bgcolor: "#f5f7fa",
 				boxShadow: 6,
 				borderRadius: 3,
 				p: { xs: 2, sm: 4 },
 				mx: "auto",
 				mt: 4,
+				
 				display: "flex",
 				flexDirection: "column",
 				gap: 2,

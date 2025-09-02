@@ -8,44 +8,31 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Dialog from "@mui/material/Dialog";
 import MasterLogin from "./MasterLogin";
+import LoginApp from "./LoginApp/page";
+import LoginUser from "./LoginUser/page";
+import LoginFirm from "./LoginFirm/page";
 
 export default function SignIn() {
-	const [chooseUser, setChooseUser] = useState(false);
-	const [chooseCompany, setChooseCompany] = useState(false);
-	const [openMasterLogin, setOpenMasterLogin] = useState(false);
-
-	const { data, error, isLoading } = useQuery({
-		queryKey: ["users"],
-		queryFn: fetchUsers,
-	});
-	const setLogIn = useAppStore((state) => state.setLogIn);
-	const setUsers = useAppStore((state) => state.setUsers);
-
-	const router = useRouter();
-
-	useEffect(() => {
-		if (data) {
-			setUsers(data); 
-		}
-	}, [data, setUsers]);
-	const usersArray = Object.values(useAppStore((state) => state.users));
-
-	const handleLogin = (userType: string) => {
-		const user = usersArray?.find((user) => user.email === userType);
-		console.log("userLogIn", user);
-		if (user) {
-			setLogIn(user);
-			router.push("/");
-		}
-	};
-	const roleUsers = usersArray?.filter((user) => user.role === "USER");
-	
-
-	const roleCompany = usersArray?.filter((user) => user.role === "COMPANY");
+	const {
+		state: {
+			roleUsers,
+			roleCompany,
+			chooseUser,
+			chooseCompany,
+			openMasterLogin,
+			isLoading,
+			error,
+		},
+		actions: {
+			handleLogin,
+			setChooseCompany,
+			setChooseUser,
+			setOpenMasterLogin,
+		},
+	} = LoginApp();
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error instanceof Error) return <div>Error: {error.message}</div>;
-	
 
 	return (
 		<>
@@ -80,95 +67,18 @@ export default function SignIn() {
 					>
 						Přihlášení
 					</Typography>
-					<Button
-						fullWidth
-						variant='contained'
-						sx={{
-							fontWeight: "bold",
-							bgcolor: "#1976d2",
-							":hover": { bgcolor: "#1565c0" },
-						}}
-						onClick={() =>
-							chooseUser ? setChooseUser(false) : setChooseUser(true)
-						}
-					>
-						User
-					</Button>
-					{chooseUser ? (
-						<List
-							sx={{
-								width: "100%",
-								bgcolor: "background.paper",
-								border: "1px solid #b6c8e6",
-								borderRadius: 2,
-								overflowY: "auto",
-								maxHeight: 300,
-							}}
-						>
-							{roleUsers?.map((user) => (
-								<ListItem key={user.email}>
-									<Button
-										fullWidth
-										variant='outlined'
-										sx={{
-											fontWeight: "bold",
-											color: "#1976d2",
-											borderColor: "#1976d2",
-											":hover": { borderColor: "#1565c0" },
-										}}
-										onClick={() => handleLogin(user.email)}
-									>
-										{user.email}
-									</Button>
-								</ListItem>
-							))}
-						</List>
-					) : null}
-
-					<Button
-						fullWidth
-						variant='contained'
-						sx={{
-							fontWeight: "bold",
-							bgcolor: "#43a047",
-							":hover": { bgcolor: "#2e7031" },
-						}}
-						onClick={() =>
-							chooseCompany ? setChooseCompany(false) : setChooseCompany(true)
-						}
-					>
-						Firmy
-					</Button>
-					{chooseCompany ? (
-						<List
-							sx={{
-								width: "100%",
-								bgcolor: "background.paper",
-								border: "1px solid #b6c8e6",
-								borderRadius: 2,
-								overflowY: "auto",
-								maxHeight: 300,
-							}}
-						>
-							{roleCompany?.map((user) => (
-								<ListItem key={user.email}>
-									<Button
-										fullWidth
-										variant='outlined'
-										sx={{
-											fontWeight: "bold",
-											color: "#1976d2",
-											borderColor: "#1976d2",
-											":hover": { borderColor: "#1565c0" },
-										}}
-										onClick={() => handleLogin(user.email)}
-									>
-										{user.email}
-									</Button>
-								</ListItem>
-							))}
-						</List>
-					) : null}
+					<LoginUser
+						chooseUser={chooseUser}
+						roleUsers={roleUsers}
+						setChooseUser={setChooseUser}
+						handleLogin={handleLogin}
+					/>
+					<LoginFirm
+						chooseCompany={chooseCompany}
+						setChooseCompany={setChooseCompany}
+						roleCompany={roleCompany}
+						handleLogin={handleLogin}
+					/>
 
 					<Button
 						fullWidth

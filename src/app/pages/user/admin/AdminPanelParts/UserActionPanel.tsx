@@ -23,7 +23,6 @@ interface UserActionPanelProps {
 }
 export default function UserActionPanel({
 	selectedUserData,
-	onEdit,
 	handleDelete,
 	deleteStatus,
 	setDeleteStatus,
@@ -41,6 +40,7 @@ export default function UserActionPanel({
 				boxShadow: 2,
 				fontFamily: "Montserrat, Arial, sans-serif",
 				mt: 2,
+				ml:50,
 				display: "flex",
 				flexDirection: "column",
 				alignItems: "flex-start",
@@ -51,14 +51,13 @@ export default function UserActionPanel({
 			}}
 		>
 			<Typography
-				variant='h6'
-				sx={{
-					display: "flex",
-					flexDirection: { xs: "column", sm: "row" },
-					gap: 2,
-					mb: 1,
-					width: "100%",
-				}}
+				 variant="h6"
+                sx={{
+                    fontWeight: "bold",
+                    color: "#1976d2",
+                    mb: 2,
+                    fontFamily: "Montserrat, Arial, sans-serif",
+                }}
 			>
 				Možnosti úprav
 			</Typography>

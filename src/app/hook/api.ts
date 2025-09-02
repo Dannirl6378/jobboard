@@ -1,6 +1,8 @@
 import { User } from "@/types/user";
-import { LogInFirm } from "@/app/pages/login/LogInUser";
 import { Job } from "@/types/job";
+import { useAppStore } from './useAppStore';
+
+const LogIn = () => useAppStore.getState().LogIn;
 
 export const fetchUsers = async () => {
 	const res = await fetch("/api/user/getUsers"); // Volání našeho API
@@ -133,11 +135,14 @@ export const fetchDeleteUser = async (userid: string) => {
 };
 
 export const fetchDeleteJob = async (jobId: string) => {
+	
 	try {
+		const login = LogIn();
 		const res = await fetch(`/api/job/deleteJob/${jobId}`, {
 			method: "DELETE",
 			headers: {
-				"x-company-id": LogInFirm?.id || "", // firma musí být přihlášená
+				"x-company-id": LogIn()?.id ||"",
+				"x-role": login?.role || "", 
 			},
 		});
 

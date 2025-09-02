@@ -1,13 +1,15 @@
 "use client";
 
 import { useAppStore } from "@/app/hook/useAppStore";
-import { useEffect } from "react";
 import Firm from "./company/page";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Box } from "@mui/material";
 import MainPgFirm from "./company/MainPgFirm";
+import AdminApp from './admin/AdminApp/page';
+
 
 const UserPage = () => {
+
 	const LogIn = useAppStore((state) => state.LogIn);
 	
 

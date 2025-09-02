@@ -28,19 +28,19 @@ const HeaderMainPage = () => {
 	};
 
 	const handleLogin = () => {
-		router.push("/login");
+		router.push("/pages/login");
 	};
 	const handleProfil = () => {
 		if (LogIn?.role === "ADMIN") {
-			router.push("/user/admin");
+			router.push("/pages/user/admin");
 			return;
 		}
 		if (LogIn?.role === "COMPANY") {
-			router.push("/user/company");
+			router.push("/pages/user/company");
 			return;
 		}
 		setSelectedUserId(null);
-		router.push("/user/users/userAppProfil");
+		router.push("/pages/user/users/userAppProfil");
 	};
 
 	return (
@@ -104,7 +104,7 @@ const HeaderMainPage = () => {
 					{!isLoggedIn && (
 						<Button
 							color='inherit'
-							onClick={() => router.push("/user")}
+							onClick={() => router.push("/pages/user")}
 							sx={{
 								fontWeight: "bold",
 								fontSize: 16,

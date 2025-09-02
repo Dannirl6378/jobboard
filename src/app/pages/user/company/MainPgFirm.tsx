@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import BusinessIcon from "@mui/icons-material/Business";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
 import { useRouter } from "next/navigation";
 
 export default function ForCompaniesIntro() {
@@ -118,7 +117,7 @@ export default function ForCompaniesIntro() {
           variant="outlined"
           sx={{ ml: "5%" }}
           onClick={() => {
-            route.push("/login")
+            route.push("/pages/login")
           }}
         >
           <Typography>Registrace</Typography>

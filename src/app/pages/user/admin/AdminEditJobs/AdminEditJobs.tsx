@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, TextField } from "@mui/material";
+import { Alert, Box, Button, Snackbar, TextField } from "@mui/material";
 import { Job } from "@/types/job";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
@@ -20,10 +20,11 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 	const [about, setAbout] = useState<string>("");
 	const [isEnable, setIsEnable] = useState<boolean>(true); // Set default as needed
 	const [purifyAbout, setPurifyAbout] = useState<string>(""); //tady se zamyslet jestli budu toto potřebovat
+	const [openSnackbar, setOpenSnackbar] = useState(false);
 
 	const selectedJobId = useAppStore((state) => state.selectedJobId);
 	const jobs = useAppStore((state) => state.jobs);
-	const job = selectedJobId ? jobs[selectedJobId] : null;
+	const job = selectedJobId ? Object.values(jobs).filter((job)=>job.id===selectedJobId)[0] : null;
 
 
 	useEffect(() => {
@@ -39,7 +40,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 		
 		try {
 			const updatedJob = await fetchUpdateJob(jobid, updateData);
-			
+			setOpenSnackbar(true);
 			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
 		} catch (error) {
 			console.error("Error updating job:", error);
@@ -55,6 +56,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 			location,
 		};
 		handleUpdateJob(selectedJobId, updateData);
+		
 	};
 
 	// Add missing state variables for about, isEnable, and purifyAbout
@@ -157,6 +159,20 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 					>
 						Uložit změny
 					</Button>
+					<Snackbar
+				open={openSnackbar}
+				autoHideDuration={3000}
+				onClose={() => setOpenSnackbar(false)}
+				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+			>
+				<Alert
+					onClose={() => setOpenSnackbar(false)}
+					severity='success'
+					sx={{ width: "100%" }}
+				>
+					Data byla úspěšně uložena.
+				</Alert>
+			</Snackbar>
 					<Button
 						variant='contained'
 						onClick={() => setEditJobsOpen(false)}

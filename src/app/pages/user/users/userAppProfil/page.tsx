@@ -1,187 +1,51 @@
 "use client";
 import {
 	Box,
-	Button,
-	FormControl,
-	FormHelperText,
-	Input,
 	Typography,
 } from "@mui/material";
-import { usePathname } from "next/navigation";
+
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
-import { useEffect, useRef, useState } from "react";
-import { useAppStore } from "@/app/hook/useAppStore";
-import { User } from "@/types/user";
-import { fetchUpdateUser } from "@/app/hook/api";
 import QuillEditor from "@/components/textEditor/TextEditQuill";
-import { sanitizeHtml } from "@/lib/sanitizeHTML";
-//import { getUserJob } from "@/app/pages/user/users/userJob/userJob";
-import { useRouter } from "next/navigation";
+import UserProfileForm from "./useProfileForm/page";
+import UserProfilePassword from "./useProfilePassword/page";
+import UserProfileResume from "./useProfileResume/page";
+import UserProfileApp from "./useProfileApp/page";
+import UserProfileEdit from "./useProfileEdit/page";
+import useUserProfile from "./useUserProfile/useUserProfile";
 
 export default function UserProfil() {
-	const router = useRouter();
-	const pathname = usePathname();
-	const prevPath = useRef(pathname);
-	const hasMounted = useRef(false);
+	const {
+ state: { 
+    isEnable, 
+    name, 
+    email, 
+    password, 
+    phone, 
+    rePassword, 
+    about, 
+    purifyAbout, 
+    purifyCoverLetter, 
+    appliedJobs, 
+    LogIn, 
+    userVsFirm, 
+    profileUser, 
+	isValidPhone
+  },
+  actions: { 
+    setName, 
+    setEmail, 
+    setPassword, 
+    setRePassword, 
+    setAbout, 
+    handlePhoneChange, 
+    handleEdit, 
+    handleSaveChanges, 
+    handleBack 
+  }
+} = useUserProfile();
 
-	const [isEnable, setIsEnable] = useState<boolean>(false);
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [phone, setPhone] = useState("");
-	const [rePassword, setRePassword] = useState("");
-	const [about, setAbout] = useState("");
-	const [purifyAbout, setPurifyAbout] = useState(about);
-	const [purifyCoverLetter, setPurifyCoverLetter] = useState<string>("");
-
-	const [userApplications, setUserApplications] = useState<any[]>([]);
-	const [appliedJobs, setAppliedJobs] = useState<
-		{
-			application: { id: string; jobid: string };
-			job?: { title?: string; id?: string };
-		}[]
-	>([]);
-	const [mappedApplications, setMappedApplications] = useState<
-		{ application: any; job: any | undefined }[]
-	>([]);
-
-	//const { id: userid } = use(params);
-	//const usersArray = Object.values(useAppStore((state) => state.users));
-	const LogIn = useAppStore((state) => state.LogIn);
-	const jobs = useAppStore((state) => state.jobs);
-	const applications = useAppStore((state) => state.applications);
-	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
-	const selectedUserId = useAppStore((state) => state.selectedUserId);
-	const users = useAppStore((state) => state.users);
-	const userVsFirm = selectedUserId ? users[selectedUserId] : null;
-
-	const profileUser = userVsFirm === null ? LogIn : userVsFirm;
-	
-	useEffect(() => {
-		prevPath.current = pathname;
-	}, [pathname]);
-
-	useEffect(() => {
-		if (!hasMounted.current) {
-			hasMounted.current = true;
-			return;
-		}
-		return () => {
-			setSelectedUserId(null);
-		};
-	}, []);
-
-	useEffect(() => {
-		sanitizeHtml(about).then(setPurifyAbout);
-		sanitizeHtml(purifyCoverLetter).then(setPurifyCoverLetter);
-	}, [about, purifyCoverLetter]);
-
-	useEffect(() => {
-		if (profileUser) {
-			setName(profileUser.name || "");
-			setEmail(profileUser.email || "");
-			setPassword(profileUser.passwordHash || "");
-			setAbout(profileUser.about || "");
-			setPhone(profileUser.Phone || "");
-			setPurifyCoverLetter(profileUser?.CoverLetter || "");
-		}
-	}, [profileUser]);
-
-	useEffect(() => {
-		if (
-			!LogIn?.id ||
-			Object.keys(jobs).length === 0 ||
-			Object.keys(applications).length === 0
-		) {
-			return; // čekej, dokud nebude vše připravené
-		}
-
-		const filteredApps = Object.values(applications).filter(
-			(app) => app.userid === LogIn.id
-		);
-		setUserApplications(filteredApps);
-	}, [LogIn?.id, applications]);
-
-	const isJobsReady = Object.keys(jobs).length > 0;
-	const isUserApplicationsReady = userApplications.length > 0;
-
-	useEffect(() => {
-		if (!isJobsReady || !isUserApplicationsReady) {
-			setMappedApplications([]);
-			return;
-		}
-
-		const mapped = userApplications.map((app) => ({
-			application: app,
-			job: Object.values(jobs).find((job) => job.id === app.jobid), // může být undefined
-		}));
-
-		setMappedApplications(mapped);
-	}, [userApplications, jobs]);
-
-	useEffect(() => {
-		if (mappedApplications.length === 0) {
-			setAppliedJobs([]);
-			return;
-		}
-		const filtered = mappedApplications.filter(
-			(item) => item.job !== undefined
-		);
-		setAppliedJobs(filtered);
-	}, [mappedApplications]);
-
-	
-	const handleEdit = () => {
-		setIsEnable((prev) => !prev);
-	};
-
-	const handleUpdateUser = async (
-		userid: string,
-		updateData: Partial<User>
-	) => {
-		try {
-			 await fetchUpdateUser(userid, updateData);
-			
-			// Zde můžete přidat další logiku, např. aktualizaci stavu nebo přesměrování
-		} catch (error) {
-			console.error("Error updating job:", error);
-			// Zde můžete přidat další logiku pro zpracování chyby
-		}
-	};
-
-	const handleSaveChanges = () => {
-		const updateData = {
-			name,
-			email,
-			password,
-			about: about,
-			Phone: phone,
-		};
-		if (LogIn?.id) {
-			handleUpdateUser(LogIn.id, updateData);
-			setIsEnable(false);
-		} else {
-			console.error("User ID is undefined. Cannot update user.");
-		}
-	};
-
-	const phoneRegex = /^\+?[0-9]{9,15}$/; // + a 9-15 číslic bez mezer
-
-	const isValidPhone = phoneRegex.test(phone);
-
-	const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const input = e.target.value;
-		// povolit pouze čísla a +
-		if (/^[0-9+]*$/.test(input)) {
-			setPhone(input);
-		}
-	};
-	const handleBack = () => {
-		router.back(); // Použití useNavigate pro přesměrování
-	};
-
-	return (
+	return(
 		<>
 			<HeaderMainPage />
 			<Box
@@ -219,154 +83,34 @@ export default function UserProfil() {
 							Profil uživatele
 						</Heading>
 					</Box>
-					<Box sx={{ width: "100%" }}>
-						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Email:</Text>
-						<Input
-							id='email'
-							value={email}
-							disabled={!isEnable}
-							onChange={(e) => setEmail(e.target.value)}
-							fullWidth
-							sx={{
-								bgcolor: "#f5f7fa",
-								borderRadius: 2,
-								mb: 1,
-								fontFamily: "Montserrat, Arial, sans-serif",
-								color: "#222",
-								fontWeight: 500,
-							}}
-						/>
-					</Box>
-					<Box sx={{ width: "100%" }}>
-						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>
-							Uživatelské jméno:
-						</Text>
-						<Input
-							id='userName'
-							value={name}
-							disabled={!isEnable}
-							onChange={(e) => setName(e.target.value)}
-							fullWidth
-							sx={{
-								bgcolor: "#f5f7fa",
-								borderRadius: 2,
-								mb: 1,
-								fontFamily: "Montserrat, Arial, sans-serif",
-								color: "#222",
-								fontWeight: 500,
-							}}
-						/>
-					</Box>
-					<Box sx={{ width: "100%" }}>
-						<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Telefon:</Text>
-						<FormControl fullWidth>
-							<Input
-								id='Telefon'
-								value={phone}
-								disabled={!isEnable}
-								onChange={handlePhoneChange}
-								fullWidth
-								sx={{
-									bgcolor: "#f5f7fa",
-									borderRadius: 2,
-									mb: 1,
-									fontFamily: "Montserrat, Arial, sans-serif",
-									color: "#222",
-									fontWeight: 500,
-								}}
-							/>
-							{!isValidPhone && (
-								<FormHelperText error>
-									Zadejte platné telefonní číslo (číslice a +)
-								</FormHelperText>
-							)}
-						</FormControl>
-					</Box>
+					<UserProfileForm
+						name={name}
+						email={email}
+						phone={phone}
+						isEnable={isEnable}
+						setName={setName}
+						setEmail={setEmail}
+						handlePhoneChange={handlePhoneChange}
+						isValidPhone={isValidPhone}
+					/>
+
 					{isEnable && (
 						<>
-							<Box sx={{ width: "100%" }}>
-								<Text sx={{ color: "#1976d2", fontWeight: 600 }}>Heslo:</Text>
-								<Input
-									id='password'
-									type='password'
-									value={password}
-									disabled={!isEnable}
-									onChange={(e) => setPassword(e.target.value)}
-									fullWidth
-									sx={{
-										bgcolor: "#f5f7fa",
-										borderRadius: 2,
-										mb: 1,
-										fontFamily: "Montserrat, Arial, sans-serif",
-										color: "#222",
-										fontWeight: 500,
-									}}
-								/>
-							</Box>
-							<Box sx={{ width: "100%" }}>
-								<Text sx={{ color: "#1976d2", fontWeight: 600 }}>
-									Opakovat heslo:
-								</Text>
-								<Input
-									id='rePassword'
-									type='password'
-									value={isEnable ? rePassword : ""}
-									disabled={!isEnable}
-									onChange={(e) => setRePassword(e.target.value)}
-									fullWidth
-									sx={{
-										bgcolor: "#f5f7fa",
-										borderRadius: 2,
-										mb: 1,
-										fontFamily: "Montserrat, Arial, sans-serif",
-										color: "#222",
-										fontWeight: 500,
-									}}
-								/>
-							</Box>
+							<UserProfilePassword
+								password={password}
+								rePassword={rePassword}
+								setPassword={setPassword}
+								setRePassword={setRePassword}
+								isEnable={isEnable}
+							/>
 						</>
 					)}
 					{userVsFirm && purifyCoverLetter !== null && (
 						<>
-							<Typography
-								color='#1976d2'
-								variant='h5'
-								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
-							>
-								Průvodní dopis
-							</Typography>
-							<Box
-								sx={{
-									width: "100%",
-									minHeight: 120,
-									maxHeight: 250,
-									overflow: "auto",
-									border: "1px solid #cee5fd",
-									borderRadius: 2,
-									bgcolor: "#e3fcec",
-									color: "#222",
-									p: 2,
-									mb: 2,
-								}}
-							>
-								<div
-									className='rich-content'
-									dangerouslySetInnerHTML={{ __html: purifyCoverLetter }}
-								/>
-							</Box>
-							<Button
-								variant='contained'
-								onClick={handleBack}
-								sx={{
-									bgcolor: "#43a047",
-									color: "#fff",
-									fontWeight: "bold",
-									fontFamily: "Montserrat, Arial, sans-serif",
-									"&:hover": { bgcolor: "#2e7031" },
-								}}
-							>
-								Zpět
-							</Button>
+							<UserProfileResume
+								handleBack={handleBack}
+								purifyCoverLetter={purifyCoverLetter}
+							/>
 						</>
 					)}
 					{isEnable && profileUser ? (
@@ -376,7 +120,7 @@ export default function UserProfil() {
 								variant='h5'
 								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
 							>
-								O mě
+								O mně
 							</Typography>
 							<QuillEditor value={about} onChange={setAbout} edit={isEnable} />
 						</Box>
@@ -387,7 +131,7 @@ export default function UserProfil() {
 								variant='h5'
 								sx={{ mt: 2, fontWeight: "bold", width: "100%" }}
 							>
-								O mě
+								O mně
 							</Typography>
 							<Box
 								sx={{
@@ -412,88 +156,18 @@ export default function UserProfil() {
 					) : null}
 					{LogIn?.role === "COMPANY" ? null : (
 						<>
-							<Typography sx={{ color: "#388e3c", fontWeight: 600, mt: 2 }}>
-								Moje přihlášky
-							</Typography>
-							<Box
-								sx={{
-									width: "100%",
-									minHeight: 60,
-									maxHeight: 180,
-									overflow: "auto",
-									border: "1px solid #cee5fd",
-									borderRadius: 2,
-									bgcolor: "#f5f7fa",
-									p: 2,
-									mb: 2,
-									display: "flex",
-									flexWrap: "wrap",
-									gap: 2,
-								}}
-							>
-								{appliedJobs.map(({ application, job }) => (
-									<Box sx={{ minWidth: 120 }} key={application.id}>
-										<Typography
-											sx={{
-												cursor: "pointer",
-												color: "#1976d2",
-												fontWeight: "bold",
-												"&:hover": { textDecoration: "underline" },
-											}}
-											onClick={() =>
-												router.push(
-													`/job/jobDetail${job?.id ? `/${job.id}` : ""}`
-												)
-											}
-										>
-											{job?.title || "Neznámá pozice"}
-										</Typography>
-									</Box>
-								))}
-							</Box>
+							<UserProfileApp appliedJobs={appliedJobs} />
 						</>
 					)}
 					{userVsFirm === null && (
-						<Box
-							sx={{
-								mt: 2,
-								display: "flex",
-								gap: 2,
-								width: "100%",
-								justifyContent: "center",
-							}}
-						>
-							<Button
-								variant='outlined'
-								onClick={handleEdit}
-								sx={{
-									fontWeight: "bold",
-									color: "#1976d2",
-									borderColor: "#1976d2",
-									"&:hover": { bgcolor: "#e3fcec", borderColor: "#1976d2" },
-								}}
-							>
-								{!isEnable ? "Upravit" : "Konec "}
-							</Button>
-							<Button
-								variant='contained'
-								onClick={handleSaveChanges}
-								sx={{
-									bgcolor: "#43a047",
-									color: "#fff",
-									fontWeight: "bold",
-									fontFamily: "Montserrat, Arial, sans-serif",
-									"&:hover": { bgcolor: "#2e7031" },
-								}}
-							>
-								Ulož
-							</Button>
-							{LogIn?.role === "COMPANY" ? null : (
-								<Text sx={{ color: "#1976d2", alignSelf: "center" }}>
-									Přilož CV
-								</Text>
-							)}
-						</Box>
+						<>
+							<UserProfileEdit
+								handleEdit={handleEdit}
+								isEnable={isEnable}
+								handleSaveChanges={handleSaveChanges}
+								LogIn={LogIn}
+							/>
+						</>
 					)}
 				</Box>
 			</Box>

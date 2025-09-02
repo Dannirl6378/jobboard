@@ -1,6 +1,6 @@
 # JobBoard
 
-**JobBoard** je moderní pracovní portál vytvořený jako webová aplikace s administrativním rozhraním, který umožňuje správu pracovních nabídek, uživatelů a firem.  
+**JobBoard** je moderní pracovní portál vytvořený jako webová aplikace s administrativním rozhraním, který umožňuje správu pracovních nabídek, uživatelů a firem.
 
 ---
 
@@ -9,30 +9,37 @@
 JobBoard nabízí:
 
 - **Pro nepřihlášené uživatele:**
+
   - Prohlížení seznamu pracovních nabídek.
   - Zobrazení detailu konkrétní pracovní pozice.
   - Možnost reagovat na pracovní nabídku bez registrace (reakce jsou uloženy jako dočasní uživatelé v databázi).
 
 - **Pro přihlášené uživatele:**
+
   - Vlastní uživatelský profil.
   - Přehled pracovních nabídek, na které uživatel reagoval.
   - Možnost spravovat své reakce.
 
 - **Pro firmy:**
+
   - Správa vlastních pracovních nabídek (vytváření, editace, mazání).
   - Přístup k profilům uživatelů, kteří reagovali na jejich nabídky.
   - Úprava vlastních firemních informací.
 
 - **Pro administrátora:**
+
   - Kompletní správa všech uživatelů, firem a pracovních nabídek.
   - Možnost vytvářet, upravovat a mazat uživatele a nabídky.
   - Přístup k detailním informacím o uživatelích i firmách.
   - Správa dočasných uživatelů (uživatelé bez registrace).
+  - Administrátorský účet je v projektu pouze jeden a slouží výhradně k ukázkovým účelům.
+  - I když si vytvoříte nové účty, přístup do administrace bude vždy možný jen prostřednictvím tohoto přednastaveného účtu.
 
 - **Pro Master Admina:**
   - Má všechna práva jako admin.
   - Navíc může mazat veškerá data označená jako demo.
-  - Demo data jsou automaticky ukládána do databáze a nemohou být změněna jinak než přímo v databázi.
+  - Demo data jsou automaticky ukládána do databáze a demo stav nemuže být změněn jinak než přímo v databázi.
+  - Tento přístup je určen výhradně pro autora projektu
 
 ---
 
@@ -77,3 +84,4 @@ JobBoard nabízí:
 git clone https://github.com/username/jobboard.git
 cd jobboard
 
+```
