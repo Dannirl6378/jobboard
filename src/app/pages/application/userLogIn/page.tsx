@@ -2,17 +2,10 @@
 import HeaderMainPage from "@/components/HeaderMainPage";
 import {
 	Box,
-	Button,
-	Snackbar,
-	Alert,
-	Dialog,
-	DialogTitle,
-	DialogContent,
-	DialogContentText,
-	DialogActions,
 } from "@mui/material";
-import UserLoginApp from "./UserLoginApp/page";
-import UserLoginCard from "./UserLoginCard/page";
+import UserLoginApp from "./UserLoginApp/UserLoginApp";
+import UserLoginCard from "./UserLoginCard/UserLoginCard";
+import UserLoginDialog from "./UserLoginDialog/UserLoginDialog";
 
 const UserLogInPage = () => {
 	const {
@@ -25,7 +18,6 @@ const UserLogInPage = () => {
 			openSnackbar,
 			openDialog,
 			dataUser,
-			router,
 		},
 		actions: {
 			handleApply,
@@ -67,38 +59,9 @@ const UserLogInPage = () => {
 					setAbout={setAbout}
 				/>
 			</Box>
-
-			<Snackbar
-				open={openSnackbar}
-				autoHideDuration={3000}
-				onClose={() => setOpenSnackbar(false)}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-			>
-				<Alert
-					onClose={() => setOpenSnackbar(false)}
-					severity='success'
-					sx={{ width: "100%" }}
-				>
-					Data byla úspěšně uložena.
-				</Alert>
-			</Snackbar>
-			<Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-				<DialogTitle>Úspěch</DialogTitle>
-				<DialogContent>
-					<DialogContentText>
-						Vaše žádost byla úspěšně odeslána.
-					</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button
-						onClick={() => router.push("/")}
-						color='primary'
-						variant='contained'
-					>
-						Hlavní stránka
-					</Button>
-				</DialogActions>
-			</Dialog>
+				<UserLoginDialog  openSnackbar={openSnackbar} openDialog={openDialog}
+				setOpenSnackbar={setOpenSnackbar} setOpenDialog={setOpenDialog}
+				/>
 		</>
 	);
 };

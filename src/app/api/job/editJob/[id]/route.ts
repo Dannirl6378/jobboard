@@ -1,7 +1,7 @@
 
 import { supabase } from "@/lib/supbaseClient";
 
-export async function PUT(request: Request, context: { params: { id: string } }) {
+export async function PUT(request: Request, context: any) {
 const params = await context.params;
   const { id } = params;
   const { title, description, salary, location } = await request.json();

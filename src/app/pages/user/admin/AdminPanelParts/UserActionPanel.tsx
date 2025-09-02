@@ -1,3 +1,4 @@
+"use client";
 import {
 	Box,
 	Button,
@@ -40,7 +41,7 @@ export default function UserActionPanel({
 				boxShadow: 2,
 				fontFamily: "Montserrat, Arial, sans-serif",
 				mt: 2,
-				ml:50,
+				ml: 50,
 				display: "flex",
 				flexDirection: "column",
 				alignItems: "flex-start",
@@ -51,13 +52,13 @@ export default function UserActionPanel({
 			}}
 		>
 			<Typography
-				 variant="h6"
-                sx={{
-                    fontWeight: "bold",
-                    color: "#1976d2",
-                    mb: 2,
-                    fontFamily: "Montserrat, Arial, sans-serif",
-                }}
+				variant='h6'
+				sx={{
+					fontWeight: "bold",
+					color: "#1976d2",
+					mb: 2,
+					fontFamily: "Montserrat, Arial, sans-serif",
+				}}
 			>
 				Možnosti úprav
 			</Typography>

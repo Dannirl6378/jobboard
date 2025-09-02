@@ -10,9 +10,9 @@ import {
 	DialogTitle,
 	Typography,
 } from "@mui/material";
-import NoLogUserApp from "./noLogUserApp/page";
-import NoLogUserCard from "./NoLogUserCard/page";
-import NoLogUserEdit from "./NoLogUserEdit/page";
+import NoLogUserApp from "./noLogUserApp/NoLogUserApp";
+import NoLogUserCard from "./NoLogUserCard/NoLogUserCard";
+import NoLogUserEdit from "./NoLogUserEdit/NoLogUserEdit";
 
 const UserNoLogInPage = () => {
 	const {

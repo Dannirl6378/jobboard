@@ -1,9 +1,9 @@
 "use client";
 import { Box, Button, List, Typography } from "@mui/material";
 import React from "react";
-import JobListApp from "./JobListApp/page";
-import JobListPgJobs from "./JobListPgJobs/page";
-import JobListControlsPage from "./JobListControlsPage/page";
+import JobListApp from "./JobListApp/JobListApp";
+import JobListPgJobs from "./JobListPgJobs/JobListPgJobs";
+import JobListControlsPage from "./JobListControlsPage/JobListControlPage";
 
 const JobList = () => {
 	const {

@@ -1,4 +1,4 @@
-import { LogInFirm } from "@/app/pages/login/LogInUser";
+/*
 import { useAppStore } from "@/app/hook/useAppStore";
 
 const selectJob = (jobid: string) => {
@@ -17,3 +17,4 @@ const selectJob = (jobid: string) => {
 	return Job;
 };
 export default selectJob;
+*/

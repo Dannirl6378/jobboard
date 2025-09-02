@@ -1,10 +1,10 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import HeaderMainPage from "@/components/HeaderMainPage";
-import UserCompanyProfile from "./useCompanyProfil/page";
-import UserCopmanyEdit from "./useCompanyEdit/page";
-import UserCompanyApp from "./useCompanyApplications/page";
-import UserCompany from "./useCompanyApp/page";
+import UserCompanyProfile from "./useCompanyProfil/UseCompanyProfil";
+import UserCopmanyEdit from "./useCompanyEdit/UseCompanyEdit";
+import UserCompanyApp from "./useCompanyApplications/UseCompanyApplications";
+import UserCompany from "./useCompanyApp/UseCompanyApp";
 
 const Firm = () => {
 	const {

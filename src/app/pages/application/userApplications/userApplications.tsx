@@ -1,17 +1,18 @@
 import { useAppStore } from "@/app/hook/useAppStore";
-import { LogInFirm } from "@/app/pages/login/LogInUser";
+
 import { Box } from "@mui/material";
 
 const userCompanyApplications = () => {
 	const usersArray = Object.values(useAppStore((state) => state.users));
 	const jobsArray = Object.values(useAppStore((state) => state.jobs));
+	const LogIn = useAppStore((state)=>state.LogIn);
 	const applicationsArray = Object.values(
 		useAppStore((state) => state.applications)
 	);
 
 	// Ověření že users je pole
 	const getCompany = () =>
-		usersArray?.find((user) => user.name === LogInFirm.name);
+		usersArray?.find((user) => user.name === LogIn?.name);
 	const company = getCompany();
 
 	const getCompanyJobs = (comapnyid: string) =>

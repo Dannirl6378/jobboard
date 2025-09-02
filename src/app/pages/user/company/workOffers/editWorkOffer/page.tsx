@@ -1,6 +1,5 @@
 "use client";
 import { Box, Button, Input, TextField, Typography } from "@mui/material";
-import selectJob from "../selectJob*/selectJob";
 import { Job } from "@/types/job";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";

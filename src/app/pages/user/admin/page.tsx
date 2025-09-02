@@ -7,9 +7,9 @@ import AdminCreateUser from "./AdminCreateUser/AdminCreateUser";
 import ApplicationJobList from "./AdminPanelParts/ApplicationJobList";
 import UserActionsPanel from "./AdminPanelParts/UserActionPanel";
 import CompanyJobsPanel from "./AdminPanelParts/CompanyJobsPanel";
-import AdminApp from "./AdminApp/page";
-import AdminMaster from "./AdminMaster/page";
-import AdminJobDialog from "./AdminJobDialog/page";
+import AdminApp from "./AdminApp/AdminApp";
+import AdminMaster from "./AdminMaster/AdminMaster";
+import AdminJobDialog from "./AdminJobDialog/AdminJobDialog";
 
 const AdminMainPage = () => {
 	const {
@@ -112,7 +112,7 @@ const AdminMainPage = () => {
 									data.
 								</Typography>
 							</Box>
-							<Box sx={{ display: "flex", gap: 2, mb: 3,ml:"25%" }}>
+							<Box sx={{ display: "flex", gap: 2, mb: 3, ml: "25%" }}>
 								<Button
 									variant='contained'
 									sx={{
@@ -132,7 +132,7 @@ const AdminMainPage = () => {
 									sx={{
 										zIndex: 10,
 										position: "fixed",
-										
+
 										width: "100vw",
 										height: "100vh",
 										bgcolor: "rgba(0,0,0,0.15)",
@@ -169,11 +169,13 @@ const AdminMainPage = () => {
 									</Box>
 								</Box>
 							)}
-							<Box sx={{ml:"1%",}}><AdminSearchPanel
-								setShowEnd={setShowEnd}
-								setHasSearched={setHasSearched}
-							/></Box>
-							
+							<Box sx={{ ml: "1%" }}>
+								<AdminSearchPanel
+									setShowEnd={setShowEnd}
+									setHasSearched={setHasSearched}
+								/>
+							</Box>
+
 							{showEnd && (
 								<Box sx={{ mt: 3 }}>
 									<Typography
@@ -244,7 +246,7 @@ const AdminMainPage = () => {
 											sx={{
 												mb: 2,
 												ml: { xs: 0, md: "25%" },
-											
+
 												width: { xs: "100%", md: "100%" },
 											}}
 										>

@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supbaseClient";
 
 export async function DELETE(
 	req: NextRequest,
-	context: { params: { id: string } }
+	context: any
 ) {
 	const params = await context.params;
 	const { id } = params;

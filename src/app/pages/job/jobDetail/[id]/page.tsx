@@ -3,11 +3,11 @@
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading } from "@/styles/editTypoghraphy";
 import { Box, Typography } from "@mui/material";
-import JobDetailReact from "../JobDetailReact/page";
-import JobDetailCard from "../JobDetailCard/page";
-import JobDetailDesc from "../JobDetailDesc/page";
-import JobDetailCompany from "../JobDetailCompany/page";
-import JobDetailApp from "../JobDetailApp/page";
+import JobDetailReact from "../JobDetailReact/JobDetailReact";
+import JobDetailCard from "../JobDetailCard/JobDetailCard";
+import JobDetailDesc from "../JobDetailDesc/JobDetailDesc";
+import JobDetailCompany from "../JobDetailCompany/JobDetailCompany";
+import JobDetailApp from "../JobDetailApp/JobDetailApp";
 
 const JobDetail = () => {
 	const {

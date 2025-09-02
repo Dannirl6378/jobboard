@@ -5,16 +5,12 @@ import Firm from "./company/page";
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Box } from "@mui/material";
 import MainPgFirm from "./company/MainPgFirm";
-import AdminApp from './admin/AdminApp/page';
-
+import AdminApp from "./admin/AdminApp/AdminApp";
 
 const UserPage = () => {
-
 	const LogIn = useAppStore((state) => state.LogIn);
-	
 
 	const LogInCompany: boolean = LogIn?.role === "COMPANY" ? true : false; //toto se upravi na zjistovani kdo je přihlašeny Firm User
-	
 
 	return (
 		<>

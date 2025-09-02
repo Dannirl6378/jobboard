@@ -1,51 +1,48 @@
 "use client";
-import {
-	Box,
-	Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import HeaderMainPage from "@/components/HeaderMainPage";
 import { Heading, Text } from "@/styles/editTypoghraphy";
 import QuillEditor from "@/components/textEditor/TextEditQuill";
-import UserProfileForm from "./useProfileForm/page";
-import UserProfilePassword from "./useProfilePassword/page";
-import UserProfileResume from "./useProfileResume/page";
-import UserProfileApp from "./useProfileApp/page";
-import UserProfileEdit from "./useProfileEdit/page";
-import useUserProfile from "./useUserProfile/useUserProfile";
+import UserProfileForm from "./useProfileForm/UserProfileForm";
+import UserProfilePassword from "./useProfilePassword/UserProfilePassword";
+import UserProfileResume from "./useProfileResume/UserProfileResume";
+import UserProfileApp from "./useProfileApplication/UserProfileApplication";
+import UserProfileEdit from "./useProfileEdit/UserProfileEdit";
+import useUserProfile from "./useProfileApp/UserProfileApp";
 
 export default function UserProfil() {
 	const {
- state: { 
-    isEnable, 
-    name, 
-    email, 
-    password, 
-    phone, 
-    rePassword, 
-    about, 
-    purifyAbout, 
-    purifyCoverLetter, 
-    appliedJobs, 
-    LogIn, 
-    userVsFirm, 
-    profileUser, 
-	isValidPhone
-  },
-  actions: { 
-    setName, 
-    setEmail, 
-    setPassword, 
-    setRePassword, 
-    setAbout, 
-    handlePhoneChange, 
-    handleEdit, 
-    handleSaveChanges, 
-    handleBack 
-  }
-} = useUserProfile();
+		state: {
+			isEnable,
+			name,
+			email,
+			password,
+			phone,
+			rePassword,
+			about,
+			purifyAbout,
+			purifyCoverLetter,
+			appliedJobs,
+			LogIn,
+			userVsFirm,
+			profileUser,
+			isValidPhone,
+		},
+		actions: {
+			setName,
+			setEmail,
+			setPassword,
+			setRePassword,
+			setAbout,
+			handlePhoneChange,
+			handleEdit,
+			handleSaveChanges,
+			handleBack,
+		},
+	} = useUserProfile();
 
-	return(
+	return (
 		<>
 			<HeaderMainPage />
 			<Box

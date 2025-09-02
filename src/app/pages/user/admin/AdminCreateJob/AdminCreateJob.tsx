@@ -1,3 +1,4 @@
+"use client"
 import { useAppStore } from "@/app/hook/useAppStore";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -9,7 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { JobAtending, Jobtype } from "../../../job/menuSelect";
 import { fetchCreateJob } from "@/app/hook/api";
 
-type AdminCreateJobProps = {
+interface AdminCreateJobProps {
 	email: string;
 	setCreateJob: (value: boolean) => void;
 };

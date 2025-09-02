@@ -2,7 +2,7 @@
 import { supabase } from "@/lib/supbaseClient";
 import { NextRequest } from "next/server";
 
-export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context: any) {
   const params = await context.params;
   const { id } = params;
   const { name, email, password, about, CV, Phone, CoverLetter } = await request.json();

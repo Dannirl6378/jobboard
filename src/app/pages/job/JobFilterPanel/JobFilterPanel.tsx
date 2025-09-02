@@ -2,18 +2,14 @@ import {
 	Box,
 	Grid,
 	Typography,
-	Collapse,
-	FormControlLabel,
-	Checkbox,
-	FormGroup,
 } from "@mui/material";
 import { useState } from "react";
 import { useAppStore } from "@/app/hook/useAppStore";
 import JobsFilter from "./JobsFilter";
 import { Jobtype } from "@/app/pages/job/menuSelect";
-import JobFilterData from "./JobFilterData/page";
-import JobFilterButton from "./JobFIlterButton/page";
-import JobFilterOptions from "./JobFilterOptions/page";
+import JobFilterData from "./JobFilterData/JobFilterData";
+import JobFilterButton from "./JobFilterButton/JobFilterButton";
+import JobFilterOptions from "./JobFilterOptions/JobFilterOptions";
 
 export default function JobFilterPanel() {
 	const [filters, setFilters] = useState({
@@ -95,7 +91,13 @@ export default function JobFilterPanel() {
 					locations={locations}
 				/>
 
-				<Grid container spacing={20} justifyContent='center' alignContent={'center'} alignItems={'center'}>
+				<Grid
+					container
+					spacing={20}
+					justifyContent='center'
+					alignContent={"center"}
+					alignItems={"center"}
+				>
 					<JobFilterButton
 						handleClear={handleClear}
 						handleSearch={handleSearch}
