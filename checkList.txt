@@ -1,0 +1,7 @@
+Toto je log pro chyby a vylepšní :
+
+11. profil firmy - zmazat - jediné funguje, ale pridala by som kontrolné okno s otázkou, či to chceš naozaj vymazať
+
+
+
+22. na dnes hotovo :) 

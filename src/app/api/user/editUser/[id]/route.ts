@@ -1,26 +1,28 @@
-import { PrismaClient } from "@/generated/prisma";
-import { NextResponse } from "next/server";
-const prisma = new PrismaClient();
 
-export async function PUT(
-    request: Request,
-    context: { params: Promise<{ id: string }> }
-  ) {
-    const params =await context.params; // ✅ správně
-    const {id} = params; 
-  
-    const { name, email, password, about, CV ,Phone, CoverLetter} = await request.json();
-  
-    try {
-      const updated = await prisma.user.update({
-        where: { id },
-        data: { name, email, password, about, CV, Phone, CoverLetter},
-      });
-      console.log("updated", updated);
-  
-      return NextResponse.json(updated);
-    } catch (error) {
-      return NextResponse.json({ error: "user update failed" }, { status: 500 });
+import { supabase } from "@/lib/supbaseClient";
+import { NextRequest } from "next/server";
+
+export async function PUT(request: NextRequest, context: { params: { id: string } }) {
+  const params = await context.params;
+  const { id } = params;
+  const { name, email, password, about, CV, Phone, CoverLetter } = await request.json();
+
+  try {
+    const { data, error } = await supabase
+      .from("User")
+      .update({ name, email, password, about, CV, Phone, CoverLetter })
+      .eq("id", id)
+      .select(); // select() vrátí aktualizovaný řádek
+
+    if (error) {
+      throw error;
     }
+
+    return new Response(JSON.stringify(data), { status: 200 });
+  } catch (err: any) {
+    console.error("User update failed:", err);
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
+}
+
   

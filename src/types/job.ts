@@ -8,4 +8,5 @@ export interface Job {
     companyid: string;
     createdat: Date;
     Attendance: string;
+    isDemo: boolean; 
 }

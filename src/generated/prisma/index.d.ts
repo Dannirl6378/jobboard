@@ -79,7 +79,7 @@ export const Category: typeof $Enums.Category
  */
 export class PrismaClient<
   ClientOptions extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
-  U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
+  const U = 'log' extends keyof ClientOptions ? ClientOptions['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<ClientOptions['log']> : never : never,
   ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs
 > {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['other'] }
@@ -111,13 +111,6 @@ export class PrismaClient<
    * Disconnect from the database
    */
   $disconnect(): $Utils.JsPromise<void>;
-
-  /**
-   * Add a middleware
-   * @deprecated since 4.16.0. For new code, prefer client extensions instead.
-   * @see https://pris.ly/d/extensions
-   */
-  $use(cb: Prisma.Middleware): void
 
 /**
    * Executes a prepared raw query and returns the number of affected rows.
@@ -275,8 +268,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.6.0
-   * Query Engine version: f676762280b54cd07c770017ed3711ddde35f37a
+   * Prisma Client JS version: 6.15.0
+   * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
    */
   export type PrismaVersion = {
     client: string
@@ -947,16 +940,24 @@ export namespace Prisma {
     /**
      * @example
      * ```
-     * // Defaults to stdout
+     * // Shorthand for `emit: 'stdout'`
      * log: ['query', 'info', 'warn', 'error']
      * 
-     * // Emit as events
+     * // Emit as events only
      * log: [
-     *   { emit: 'stdout', level: 'query' },
-     *   { emit: 'stdout', level: 'info' },
-     *   { emit: 'stdout', level: 'warn' }
-     *   { emit: 'stdout', level: 'error' }
+     *   { emit: 'event', level: 'query' },
+     *   { emit: 'event', level: 'info' },
+     *   { emit: 'event', level: 'warn' }
+     *   { emit: 'event', level: 'error' }
      * ]
+     * 
+     * / Emit as events and log to stdout
+     * og: [
+     *  { emit: 'stdout', level: 'query' },
+     *  { emit: 'stdout', level: 'info' },
+     *  { emit: 'stdout', level: 'warn' }
+     *  { emit: 'stdout', level: 'error' }
+     * 
      * ```
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
@@ -1000,10 +1001,15 @@ export namespace Prisma {
     emit: 'stdout' | 'event'
   }
 
-  export type GetLogType<T extends LogLevel | LogDefinition> = T extends LogDefinition ? T['emit'] extends 'event' ? T['level'] : never : never
-  export type GetEvents<T extends any> = T extends Array<LogLevel | LogDefinition> ?
-    GetLogType<T[0]> | GetLogType<T[1]> | GetLogType<T[2]> | GetLogType<T[3]>
-    : never
+  export type CheckIsLogLevel<T> = T extends LogLevel ? T : never;
+
+  export type GetLogType<T> = CheckIsLogLevel<
+    T extends LogDefinition ? T['level'] : T
+  >;
+
+  export type GetEvents<T extends any[]> = T extends Array<LogLevel | LogDefinition>
+    ? GetLogType<T[number]>
+    : never;
 
   export type QueryEvent = {
     timestamp: Date
@@ -1043,25 +1049,6 @@ export namespace Prisma {
     | 'runCommandRaw'
     | 'findRaw'
     | 'groupBy'
-
-  /**
-   * These options are being passed into the middleware as "params"
-   */
-  export type MiddlewareParams = {
-    model?: ModelName
-    action: PrismaAction
-    args: any
-    dataPath: string[]
-    runInTransaction: boolean
-  }
-
-  /**
-   * The `T` type makes sure, that the `return proceed` is not forgotten in the middleware implementation
-   */
-  export type Middleware<T = any> = (
-    params: MiddlewareParams,
-    next: (params: MiddlewareParams) => $Utils.JsPromise<T>,
-  ) => $Utils.JsPromise<T>
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
@@ -1176,6 +1163,7 @@ export namespace Prisma {
     Phone: string | null
     CoverLetter: string | null
     CV: string | null
+    isDemo: boolean | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1189,6 +1177,7 @@ export namespace Prisma {
     Phone: string | null
     CoverLetter: string | null
     CV: string | null
+    isDemo: boolean | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1202,6 +1191,7 @@ export namespace Prisma {
     Phone: number
     CoverLetter: number
     CV: number
+    isDemo: number
     _all: number
   }
 
@@ -1217,6 +1207,7 @@ export namespace Prisma {
     Phone?: true
     CoverLetter?: true
     CV?: true
+    isDemo?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1230,6 +1221,7 @@ export namespace Prisma {
     Phone?: true
     CoverLetter?: true
     CV?: true
+    isDemo?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1243,6 +1235,7 @@ export namespace Prisma {
     Phone?: true
     CoverLetter?: true
     CV?: true
+    isDemo?: true
     _all?: true
   }
 
@@ -1329,6 +1322,7 @@ export namespace Prisma {
     Phone: string | null
     CoverLetter: string | null
     CV: string | null
+    isDemo: boolean
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1359,6 +1353,7 @@ export namespace Prisma {
     Phone?: boolean
     CoverLetter?: boolean
     CV?: boolean
+    isDemo?: boolean
     Application?: boolean | User$ApplicationArgs<ExtArgs>
     Job?: boolean | User$JobArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1375,6 +1370,7 @@ export namespace Prisma {
     Phone?: boolean
     CoverLetter?: boolean
     CV?: boolean
+    isDemo?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1388,6 +1384,7 @@ export namespace Prisma {
     Phone?: boolean
     CoverLetter?: boolean
     CV?: boolean
+    isDemo?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1401,9 +1398,10 @@ export namespace Prisma {
     Phone?: boolean
     CoverLetter?: boolean
     CV?: boolean
+    isDemo?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "created_at" | "about" | "Phone" | "CoverLetter" | "CV", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "name" | "role" | "created_at" | "about" | "Phone" | "CoverLetter" | "CV" | "isDemo", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Application?: boolean | User$ApplicationArgs<ExtArgs>
     Job?: boolean | User$JobArgs<ExtArgs>
@@ -1429,6 +1427,7 @@ export namespace Prisma {
       Phone: string | null
       CoverLetter: string | null
       CV: string | null
+      isDemo: boolean
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1864,6 +1863,7 @@ export namespace Prisma {
     readonly Phone: FieldRef<"User", 'String'>
     readonly CoverLetter: FieldRef<"User", 'String'>
     readonly CV: FieldRef<"User", 'String'>
+    readonly isDemo: FieldRef<"User", 'Boolean'>
   }
     
 
@@ -2348,6 +2348,7 @@ export namespace Prisma {
     companyid: string | null
     createdat: Date | null
     Attendance: string | null
+    isDemo: boolean | null
   }
 
   export type JobMaxAggregateOutputType = {
@@ -2360,6 +2361,7 @@ export namespace Prisma {
     companyid: string | null
     createdat: Date | null
     Attendance: string | null
+    isDemo: boolean | null
   }
 
   export type JobCountAggregateOutputType = {
@@ -2372,6 +2374,7 @@ export namespace Prisma {
     companyid: number
     createdat: number
     Attendance: number
+    isDemo: number
     _all: number
   }
 
@@ -2394,6 +2397,7 @@ export namespace Prisma {
     companyid?: true
     createdat?: true
     Attendance?: true
+    isDemo?: true
   }
 
   export type JobMaxAggregateInputType = {
@@ -2406,6 +2410,7 @@ export namespace Prisma {
     companyid?: true
     createdat?: true
     Attendance?: true
+    isDemo?: true
   }
 
   export type JobCountAggregateInputType = {
@@ -2418,6 +2423,7 @@ export namespace Prisma {
     companyid?: true
     createdat?: true
     Attendance?: true
+    isDemo?: true
     _all?: true
   }
 
@@ -2517,6 +2523,7 @@ export namespace Prisma {
     companyid: string | null
     createdat: Date | null
     Attendance: string | null
+    isDemo: boolean
     _count: JobCountAggregateOutputType | null
     _avg: JobAvgAggregateOutputType | null
     _sum: JobSumAggregateOutputType | null
@@ -2548,6 +2555,7 @@ export namespace Prisma {
     companyid?: boolean
     createdat?: boolean
     Attendance?: boolean
+    isDemo?: boolean
     Application?: boolean | Job$ApplicationArgs<ExtArgs>
     User?: boolean | Job$UserArgs<ExtArgs>
     _count?: boolean | JobCountOutputTypeDefaultArgs<ExtArgs>
@@ -2563,6 +2571,7 @@ export namespace Prisma {
     companyid?: boolean
     createdat?: boolean
     Attendance?: boolean
+    isDemo?: boolean
     User?: boolean | Job$UserArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
 
@@ -2576,6 +2585,7 @@ export namespace Prisma {
     companyid?: boolean
     createdat?: boolean
     Attendance?: boolean
+    isDemo?: boolean
     User?: boolean | Job$UserArgs<ExtArgs>
   }, ExtArgs["result"]["job"]>
 
@@ -2589,9 +2599,10 @@ export namespace Prisma {
     companyid?: boolean
     createdat?: boolean
     Attendance?: boolean
+    isDemo?: boolean
   }
 
-  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "salary" | "category" | "companyid" | "createdat" | "Attendance", ExtArgs["result"]["job"]>
+  export type JobOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "location" | "salary" | "category" | "companyid" | "createdat" | "Attendance" | "isDemo", ExtArgs["result"]["job"]>
   export type JobInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Application?: boolean | Job$ApplicationArgs<ExtArgs>
     User?: boolean | Job$UserArgs<ExtArgs>
@@ -2620,6 +2631,7 @@ export namespace Prisma {
       companyid: string | null
       createdat: Date | null
       Attendance: string | null
+      isDemo: boolean
     }, ExtArgs["result"]["job"]>
     composites: {}
   }
@@ -3054,6 +3066,7 @@ export namespace Prisma {
     readonly companyid: FieldRef<"Job", 'String'>
     readonly createdat: FieldRef<"Job", 'DateTime'>
     readonly Attendance: FieldRef<"Job", 'String'>
+    readonly isDemo: FieldRef<"Job", 'Boolean'>
   }
     
 
@@ -3527,6 +3540,7 @@ export namespace Prisma {
     userid: string | null
     covertletter: string | null
     application_date: Date | null
+    isDemo: boolean | null
   }
 
   export type ApplicationMaxAggregateOutputType = {
@@ -3535,6 +3549,7 @@ export namespace Prisma {
     userid: string | null
     covertletter: string | null
     application_date: Date | null
+    isDemo: boolean | null
   }
 
   export type ApplicationCountAggregateOutputType = {
@@ -3543,6 +3558,7 @@ export namespace Prisma {
     userid: number
     covertletter: number
     application_date: number
+    isDemo: number
     _all: number
   }
 
@@ -3553,6 +3569,7 @@ export namespace Prisma {
     userid?: true
     covertletter?: true
     application_date?: true
+    isDemo?: true
   }
 
   export type ApplicationMaxAggregateInputType = {
@@ -3561,6 +3578,7 @@ export namespace Prisma {
     userid?: true
     covertletter?: true
     application_date?: true
+    isDemo?: true
   }
 
   export type ApplicationCountAggregateInputType = {
@@ -3569,6 +3587,7 @@ export namespace Prisma {
     userid?: true
     covertletter?: true
     application_date?: true
+    isDemo?: true
     _all?: true
   }
 
@@ -3650,6 +3669,7 @@ export namespace Prisma {
     userid: string
     covertletter: string | null
     application_date: Date | null
+    isDemo: boolean
     _count: ApplicationCountAggregateOutputType | null
     _min: ApplicationMinAggregateOutputType | null
     _max: ApplicationMaxAggregateOutputType | null
@@ -3675,6 +3695,7 @@ export namespace Prisma {
     userid?: boolean
     covertletter?: boolean
     application_date?: boolean
+    isDemo?: boolean
     Job?: boolean | JobDefaultArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
@@ -3685,6 +3706,7 @@ export namespace Prisma {
     userid?: boolean
     covertletter?: boolean
     application_date?: boolean
+    isDemo?: boolean
     Job?: boolean | JobDefaultArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
@@ -3695,6 +3717,7 @@ export namespace Prisma {
     userid?: boolean
     covertletter?: boolean
     application_date?: boolean
+    isDemo?: boolean
     Job?: boolean | JobDefaultArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["application"]>
@@ -3705,9 +3728,10 @@ export namespace Prisma {
     userid?: boolean
     covertletter?: boolean
     application_date?: boolean
+    isDemo?: boolean
   }
 
-  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobid" | "userid" | "covertletter" | "application_date", ExtArgs["result"]["application"]>
+  export type ApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jobid" | "userid" | "covertletter" | "application_date" | "isDemo", ExtArgs["result"]["application"]>
   export type ApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     Job?: boolean | JobDefaultArgs<ExtArgs>
     User?: boolean | UserDefaultArgs<ExtArgs>
@@ -3733,6 +3757,7 @@ export namespace Prisma {
       userid: string
       covertletter: string | null
       application_date: Date | null
+      isDemo: boolean
     }, ExtArgs["result"]["application"]>
     composites: {}
   }
@@ -4163,6 +4188,7 @@ export namespace Prisma {
     readonly userid: FieldRef<"Application", 'String'>
     readonly covertletter: FieldRef<"Application", 'String'>
     readonly application_date: FieldRef<"Application", 'DateTime'>
+    readonly isDemo: FieldRef<"Application", 'Boolean'>
   }
     
 
@@ -4601,7 +4627,8 @@ export namespace Prisma {
     about: 'about',
     Phone: 'Phone',
     CoverLetter: 'CoverLetter',
-    CV: 'CV'
+    CV: 'CV',
+    isDemo: 'isDemo'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -4616,7 +4643,8 @@ export namespace Prisma {
     category: 'category',
     companyid: 'companyid',
     createdat: 'createdat',
-    Attendance: 'Attendance'
+    Attendance: 'Attendance',
+    isDemo: 'isDemo'
   };
 
   export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
@@ -4627,7 +4655,8 @@ export namespace Prisma {
     jobid: 'jobid',
     userid: 'userid',
     covertletter: 'covertletter',
-    application_date: 'application_date'
+    application_date: 'application_date',
+    isDemo: 'isDemo'
   };
 
   export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -4705,6 +4734,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'Decimal'
    */
   export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -4763,6 +4799,7 @@ export namespace Prisma {
     Phone?: StringNullableFilter<"User"> | string | null
     CoverLetter?: StringNullableFilter<"User"> | string | null
     CV?: StringNullableFilter<"User"> | string | null
+    isDemo?: BoolFilter<"User"> | boolean
     Application?: ApplicationListRelationFilter
     Job?: JobListRelationFilter
   }
@@ -4778,6 +4815,7 @@ export namespace Prisma {
     Phone?: SortOrderInput | SortOrder
     CoverLetter?: SortOrderInput | SortOrder
     CV?: SortOrderInput | SortOrder
+    isDemo?: SortOrder
     Application?: ApplicationOrderByRelationAggregateInput
     Job?: JobOrderByRelationAggregateInput
   }
@@ -4796,6 +4834,7 @@ export namespace Prisma {
     Phone?: StringNullableFilter<"User"> | string | null
     CoverLetter?: StringNullableFilter<"User"> | string | null
     CV?: StringNullableFilter<"User"> | string | null
+    isDemo?: BoolFilter<"User"> | boolean
     Application?: ApplicationListRelationFilter
     Job?: JobListRelationFilter
   }, "id" | "email">
@@ -4811,6 +4850,7 @@ export namespace Prisma {
     Phone?: SortOrderInput | SortOrder
     CoverLetter?: SortOrderInput | SortOrder
     CV?: SortOrderInput | SortOrder
+    isDemo?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -4830,6 +4870,7 @@ export namespace Prisma {
     Phone?: StringNullableWithAggregatesFilter<"User"> | string | null
     CoverLetter?: StringNullableWithAggregatesFilter<"User"> | string | null
     CV?: StringNullableWithAggregatesFilter<"User"> | string | null
+    isDemo?: BoolWithAggregatesFilter<"User"> | boolean
   }
 
   export type JobWhereInput = {
@@ -4845,6 +4886,7 @@ export namespace Prisma {
     companyid?: UuidNullableFilter<"Job"> | string | null
     createdat?: DateTimeNullableFilter<"Job"> | Date | string | null
     Attendance?: StringNullableFilter<"Job"> | string | null
+    isDemo?: BoolFilter<"Job"> | boolean
     Application?: ApplicationListRelationFilter
     User?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
@@ -4859,6 +4901,7 @@ export namespace Prisma {
     companyid?: SortOrderInput | SortOrder
     createdat?: SortOrderInput | SortOrder
     Attendance?: SortOrderInput | SortOrder
+    isDemo?: SortOrder
     Application?: ApplicationOrderByRelationAggregateInput
     User?: UserOrderByWithRelationInput
   }
@@ -4876,6 +4919,7 @@ export namespace Prisma {
     companyid?: UuidNullableFilter<"Job"> | string | null
     createdat?: DateTimeNullableFilter<"Job"> | Date | string | null
     Attendance?: StringNullableFilter<"Job"> | string | null
+    isDemo?: BoolFilter<"Job"> | boolean
     Application?: ApplicationListRelationFilter
     User?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
@@ -4890,6 +4934,7 @@ export namespace Prisma {
     companyid?: SortOrderInput | SortOrder
     createdat?: SortOrderInput | SortOrder
     Attendance?: SortOrderInput | SortOrder
+    isDemo?: SortOrder
     _count?: JobCountOrderByAggregateInput
     _avg?: JobAvgOrderByAggregateInput
     _max?: JobMaxOrderByAggregateInput
@@ -4910,6 +4955,7 @@ export namespace Prisma {
     companyid?: UuidNullableWithAggregatesFilter<"Job"> | string | null
     createdat?: DateTimeNullableWithAggregatesFilter<"Job"> | Date | string | null
     Attendance?: StringNullableWithAggregatesFilter<"Job"> | string | null
+    isDemo?: BoolWithAggregatesFilter<"Job"> | boolean
   }
 
   export type ApplicationWhereInput = {
@@ -4921,6 +4967,7 @@ export namespace Prisma {
     userid?: UuidFilter<"Application"> | string
     covertletter?: StringNullableFilter<"Application"> | string | null
     application_date?: DateTimeNullableFilter<"Application"> | Date | string | null
+    isDemo?: BoolFilter<"Application"> | boolean
     Job?: XOR<JobScalarRelationFilter, JobWhereInput>
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -4931,6 +4978,7 @@ export namespace Prisma {
     userid?: SortOrder
     covertletter?: SortOrderInput | SortOrder
     application_date?: SortOrderInput | SortOrder
+    isDemo?: SortOrder
     Job?: JobOrderByWithRelationInput
     User?: UserOrderByWithRelationInput
   }
@@ -4945,6 +4993,7 @@ export namespace Prisma {
     userid?: UuidFilter<"Application"> | string
     covertletter?: StringNullableFilter<"Application"> | string | null
     application_date?: DateTimeNullableFilter<"Application"> | Date | string | null
+    isDemo?: BoolFilter<"Application"> | boolean
     Job?: XOR<JobScalarRelationFilter, JobWhereInput>
     User?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "jobid_userid">
@@ -4955,6 +5004,7 @@ export namespace Prisma {
     userid?: SortOrder
     covertletter?: SortOrderInput | SortOrder
     application_date?: SortOrderInput | SortOrder
+    isDemo?: SortOrder
     _count?: ApplicationCountOrderByAggregateInput
     _max?: ApplicationMaxOrderByAggregateInput
     _min?: ApplicationMinOrderByAggregateInput
@@ -4969,6 +5019,7 @@ export namespace Prisma {
     userid?: UuidWithAggregatesFilter<"Application"> | string
     covertletter?: StringNullableWithAggregatesFilter<"Application"> | string | null
     application_date?: DateTimeNullableWithAggregatesFilter<"Application"> | Date | string | null
+    isDemo?: BoolWithAggregatesFilter<"Application"> | boolean
   }
 
   export type UserCreateInput = {
@@ -4982,6 +5033,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
     Application?: ApplicationCreateNestedManyWithoutUserInput
     Job?: JobCreateNestedManyWithoutUserInput
   }
@@ -4997,6 +5049,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
     Application?: ApplicationUncheckedCreateNestedManyWithoutUserInput
     Job?: JobUncheckedCreateNestedManyWithoutUserInput
   }
@@ -5012,6 +5065,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUpdateManyWithoutUserNestedInput
     Job?: JobUpdateManyWithoutUserNestedInput
   }
@@ -5027,6 +5081,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
     Job?: JobUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -5042,6 +5097,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
   }
 
   export type UserUpdateManyMutationInput = {
@@ -5055,6 +5111,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -5068,6 +5125,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type JobCreateInput = {
@@ -5079,6 +5137,7 @@ export namespace Prisma {
     category?: $Enums.Category | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
     Application?: ApplicationCreateNestedManyWithoutJobInput
     User?: UserCreateNestedOneWithoutJobInput
   }
@@ -5093,6 +5152,7 @@ export namespace Prisma {
     companyid?: string | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
     Application?: ApplicationUncheckedCreateNestedManyWithoutJobInput
   }
 
@@ -5105,6 +5165,7 @@ export namespace Prisma {
     category?: NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUpdateManyWithoutJobNestedInput
     User?: UserUpdateOneWithoutJobNestedInput
   }
@@ -5119,6 +5180,7 @@ export namespace Prisma {
     companyid?: NullableStringFieldUpdateOperationsInput | string | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUncheckedUpdateManyWithoutJobNestedInput
   }
 
@@ -5132,6 +5194,7 @@ export namespace Prisma {
     companyid?: string | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
   }
 
   export type JobUpdateManyMutationInput = {
@@ -5143,6 +5206,7 @@ export namespace Prisma {
     category?: NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type JobUncheckedUpdateManyInput = {
@@ -5155,12 +5219,14 @@ export namespace Prisma {
     companyid?: NullableStringFieldUpdateOperationsInput | string | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationCreateInput = {
     id?: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
     Job: JobCreateNestedOneWithoutApplicationInput
     User: UserCreateNestedOneWithoutApplicationInput
   }
@@ -5171,12 +5237,14 @@ export namespace Prisma {
     userid: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
   }
 
   export type ApplicationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Job?: JobUpdateOneRequiredWithoutApplicationNestedInput
     User?: UserUpdateOneRequiredWithoutApplicationNestedInput
   }
@@ -5187,6 +5255,7 @@ export namespace Prisma {
     userid?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationCreateManyInput = {
@@ -5195,12 +5264,14 @@ export namespace Prisma {
     userid: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
   }
 
   export type ApplicationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationUncheckedUpdateManyInput = {
@@ -5209,6 +5280,7 @@ export namespace Prisma {
     userid?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UuidFilter<$PrismaModel = never> = {
@@ -5271,6 +5343,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type ApplicationListRelationFilter = {
     every?: ApplicationWhereInput
     some?: ApplicationWhereInput
@@ -5307,6 +5384,7 @@ export namespace Prisma {
     Phone?: SortOrder
     CoverLetter?: SortOrder
     CV?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -5320,6 +5398,7 @@ export namespace Prisma {
     Phone?: SortOrder
     CoverLetter?: SortOrder
     CV?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -5333,6 +5412,7 @@ export namespace Prisma {
     Phone?: SortOrder
     CoverLetter?: SortOrder
     CV?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type UuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -5410,6 +5490,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -5455,6 +5543,7 @@ export namespace Prisma {
     companyid?: SortOrder
     createdat?: SortOrder
     Attendance?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type JobAvgOrderByAggregateInput = {
@@ -5471,6 +5560,7 @@ export namespace Prisma {
     companyid?: SortOrder
     createdat?: SortOrder
     Attendance?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type JobMinOrderByAggregateInput = {
@@ -5483,6 +5573,7 @@ export namespace Prisma {
     companyid?: SortOrder
     createdat?: SortOrder
     Attendance?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type JobSumOrderByAggregateInput = {
@@ -5551,6 +5642,7 @@ export namespace Prisma {
     userid?: SortOrder
     covertletter?: SortOrder
     application_date?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type ApplicationMaxOrderByAggregateInput = {
@@ -5559,6 +5651,7 @@ export namespace Prisma {
     userid?: SortOrder
     covertletter?: SortOrder
     application_date?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type ApplicationMinOrderByAggregateInput = {
@@ -5567,6 +5660,7 @@ export namespace Prisma {
     userid?: SortOrder
     covertletter?: SortOrder
     application_date?: SortOrder
+    isDemo?: SortOrder
   }
 
   export type ApplicationCreateNestedManyWithoutUserInput = {
@@ -5611,6 +5705,10 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type ApplicationUpdateManyWithoutUserNestedInput = {
@@ -5824,6 +5922,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedUuidWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -5918,6 +6021,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel> | null
@@ -5991,6 +6102,7 @@ export namespace Prisma {
     id?: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
     Job: JobCreateNestedOneWithoutApplicationInput
   }
 
@@ -5999,6 +6111,7 @@ export namespace Prisma {
     jobid: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
   }
 
   export type ApplicationCreateOrConnectWithoutUserInput = {
@@ -6020,6 +6133,7 @@ export namespace Prisma {
     category?: $Enums.Category | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
     Application?: ApplicationCreateNestedManyWithoutJobInput
   }
 
@@ -6032,6 +6146,7 @@ export namespace Prisma {
     category?: $Enums.Category | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
     Application?: ApplicationUncheckedCreateNestedManyWithoutJobInput
   }
 
@@ -6070,6 +6185,7 @@ export namespace Prisma {
     userid?: UuidFilter<"Application"> | string
     covertletter?: StringNullableFilter<"Application"> | string | null
     application_date?: DateTimeNullableFilter<"Application"> | Date | string | null
+    isDemo?: BoolFilter<"Application"> | boolean
   }
 
   export type JobUpsertWithWhereUniqueWithoutUserInput = {
@@ -6101,12 +6217,14 @@ export namespace Prisma {
     companyid?: UuidNullableFilter<"Job"> | string | null
     createdat?: DateTimeNullableFilter<"Job"> | Date | string | null
     Attendance?: StringNullableFilter<"Job"> | string | null
+    isDemo?: BoolFilter<"Job"> | boolean
   }
 
   export type ApplicationCreateWithoutJobInput = {
     id?: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
     User: UserCreateNestedOneWithoutApplicationInput
   }
 
@@ -6115,6 +6233,7 @@ export namespace Prisma {
     userid: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
   }
 
   export type ApplicationCreateOrConnectWithoutJobInput = {
@@ -6138,6 +6257,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
     Application?: ApplicationCreateNestedManyWithoutUserInput
   }
 
@@ -6152,6 +6272,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
     Application?: ApplicationUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6198,6 +6319,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUpdateManyWithoutUserNestedInput
   }
 
@@ -6212,6 +6334,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -6224,6 +6347,7 @@ export namespace Prisma {
     category?: $Enums.Category | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
     User?: UserCreateNestedOneWithoutJobInput
   }
 
@@ -6237,6 +6361,7 @@ export namespace Prisma {
     companyid?: string | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
   }
 
   export type JobCreateOrConnectWithoutApplicationInput = {
@@ -6255,6 +6380,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
     Job?: JobCreateNestedManyWithoutUserInput
   }
 
@@ -6269,6 +6395,7 @@ export namespace Prisma {
     Phone?: string | null
     CoverLetter?: string | null
     CV?: string | null
+    isDemo?: boolean
     Job?: JobUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -6297,6 +6424,7 @@ export namespace Prisma {
     category?: NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     User?: UserUpdateOneWithoutJobNestedInput
   }
 
@@ -6310,6 +6438,7 @@ export namespace Prisma {
     companyid?: NullableStringFieldUpdateOperationsInput | string | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type UserUpsertWithoutApplicationInput = {
@@ -6334,6 +6463,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Job?: JobUpdateManyWithoutUserNestedInput
   }
 
@@ -6348,6 +6478,7 @@ export namespace Prisma {
     Phone?: NullableStringFieldUpdateOperationsInput | string | null
     CoverLetter?: NullableStringFieldUpdateOperationsInput | string | null
     CV?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Job?: JobUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -6356,6 +6487,7 @@ export namespace Prisma {
     jobid: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
   }
 
   export type JobCreateManyUserInput = {
@@ -6367,12 +6499,14 @@ export namespace Prisma {
     category?: $Enums.Category | null
     createdat?: Date | string | null
     Attendance?: string | null
+    isDemo?: boolean
   }
 
   export type ApplicationUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Job?: JobUpdateOneRequiredWithoutApplicationNestedInput
   }
 
@@ -6381,6 +6515,7 @@ export namespace Prisma {
     jobid?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationUncheckedUpdateManyWithoutUserInput = {
@@ -6388,6 +6523,7 @@ export namespace Prisma {
     jobid?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type JobUpdateWithoutUserInput = {
@@ -6399,6 +6535,7 @@ export namespace Prisma {
     category?: NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUpdateManyWithoutJobNestedInput
   }
 
@@ -6411,6 +6548,7 @@ export namespace Prisma {
     category?: NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     Application?: ApplicationUncheckedUpdateManyWithoutJobNestedInput
   }
 
@@ -6423,6 +6561,7 @@ export namespace Prisma {
     category?: NullableEnumCategoryFieldUpdateOperationsInput | $Enums.Category | null
     createdat?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     Attendance?: NullableStringFieldUpdateOperationsInput | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationCreateManyJobInput = {
@@ -6430,12 +6569,14 @@ export namespace Prisma {
     userid: string
     covertletter?: string | null
     application_date?: Date | string | null
+    isDemo?: boolean
   }
 
   export type ApplicationUpdateWithoutJobInput = {
     id?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
     User?: UserUpdateOneRequiredWithoutApplicationNestedInput
   }
 
@@ -6444,6 +6585,7 @@ export namespace Prisma {
     userid?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ApplicationUncheckedUpdateManyWithoutJobInput = {
@@ -6451,6 +6593,7 @@ export namespace Prisma {
     userid?: StringFieldUpdateOperationsInput | string
     covertletter?: NullableStringFieldUpdateOperationsInput | string | null
     application_date?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDemo?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

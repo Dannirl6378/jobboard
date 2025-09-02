@@ -1,36 +1,55 @@
-import { PrismaClient } from "@/generated/prisma";
-import { NextRequest, NextResponse } from "next/server";
-const prisma = new PrismaClient();
+
+import { NextRequest } from "next/server";
+
+import { supabase } from "@/lib/supbaseClient";
 
 export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }
+	req: NextRequest,
+	context: { params: { id: string } }
 ) {
-  const { id } = await context.params;
-  //const userid = req.headers.get("x-company-id");
+	const params = await context.params;
+	const { id } = params;
 
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-    });
+	try {
+		// ověření, že uživatel existuje
+		const { data: userData, error: fetchError } = await supabase
+			.from("User")
+			.select("*")
+			.eq("id", id)
+			.single();
 
-    if (!user || user.id !== id) {
-      return NextResponse.json({ error: "Not authorized or User not found" }, { status: 403 });
-    }
+		if (fetchError || !userData) {
+			return new Response(JSON.stringify({ error: "User not found" }), {
+				status: 404,
+			});
+		}
 
-    const deletedUser = await prisma.user.delete({
-      where: { id },
-    });
-    await prisma.user.deleteMany({
-   where: {
-    role: { in: ["TEMPORAL", "ADMIN", "COMPANY", "USER"] },
-    Application: { none: {} }
-  }
-});
+		// odstranění uživatele
+		const { data: deletedUser, error: deleteError } = await supabase
+			.from("User")
+			.delete()
+			.eq("id", id);
 
-    return NextResponse.json(deletedUser, { status: 200 });
-  } catch (error) {
-    console.error("Delete error:", error);
-    return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
-  }
+		if (deleteError) {
+			throw deleteError;
+		}
+
+		// volitelně: hromadné mazání TEMPORAL uživatelů, kteří nemají žádnou aplikaci
+		const { error: bulkDeleteError } = await supabase
+			.from("user")
+			.delete()
+			.in("role", ["TEMPORAL", "ADMIN", "COMPANY", "USER"])
+			.is("Application", null);
+
+		if (bulkDeleteError) {
+			console.warn("Bulk delete TEMPORAL users failed:", bulkDeleteError);
+		}
+
+		return new Response(JSON.stringify(deletedUser), { status: 200 });
+	} catch (error: any) {
+		console.error("Delete error:", error);
+		return new Response(JSON.stringify({ error: error.message }), {
+			status: 500,
+		});
+	}
 }
