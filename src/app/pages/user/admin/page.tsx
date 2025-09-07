@@ -139,6 +139,8 @@ const AdminMainPage = () => {
 										display: "flex",
 										alignItems: "center",
 										justifyContent: "center",
+										bottom: { xs: 80, md: 0 },
+										right: { xs: 2, md: 0 },
 									}}
 								>
 									<Box
@@ -147,7 +149,8 @@ const AdminMainPage = () => {
 											border: "2px solid #1976d2",
 											borderRadius: 3,
 											boxShadow: 10,
-											p: 4,
+											margin: "auto",
+											p: 2,
 											minWidth: 320,
 											maxWidth: "95vw",
 											fontFamily: "Montserrat, Arial, sans-serif",
