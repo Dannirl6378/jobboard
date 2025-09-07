@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useAppStore } from "@/app/hook/useAppStore";
 import { Heading, SubHeading, Text } from "@/styles/editTypoghraphy";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -13,7 +13,7 @@ import { fetchCreateJob } from "@/app/hook/api";
 interface AdminCreateJobProps {
 	email: string;
 	setCreateJob: (value: boolean) => void;
-};
+}
 
 const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 	const [title, setTitle] = useState("");
@@ -39,8 +39,6 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 	}, [foundUser]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
-		
-
 		e.preventDefault();
 		if (
 			!title ||
@@ -74,11 +72,12 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 			setError("Failed to create job");
 		}
 	};
-	
+
 	return (
 		<>
 			<HeaderMainPage />
-			<form
+			<Box
+				component='form'
 				noValidate
 				autoComplete='off'
 				style={{
@@ -88,17 +87,20 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					background: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					opacity: 0.98,
 					borderRadius: "18px",
-					maxHeight: "90vh",
 					overflowY: "auto",
-					width: "100%",
-					maxWidth: 600,
-					marginTop: "5%",
-					marginRight: "25%",
 					display: "flex",
 					flexDirection: "column",
 					gap: "20px",
-					justifyContent: "center",
 					fontFamily: "Montserrat, Arial, sans-serif",
+				}}
+				sx={{
+					width: { xs: "1500%", sm: "80%", md: "100%" },
+					maxWidth: "100%",
+					marginRight: { xs: "10%", md: "25%" },
+					height: "90vh",
+					maxHeight: { xs: "50%", md: "100%" },
+					marginTop: { xs: "-25%", md: "5%" },
+					justifyContent: { xs: "flex-start", md: "center" },
 				}}
 			>
 				<Heading
@@ -108,7 +110,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 						fontWeight: "bold",
 						textAlign: "center",
 						mb: 2,
-						mt: "20%",
+						mt: { xs: "-5%", md: "20%" },
 					}}
 				>
 					Nová nabídka práce
@@ -248,7 +250,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 						Zavřít
 					</Button>
 				</Box>
-			</form>
+			</Box>
 		</>
 	);
 };
