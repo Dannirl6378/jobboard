@@ -64,7 +64,8 @@ const AdminEditUser = ({ setEditUserOpen }: AdminEditUserProps) => {
 				p: { xs: 2, sm: 4 },
 				mx: "auto",
 				mt: 4,
-				
+				zIndex:"1",
+				position:"relative",
 				display: "flex",
 				flexDirection: "column",
 				gap: 2,

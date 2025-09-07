@@ -38,9 +38,8 @@ const Firm = () => {
 			<HeaderMainPage />
 			<Box
 				sx={{
-					maxWidth: "70vw",
-					width: "100%",
-					mx: "20%",
+					width: {xs:"120%",md:"100%"},
+					mx: {xs:"7%",md:"18%"},
 					mt: { xs: 2, md: 6 },
 					p: { xs: 2, md: 4 },
 					bgcolor: "white",
