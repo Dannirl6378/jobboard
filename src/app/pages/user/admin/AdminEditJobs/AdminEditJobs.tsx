@@ -71,7 +71,8 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 	return (
 		<>
 			<HeaderMainPage />
-			<form
+			<Box
+			component="form"
 				noValidate
 				autoComplete='off'
 				style={{
@@ -81,17 +82,20 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 					background: "linear-gradient(135deg, #cee5fd 0%, #e3fcec 100%)",
 					opacity: 0.98,
 					borderRadius: "18px",
-					maxHeight: "90vh",
 					overflowY: "auto",
-					width: "100%",
-					maxWidth: 600,
-					marginTop: "5%",
-					marginRight: "25%",
 					display: "flex",
 					flexDirection: "column",
 					gap: "20px",
-					justifyContent: "center",
 					fontFamily: "Montserrat, Arial, sans-serif",
+				}}
+				sx={{
+					width: { xs: "1500%", sm: "80%", md: "100%" },
+					maxWidth: "100%",
+					marginRight: { xs: "10%", md: "25%" },
+					height: "90vh",
+					maxHeight: { xs: "50%", md: "100%" },
+					marginTop: { xs: "-25%", md: "5%" },
+					justifyContent: { xs: "flex-start", md: "center" },
 				}}
 			>
 				<Heading
@@ -101,7 +105,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 						fontWeight: "bold",
 						textAlign: "center",
 						mb: 2,
-						mt: "35%",
+						mt: {sx:"-5%",mb:"35%"},
 					}}
 				>
 					Upravit pracovní nabídku
@@ -187,7 +191,7 @@ export default function AdminEditJobs({ setEditJobsOpen }: AdminEditJobsProps) {
 						Zavřít
 					</Button>
 				</Box>
-			</form>
+			</Box>
 		</>
 	);
 }
