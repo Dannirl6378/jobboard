@@ -98,7 +98,7 @@ const AdminCreateJob = ({ email, setCreateJob }: AdminCreateJobProps) => {
 					maxWidth: "100%",
 					marginRight: { xs: "10%", md: "25%" },
 					height: "90vh",
-					maxHeight: { xs: "50%", md: "100%" },
+					maxHeight: { xs: "75%", md: "100%" },
 					marginTop: { xs: "25%", md: "5%" },
 					justifyContent: { xs: "flex-start", md: "center" },
 				}}

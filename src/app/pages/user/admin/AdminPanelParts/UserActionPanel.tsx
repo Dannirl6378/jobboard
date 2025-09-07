@@ -164,8 +164,8 @@ export default function UserActionPanel({
 				<Box
 					sx={{
 						mt: 2,
-						width: { xs: "70%", md: "100%" },
-						mx: { xs: "-12%", md: "0%" },
+						width: { xs: "65%", md: "100%" },
+						mx: { xs: "-10%", md: "0%" },
 					}}
 				>
 					<AdminEditUser setEditUserOpen={setEditUserOpen} />
