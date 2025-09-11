@@ -150,7 +150,7 @@ const AdminMainPage = () => {
 											borderRadius: 3,
 											boxShadow: 10,
 											margin: "auto",
-											mt:{xs:"50%", md: },
+											mt:{xs:"50%", md: "5%"},
 											height:{xs:"75vh"},
 											p: 2,
 											minWidth: 320,
