@@ -93,7 +93,7 @@ const AdminCreateUser = () => {
 				maxWidth: 400,
 				mx: "auto",
 				overflowY: "auto",
-				maxHeight: "75vh",
+				maxHeight: "80vh",
 			}}
 		>
 			<Typography
