@@ -163,7 +163,7 @@ export default function UserActionPanel({
 			{editUserOpen && (
 				<Box
 					sx={{
-						mt: 2,
+						mt: 4,
 						width: { xs: "65%", md: "100%" },
 						mx: { xs: "-10%", md: "0%" },
 					}}
