@@ -132,7 +132,7 @@ const AdminMainPage = () => {
 									sx={{
 										zIndex: 10,
 										position: "fixed",
-
+										mt:{md:"10%"},
 										width: "100vw",
 										height: "100vh",
 										bgcolor: "rgba(0,0,0,0.15)",
@@ -151,7 +151,7 @@ const AdminMainPage = () => {
 											boxShadow: 10,
 											margin: "auto",
 											mt:{xs:"50%", md: "8%"},
-											height:{xs:"75vh",md:"85"},
+											height:{xs:"75vh",md:"85vh"},
 											p: 2,
 											minWidth: 320,
 											maxWidth: "95vw",
