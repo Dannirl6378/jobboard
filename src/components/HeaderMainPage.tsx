@@ -42,6 +42,9 @@ const HeaderMainPage = () => {
 		setSelectedUserId(null);
 		router.push("/pages/user/users/userAppProfil");
 	};
+	const handleReadMe=()=>{
+		router.push("/pages/ReadMe");
+	}
 
 	return (
 		<PageContainer>
@@ -61,6 +64,7 @@ const HeaderMainPage = () => {
 						>
 							JobBoard
 						</Link>
+						<Button variant="contained" sx={{background:"red",marginLeft:"5%"}} onClick={()=>handleReadMe()}>Read Me</Button>
 					</Typography>
 					{/* --- ADMIN --- */}
 					{isAdmin && (
