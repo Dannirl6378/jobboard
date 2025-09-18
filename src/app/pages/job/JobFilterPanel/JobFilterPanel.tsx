@@ -113,7 +113,7 @@ export default function JobFilterPanel() {
 					handleCheckboxChange={handleCheckboxChange}
 				/>
 			</Grid>
-			{LogIn && (
+			{LogIn?.role ==="USER" && (
 				<Box sx={{ zIndex: "10" }}>
 					<HoverHelp type='aiFind'>
 						<Button
