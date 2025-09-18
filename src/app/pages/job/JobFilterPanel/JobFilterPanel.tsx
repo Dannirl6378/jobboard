@@ -26,6 +26,7 @@ export default function JobFilterPanel() {
 	//const [filteredJobs, setFilteredJobs] = useState<Job[] | null>(null);
 	const jobsArray = useAppStore((state) => state.jobs);
 	const filteredJobsStore = useAppStore((state) => state.filteredJobs);
+	const LogIn = useAppStore((state) => state.LogIn);
 	const [controlFilters, setControlFilters] = useState<boolean>(false);
 	const [open, setOpen] = useState<Boolean>(false);
 
@@ -104,7 +105,6 @@ export default function JobFilterPanel() {
 						setShowMore={setShowMore}
 						showMore={showMore}
 					/>
-
 				</Grid>
 
 				<JobFilterOptions
@@ -113,9 +113,14 @@ export default function JobFilterPanel() {
 					handleCheckboxChange={handleCheckboxChange}
 				/>
 			</Grid>
-			<Box sx={{zIndex:"10",}}>
-			<HoverHelp type='aiFind'>
-						<Button variant='contained' sx={{bgcolor:"grey"}} onClick={() => setOpen(!open)}>
+			{LogIn && (
+				<Box sx={{ zIndex: "10" }}>
+					<HoverHelp type='aiFind'>
+						<Button
+							variant='contained'
+							sx={{ bgcolor: "grey" }}
+							onClick={() => setOpen(!open)}
+						>
 							{open ? (
 								"Zavřít"
 							) : (
@@ -125,7 +130,9 @@ export default function JobFilterPanel() {
 							)}
 						</Button>
 					</HoverHelp>
-					</Box>
+				</Box>
+			)}
+
 			{isSearch && filteredJobsStore && filteredJobsStore.length === 0 && (
 				<Typography
 					sx={{
