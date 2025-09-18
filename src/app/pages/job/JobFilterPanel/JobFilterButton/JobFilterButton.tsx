@@ -1,5 +1,7 @@
 import { Button, Grid, IconButton, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { HoverHelp } from '../../../../../components/onHover/onHover';
+
 
 interface Props{
 	handleSearch: () => void;
@@ -54,6 +56,7 @@ export default function JobFilterButton({
 				</Grid>
 
 				<Grid size={{ xs: 12, sm: "auto" }}>
+					<HoverHelp type="filterOptions" >
 					<IconButton
 						sx={{
 							bgcolor: "rgba(117, 177, 39, 0.46)",
@@ -63,20 +66,21 @@ export default function JobFilterButton({
 						onClick={() => setShowMore(!showMore)}
 					>
 						<ExpandMoreIcon
-							sx={{ fontSize: "1.5rem", color: "rgb(194, 176, 138)" }}
+							sx={{ fontSize: "1.2rem", color: "rgb(194, 176, 138)" }}
 						/>
 						<Typography
 							sx={{
 								color: "black",
 								fontSize: "0.8rem",
 								fontWeight: "bold",
-								ml: 1,
+								ml: 0.5,
 							}}
 							variant='body2'
 						>
-							{showMore ? "Zavřít" : "Více možností"}
+							{showMore ? "Zavřít" : "Možnosti"}
 						</Typography>
 					</IconButton>
+					</HoverHelp>
 				</Grid>
 			</Grid>
 		</>

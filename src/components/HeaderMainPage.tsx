@@ -10,6 +10,7 @@ import {
 import PageContainer from "@/components/PageContainer";
 import { useAppStore } from "@/app/hook/useAppStore";
 import { useRouter } from "next/navigation";
+import { HoverHelp } from "./onHover/onHover";
 
 const HeaderMainPage = () => {
 	const setSelectedUserId = useAppStore((state) => state.setSelectedUserId);
@@ -50,7 +51,9 @@ const HeaderMainPage = () => {
 		<PageContainer>
 			<AppBar sx={{ width: "full-width", flexGrow: 1 }}>
 				<Toolbar>
+					
 					<Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
+						<HoverHelp type="jobBoard">
 						<Link
 							href='/'
 							underline='none'
@@ -64,6 +67,7 @@ const HeaderMainPage = () => {
 						>
 							JobBoard
 						</Link>
+						</HoverHelp>
 						<Button variant="contained" sx={{background:"red",marginLeft:"5%"}} onClick={()=>handleReadMe()}>Read Me</Button>
 					</Typography>
 					{/* --- ADMIN --- */}
@@ -124,6 +128,7 @@ const HeaderMainPage = () => {
 					)}
 					{/* --- LOGOUT/LOGIN --- */}
 					{isLoggedIn ? (
+						<HoverHelp type="login" >
 						<Button
 							role='button'
 							onClick={handleLogout}
@@ -140,7 +145,9 @@ const HeaderMainPage = () => {
 						>
 							Odhlášení
 						</Button>
+						</HoverHelp>
 					) : (
+						<HoverHelp type="login" >
 						<Button
 							role='button'
 							onClick={handleLogin}
@@ -157,6 +164,7 @@ const HeaderMainPage = () => {
 						>
 							Přihášení
 						</Button>
+						</HoverHelp>
 					)}
 				</Toolbar>
 			</AppBar>

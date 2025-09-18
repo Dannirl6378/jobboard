@@ -1,8 +1,4 @@
-import {
-	Box,
-	Grid,
-	Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 import { useAppStore } from "@/app/hook/useAppStore";
 import JobsFilter from "./JobsFilter";
@@ -10,6 +6,9 @@ import { Jobtype } from "@/app/pages/job/menuSelect";
 import JobFilterData from "./JobFilterData/JobFilterData";
 import JobFilterButton from "./JobFilterButton/JobFilterButton";
 import JobFilterOptions from "./JobFilterOptions/JobFilterOptions";
+import AIButtonExample from "@/components/findViaAi/page";
+import { HoverHelp } from "@/components/onHover/onHover";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 export default function JobFilterPanel() {
 	const [filters, setFilters] = useState({
@@ -28,6 +27,7 @@ export default function JobFilterPanel() {
 	const jobsArray = useAppStore((state) => state.jobs);
 	const filteredJobsStore = useAppStore((state) => state.filteredJobs);
 	const [controlFilters, setControlFilters] = useState<boolean>(false);
+	const [open, setOpen] = useState<Boolean>(false);
 
 	const locations = Array.from(
 		new Set(
@@ -104,13 +104,28 @@ export default function JobFilterPanel() {
 						setShowMore={setShowMore}
 						showMore={showMore}
 					/>
+
 				</Grid>
+
 				<JobFilterOptions
 					showMore={showMore}
 					filters={filters}
 					handleCheckboxChange={handleCheckboxChange}
 				/>
 			</Grid>
+			<Box sx={{zIndex:"10",}}>
+			<HoverHelp type='aiFind'>
+						<Button variant='contained' sx={{bgcolor:"grey"}} onClick={() => setOpen(!open)}>
+							{open ? (
+								"Zavřít"
+							) : (
+								<>
+									<AutoAwesomeIcon />
+								</>
+							)}
+						</Button>
+					</HoverHelp>
+					</Box>
 			{isSearch && filteredJobsStore && filteredJobsStore.length === 0 && (
 				<Typography
 					sx={{
@@ -129,6 +144,7 @@ export default function JobFilterPanel() {
 			{isSearch && (
 				<JobsFilter filter={filters} jobsArray={Object.values(jobsArray)} />
 			)}
+			{open && <AIButtonExample />}
 		</Box>
 	);
 }
