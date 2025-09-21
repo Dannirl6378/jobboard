@@ -114,7 +114,7 @@ export default function JobFilterPanel() {
 				/>
 			</Grid>
 			{LogIn?.role ==="USER" && (
-				<Box sx={{ zIndex: "10" }}>
+				<Box sx={{ zIndex: "10",mt:"2%" }}>
 					<HoverHelp type='aiFind'>
 						<Button
 							variant='contained'

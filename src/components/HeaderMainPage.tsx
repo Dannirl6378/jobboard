@@ -68,7 +68,7 @@ const HeaderMainPage = () => {
 							JobBoard
 						</Link>
 						</HoverHelp>
-						<Button variant="contained" sx={{background:"red",marginLeft:"5%"}} onClick={()=>handleReadMe()}>Read Me</Button>
+						<Button variant="contained" size="small" sx={{background:"red",marginLeft:"5%",color:"black"}} onClick={()=>handleReadMe()}>Read Me</Button>
 					</Typography>
 					{/* --- ADMIN --- */}
 					{isAdmin && (
