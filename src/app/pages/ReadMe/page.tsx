@@ -159,11 +159,11 @@ export default function ReadMe() {
 						<ListItem>Firemní profily a správa jejich nabídek.</ListItem>
 						<ListItem>Master admin pro správu demo dat.</ListItem>
 						<ListItem>
-							🔍 Algoritmické vyhledávání pracovních nabídek podle procentuální
+							Algoritmické vyhledávání pracovních nabídek podle procentuální
 							shody mezi uživatelským profilem a nabídkami.
 						</ListItem>
 						<ListItem>
-							🕛 Automatické mazání všech demo dat (s <code>isDemo: true</code>)
+							Automatické mazání všech demo dat (s <code>isDemo: true</code>)
 							každý den o půlnoci.
 						</ListItem>
 					</List>
