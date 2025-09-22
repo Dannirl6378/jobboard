@@ -19,7 +19,7 @@ export async function GET() {
     .from("User")
     .delete()
     .eq("isDemo", true)
-    .lt("createdat", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+    .lt("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
 
   return NextResponse.json({ status: "ok", message: "Old demo data deleted" });
 }
