@@ -65,6 +65,7 @@ export default function useUserProfile() {
 	}, [about, purifyCoverLetter]);
 
 	useEffect(() => {
+		console.log("Profile User changed:", profileUser);
 		if (profileUser) {
 			setName(profileUser.name || "");
 			setEmail(profileUser.email || "");

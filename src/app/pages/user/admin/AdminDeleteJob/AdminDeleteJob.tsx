@@ -11,7 +11,7 @@ const AdminDeleteJob = async (jobId: string) => {
 		const updatedJobs = companyJobs.filter((job) => job.id !== jobId);
 		useAppStore.getState().setJobs(updatedJobs);
 
-		console.log("Job deleted successfully");
+	
 		return {
 			success: true,
 			message: "Pracovní nabídka byla úspěšně smazána.",

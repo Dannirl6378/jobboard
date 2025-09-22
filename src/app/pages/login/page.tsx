@@ -99,7 +99,7 @@ export default function SignIn() {
 						}}
 						onClick={() => {
 							setOpenMasterLogin(true);
-							console.log("klik");
+							
 						}}
 					>
 						Master Admin

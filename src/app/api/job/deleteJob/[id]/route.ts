@@ -9,14 +9,7 @@ export async function DELETE(
 	const companyid = req.headers.get("x-company-id");
 	const role = req.headers.get("x-role"); // Přidej do fetchDeleteJob také tuto hlavičku!
 
-	console.log(
-		"Delete request for job ID:",
-		id,
-		"by company ID:",
-		companyid,
-		"role:",
-		role
-	);
+
 
 	try {
 		// najdi job
@@ -26,7 +19,7 @@ export async function DELETE(
 			.eq("id", id)
 			.single();
 
-		console.log("Fetched job data:", jobData, "Fetch error:", fetchError);
+		
 
 		// Pokud není ADMIN, kontroluj companyid
 		if (role !== "ADMIN") {

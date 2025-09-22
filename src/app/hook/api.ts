@@ -46,7 +46,7 @@ export const fetchCreateApplication = async (userid: string, jobid: string) => {
 		},
 		body: JSON.stringify({ userid, jobid }),
 	});
-	console.log("response", response);
+	
 	// Check if the response is ok (status in the range 200-299)
 	if (!response.ok) {
 		throw new Error("Failed to update User");
@@ -64,7 +64,7 @@ export const fetchCreateUser = async (updateData: Partial<User>) => {
 		},
 		body: JSON.stringify(updateData),
 	});
-	console.log("response", response);
+	
 	// Check if the response is ok (status in the range 200-299)
 	if (!response.ok) {
 		throw new Error("Failed to update User");
@@ -84,7 +84,7 @@ export const fetchUpdateUser = async (
 		},
 		body: JSON.stringify(updateData),
 	});
-	console.log("response", response);
+	
 	// Check if the response is ok (status in the range 200-299)
 	if (!response.ok) {
 		throw new Error("Failed to update User");
@@ -128,7 +128,7 @@ export const fetchDeleteUser = async (userid: string) => {
 			throw new Error(errorData.error || "Failed to delete");
 		}
 		const deleted = await res.json();
-		console.log("Deleted:", deleted);
+		
 	} catch (err) {
 		console.error("Error deleting job:", err);
 	}
@@ -152,7 +152,7 @@ export const fetchDeleteJob = async (jobId: string) => {
 		}
 
 		const deleted = await res.json();
-		console.log("Deleted:", deleted);
+	
 	} catch (err) {
 		console.error("Error deleting job:", err);
 	}
@@ -169,7 +169,7 @@ export const fetchUpdateJob = async (
 		},
 		body: JSON.stringify(updateData),
 	});
-	console.log("response", response);
+	
 	// Check if the response is ok (status in the range 200-299)
 	if (!response.ok) {
 		throw new Error("Failed to update job");

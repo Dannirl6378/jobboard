@@ -31,7 +31,7 @@ export default function LoginApp(){
 
 	const handleLogin = (userType: string) => {
 		const user = usersArray?.find((user) => user.email === userType);
-		console.log("userLogIn", user);
+		
 		if (user) {
 			setLogIn(user);
 			router.push("/");

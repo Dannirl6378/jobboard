@@ -180,7 +180,7 @@ export default function AdminApp() {
 				await AdminDeleteUser(user.id);
 			}
 		}
-		console.log("Mazání demo dat...");
+
 	};
 	return {
 		state: {
