@@ -6,27 +6,42 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY! // musíš použít Service Role Key
 );
 
-/*export async function GET(req: Request) {
-  console.log("CRON invoked at", new Date().toISOString());
-  console.log("Headers:", Object.fromEntries(req.headers));
-  // smaže všechny joby starší než 1 den
-  await supabase
-    .from("Job")
-    .delete()
-    .eq("isDemo", true)
-    .lt("createdat", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
-
-  // smaže všechny uživatele starší než 1 den
-  await supabase
-    .from("User")
-    .delete()
-    .eq("isDemo", true)
-    .lt("created_at", new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString())
-    .eq("application_count", 0); 
-
-  return NextResponse.json({ status: "ok", message: "Old demo data deleted" });
-}*/
 export async function GET(req: Request) {
   console.log("CRON invoked at", new Date().toISOString());
-  return new Response(JSON.stringify({ ok: true, time: new Date().toISOString() }), { headers: { "Content-Type": "application/json" }});
+
+  // smaže všechny joby starší než 1 den
+  try {
+    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+    // smaže joby
+    const { data: deletedJobs, error: jobsError } = await supabase
+      .from("Job")
+      .delete()
+      .eq("isDemo", true)
+      .lt("createdat", cutoff)
+      .select(); // vrátí smazané řádky (pokud to chceš zkontrolovat)
+
+    if (jobsError) throw jobsError;
+
+  const { data: deletedUsers, error: usersError } = await supabase
+      .from("User")
+      .delete()
+      .eq("isDemo", true)
+      .lt("created_at", cutoff)
+      .select();
+
+    if (usersError) throw usersError;
+
+    console.log("🗑️ Deleted jobs:", deletedJobs?.length || 0);
+    console.log("🗑️ Deleted users:", deletedUsers?.length || 0);
+
+    return NextResponse.json({
+      success: true,
+      deletedJobs: deletedJobs?.length || 0,
+      deletedUsers: deletedUsers?.length || 0,
+    });
+  } catch (err) {
+    console.error("❌ Cron error:", err);
+    return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
+  }
 }
