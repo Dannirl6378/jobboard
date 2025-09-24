@@ -6,7 +6,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY! // musíš použít Service Role Key
 );
 
-export async function GET() {
+export async function GET(req: Request) {
+  console.log("CRON invoked at", new Date().toISOString());
+  console.log("Headers:", Object.fromEntries(req.headers));
   // smaže všechny joby starší než 1 den
   await supabase
     .from("Job")
