@@ -16,7 +16,7 @@ export async function GET(req: Request) {
     // smaže joby
     const { data: deletedJobs, error: jobsError } = await supabase
       .from("Job")
-      .select()
+      .select("*")
       .eq("isDemo", true)
       .lt("createdat", cutoff)
       .select(); // vrátí smazané řádky (pokud to chceš zkontrolovat)
