@@ -2,46 +2,56 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // musíš použít Service Role Key
+	process.env.NEXT_PUBLIC_SUPABASE_URL!,
+	process.env.SUPABASE_SERVICE_ROLE_KEY! // musíš použít Service Role Key
 );
 
 export async function GET(req: Request) {
-  console.log("CRON invoked at", new Date().toISOString());
+	console.log("CRON invoked at", new Date().toISOString());
 
-  // smaže všechny joby starší než 1 den
-  try {
-    const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+	// smaže všechny joby starší než 1 den
+	try {
+		const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-    // smaže joby
-    const { data: deletedJobs, error: jobsError } = await supabase
-      .from("Job")
-      .select("*")
-      .eq("isDemo", true)
-      .lt("createdat", cutoff)
-      .select(); // vrátí smazané řádky (pokud to chceš zkontrolovat)
+		const { data } = await supabase
+			.from("Job")
+			.select("id, createdat, isDemo")
+			.limit(10);
 
-    if (jobsError) throw jobsError;
+		console.log("Sample jobs:", data);
 
-  const { data: deletedUsers, error: usersError } = await supabase
-      .from("User")
-      .delete()
-      .eq("isDemo", true)
-      .lt("created_at", cutoff)
-      .select();
+		// smaže joby
+		const { data: deletedJobs, error: jobsError } = await supabase
+			.from("Job")
+			.select("*")
+			.eq("isDemo", true)
+			.lt("createdat", cutoff)
+			.select(); // vrátí smazané řádky (pokud to chceš zkontrolovat)
 
-    if (usersError) throw usersError;
+		if (jobsError) throw jobsError;
 
-    console.log("🗑️ Deleted jobs:", deletedJobs?.length || 0);
-    console.log("🗑️ Deleted users:", deletedUsers?.length || 0);
+		const { data: deletedUsers, error: usersError } = await supabase
+			.from("User")
+			.delete()
+			.eq("isDemo", true)
+			.lt("created_at", cutoff)
+			.select();
 
-    return NextResponse.json({
-      success: true,
-      deletedJobs: deletedJobs?.length || 0,
-      deletedUsers: deletedUsers?.length || 0,
-    });
-  } catch (err) {
-    console.error("❌ Cron error:", err);
-    return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
-  }
+		if (usersError) throw usersError;
+
+		console.log("🗑️ Deleted jobs:", deletedJobs?.length || 0);
+		console.log("🗑️ Deleted users:", deletedUsers?.length || 0);
+
+		return NextResponse.json({
+			success: true,
+			deletedJobs: deletedJobs?.length || 0,
+			deletedUsers: deletedUsers?.length || 0,
+		});
+	} catch (err) {
+		console.error("❌ Cron error:", err);
+		return NextResponse.json(
+			{ success: false, error: String(err) },
+			{ status: 500 }
+		);
+	}
 }
