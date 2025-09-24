@@ -13,12 +13,9 @@ export async function GET(req: Request) {
 	try {
 		const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-		const { data } = await supabase
-			.from("Job")
-			.select("id, createdat, isDemo")
-			.limit(10);
-
-		console.log("Sample jobs:", data);
+    if (req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new NextResponse("Unauthorized", { status: 401 });
+  }
 
 		// smaže joby
 		const { data: deletedJobs, error: jobsError } = await supabase
