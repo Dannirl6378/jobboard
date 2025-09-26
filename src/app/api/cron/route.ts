@@ -36,7 +36,7 @@ export async function GET(req: Request) {
 
 		if (usersError) throw usersError;
 
-		console.log("🗑️ Deleted jobs:", deletedJobs?.length || 0);
+		console.log("🗑️ Deleted jobs:", deletedJobs);
 		console.log("🗑️ Deleted users:", deletedUsers?.length || 0);
 
 		return NextResponse.json({
