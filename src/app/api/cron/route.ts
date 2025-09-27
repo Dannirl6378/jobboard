@@ -41,7 +41,7 @@ export async function GET(req: Request) {
 
 		return NextResponse.json({
 			success: true,
-			deletedJobs: deletedJobs?.length || 0,
+			deletedJobs: deletedJobs,
 			deletedUsers: deletedUsers?.length || 0,
 		});
 	} catch (err) {
