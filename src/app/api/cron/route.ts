@@ -20,7 +20,7 @@ export async function GET(req: Request) {
 		// smaže joby
 		const { data: deletedJobs, error: jobsError } = await supabase
 			.from("Job")
-			.select("*")
+			.delete()
 			.eq("isDemo", true)
 			.lt("createdat", cutoff)
 			.select(); // vrátí smazané řádky (pokud to chceš zkontrolovat)
@@ -36,12 +36,12 @@ export async function GET(req: Request) {
 
 		if (usersError) throw usersError;
 
-		console.log("🗑️ Deleted jobs:", deletedJobs);
+		console.log("🗑️ Deleted jobs:", deletedJobs?.length || 0);
 		console.log("🗑️ Deleted users:", deletedUsers?.length || 0);
 
 		return NextResponse.json({
 			success: true,
-			deletedJobs: deletedJobs,
+			deletedJobs: deletedJobs?.length || 0,
 			deletedUsers: deletedUsers?.length || 0,
 		});
 	} catch (err) {
