@@ -1,11 +1,9 @@
 {
+	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"crons": [
 		{
 			"path": "/api/cron",
-			"schedule": "10 14 * * *",
-			"headers": {
-				"Authorization": "Bearer JobBoardToken123"
-			}
+			"schedule": "10 14 * * *"
 		}
 	]
 }
