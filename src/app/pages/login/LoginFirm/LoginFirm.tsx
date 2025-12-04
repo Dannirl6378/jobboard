@@ -23,6 +23,7 @@ export default function LoginFirm({
 					fontWeight: "bold",
 					bgcolor: "#43a047",
 					":hover": { bgcolor: "#2e7031" },
+					color: "white",
 				}}
 				onClick={() =>
 					chooseCompany ? setChooseCompany(false) : setChooseCompany(true)
@@ -50,7 +51,7 @@ export default function LoginFirm({
 									fontWeight: "bold",
 									color: "#1976d2",
 									borderColor: "#1976d2",
-									":hover": { borderColor: "#1565c0" },
+									":hover": { borderColor: "#1565c0", color: "#1565c0" },
 								}}
 								onClick={() => handleLogin(user.email)}
 							>

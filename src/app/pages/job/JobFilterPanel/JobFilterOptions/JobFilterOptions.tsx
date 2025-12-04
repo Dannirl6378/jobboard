@@ -40,8 +40,7 @@ export default function JobFilterOptions({
 						sx={{
 							border: "1px solid #c7c2ba52",
 							borderRadius: 1,
-							background:
-								"linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+							background: "linear-gradient(to right, rgb(225, 238, 250), rgb(200, 220, 245))",
 							display: "flex",
 							alignItems: "center",
 							justifyContent: "center",

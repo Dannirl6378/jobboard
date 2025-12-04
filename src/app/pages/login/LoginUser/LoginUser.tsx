@@ -50,7 +50,7 @@ export default function LoginUser({
 									fontWeight: "bold",
 									color: "#1976d2",
 									borderColor: "#1976d2",
-									":hover": { borderColor: "#1565c0" },
+									":hover": { borderColor: "#1565c0", color: "#1565c0" },
 								}}
 								onClick={() => handleLogin(user.email)}
 							>

@@ -4,7 +4,7 @@ interface Props {
 	company?: { id: string; name: string };
 	handleAddWorkOffer: () => void;
 	handleEditUser: () => void;
-};
+}
 
 export default function UserCompanyProfile({
 	company,
@@ -23,8 +23,9 @@ export default function UserCompanyProfile({
 					fontFamily: "Montserrat, Arial, sans-serif",
 				}}
 			>
-				Profil firmy: <span style={{ color: "#388e3c" }}>{company?.name}</span>
+				Profil firmy: <span style={{ color: "#2e7d32" }}>{company?.name}</span>
 			</Typography>
+
 			<Box
 				sx={{
 					display: "flex",
@@ -36,16 +37,17 @@ export default function UserCompanyProfile({
 				<Button
 					variant='contained'
 					sx={{
-						bgcolor: "#43a047",
+						bgcolor: "#2e7d32", // ztmavená zelená k modré
 						color: "#fff",
 						fontWeight: "bold",
 						fontFamily: "Montserrat, Arial, sans-serif",
-						"&:hover": { bgcolor: "#2e7031" },
+						"&:hover": { bgcolor: "#255a27" },
 					}}
 					onClick={handleAddWorkOffer}
 				>
 					Přidat pracovní nabídku
 				</Button>
+
 				<Button
 					variant='contained'
 					sx={{

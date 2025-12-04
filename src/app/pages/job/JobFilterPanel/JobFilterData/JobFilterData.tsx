@@ -50,8 +50,7 @@ export default function JobFilterPanel({
 			<Grid size={{ xs: 12, md: 3 }}>
 				<TextField
 					sx={{
-						background:
-							"linear-gradient(to right,rgb(217, 241, 236),rgb(165, 201, 247))",
+						background: "linear-gradient(to right, rgb(225, 238, 250), rgb(200, 220, 245))",
 						borderRadius: 1,
 						boxShadow: 2,
 						color: "black",

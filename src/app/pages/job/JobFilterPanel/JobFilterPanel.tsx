@@ -73,7 +73,7 @@ export default function JobFilterPanel() {
 			sx={{
 				mt: 10,
 				mb: 2,
-				bgcolor: "#3b82f6",
+				bgcolor: "#3b83f69f",
 				p: 2,
 				right: "5%",
 				left: "5%",

@@ -30,7 +30,7 @@ export default function Home() {
 			<Box
 				sx={{
 					flexGrow: 1,
-					bgcolor: "#cee5fdff",
+					bgcolor: "#d0e3f8ff",
 					minHeight: "100vh",
 					minWidth: "100vw",
 					height: "100%",
