@@ -205,7 +205,7 @@ export default function ReadMe() {
 						}}
 					>
 						<code>
-							git clone https://github.com/username/jobboard.git
+							git clone https://github.com/Dannirl6378/jobBoard 
 							<br />
 							cd jobboard
 						</code>
