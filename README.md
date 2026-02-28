@@ -1,6 +1,7 @@
 # JobBoard
 
 **JobBoard** je moderní pracovní portál vytvořený jako webová aplikace s administrativním rozhraním, který umožňuje správu pracovních nabídek, uživatelů a firem.
+<img width="1919" height="918" alt="Image" src="https://github.com/user-attachments/assets/59d3f13d-465f-48cd-942d-b8b5a962bcdd" />
 
 ---
 
